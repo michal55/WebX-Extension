@@ -1,9 +1,9 @@
 # WebX-Extension
 
 File structure
-  - icon.png - Icon of the chrome extension
+  - icon.png - Chrome extension icon
   - manifest.json - Json file containing basic information like name, html file name, icon, permissions.
-  - popup.html - Html of the extension and also contains links to JS file.
+  - popup.html - Html file containing grafic and links to JS file.
   - popup.js - JS file.
 
 Loading extension into chrome
