@@ -1,19 +1,20 @@
 # WebX-Extension
 
-Struktura subora obsahujuceho extension
-  - icon.png - Ikona chrome extensionu.
-  - manifest.json - Json obsahujuci zakladne informacie o extension napr. nazov html subora, ikonu a permissions.
-  - popup.html - Html extensionu a zaroven odkaz na JS subor.
-  - popup.js - JS subor.
+File structure
+  - icon.png - Icon of the chrome extension
+  - manifest.json - Json file containing basic information like name, html file name, icon, permissions.
+  - popup.html - Html of the extension and also contains links to JS file.
+  - popup.js - JS file.
 
-Nacitanie extensionu do Chromu
-  - Do prehliadaca zadat adresu chrome://extensions/
-  - Hore zaskrtnut Developer mode
+Loading extension into chrome
+  - Go to chrome://extensions/ adress
+  - Enable Developer Mode
   - Load unpacked extension...
-  - Vybrat subor obsahujuci extension a kliknut Open
-  - Extension uz bezi a ked je potrebne ho reloadnut tak v chrome://extensions/ je moznost kliknutia reload
-    (Ak nastala nejaka chyba tak to pri reloade zahlasi a oznaci aj riadok oznacuje to ale tak pofiderne oznacilo mi
-     zly riadok pricom chyba bola o riadok vyssie.)
+  - Navigate to file containing extension and press Open
+  - Extension is running. If you need to reload extension just go to chrome://extensions/ and under the extension
+    name is reload option.
 
-Praca
-  - Cize staci vytvorit v popup.html grafiku a idcka k tym veciam a potom nasledne popup.js robit logiku.
+TL;DR
+  - popup.html contains the extension grafic
+  - popup.js logic 
+
