@@ -1,20 +1,7 @@
+function clickHandler(e) {
+    chrome.tabs.update({url: "https://google.com"});
+    window.close(); 
+}
 document.addEventListener('DOMContentLoaded', function() {
-  var checkPageButton = document.getElementById('login');
-  checkPageButton.addEventListener('click', function() {
-
-    chrome.tabs.getSelected(null, function(tab) {
-      d = document;
-
-      var f = d.createElement('form');
-      f.action = 'http://google.com';
-      f.method = 'post';
-      var i = d.createElement('input');
-      i.type = 'hidden';
-      i.name = 'url';
-      i.value = tab.url;
-      f.appendChild(i);
-      d.body.appendChild(f);
-      f.submit();
-    });
-  }, false);
-}, false);
+    document.getElementById('google').addEventListener('click', clickHandler);
+});
