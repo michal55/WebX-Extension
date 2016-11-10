@@ -1,5 +1,6 @@
 {
   "manifest_version": 2,
+  "minimum_chrome_version": "33",
 
   "name": "Webx",
   "description": "Extension for Webx web extraction.",
@@ -10,10 +11,14 @@
     "default_popup": "popup.html",
     "default_title": "Webx"
   },
+
   "permissions": [
     "identity",
-    "https://www.googleapis.com/",
-    "https://accounts.google.com/"
-  ]
-}
+    "http://localhost:3000/webx/api/*"
+  ],
 
+  "oauth2": {
+    "client_id": "19e161e3cf0f594fb87f3e4810e041c45530861c56883ce09b2ff2a54a99fe39",
+    "scopes": []
+  }
+}
