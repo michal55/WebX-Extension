@@ -17,6 +17,11 @@ Loading extension into chrome
   - Extension is running. If you need to reload extension just go to chrome://extensions/ and under the extension
     name is reload option.
 
+Integration with Webx
+  - In seeds.rb edit redirect_uri:
+	'redirect_uri' => 'https://YourExtensionID.chromiumapp.org/'
+  - run rake db:seed
+
 TL;DR
   - popup.html contains the extension grafic
   - popup.js logic 
