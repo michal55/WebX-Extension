@@ -37,6 +37,7 @@ function onProjects(status, response) {
 
                 div.id = "project" + json[i].id;
                 btn.appendChild(text);
+                btn.addEventListener('click', getSchema(json[i].id));
                 btn.addEventListener('click', getScripts(json[i].id));
                 div.appendChild(btn);
                 document.getElementById("projects_div").appendChild(div);          
@@ -55,6 +56,10 @@ function getScripts(project_id) {
 function onScripts(status, response) {
         if (status == 200) {
             var json = JSON.parse(response);
+            var p = document.createElement("P");
+            p.appendChild(document.createTextNode("Scripts"));
+            document.getElementById("project" + json[0].project_id).appendChild(p);
+
             for (var i = 0; i<json.length; i++){
                 var div = document.createElement("DIV");
                 var li = document.createElement("LI");
@@ -69,6 +74,28 @@ function onScripts(status, response) {
                 document.getElementById("project" + json[i].project_id).appendChild(div);
             }
         }    
+}
+
+function getSchema(project_id) {
+    xhrWithAuth('GET', '/data/user/project/'+ project_id +'/data_schemas', false, onSchema);
+    }
+
+function onSchema(status, response) {
+        if (status == 200) {
+            var json = JSON.parse(response);
+            var p = document.createElement("P");
+            p.appendChild(document.createTextNode("Schema"));
+            document.getElementById("project" + json[0].project_id).appendChild(p);
+
+            for (var i = 0; i<json.length; i++){
+                var li = document.createElement("LI");
+                var text = document.createTextNode(json[i].name + " : " + json[i].data_type);
+                li.appendChild(text);
+
+                document.getElementById("project" + json[i].project_id).appendChild(li);       
+        }
+    }
+
 }
 
 document.addEventListener('DOMContentLoaded', function() {
