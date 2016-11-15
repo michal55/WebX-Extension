@@ -35,10 +35,16 @@ function onProjects(status, response) {
             }
             for (var i = 0; i<json.length; i++){
                 var div = document.createElement('DIV');
+                div.id = 'project' + json[i].id;
                 var btn = document.createElement('BUTTON');
                 var text = document.createTextNode(json[i].name);
+                var prev_div = document.getElementById('project' + json[i].id);
 
-                div.id = 'project' + json[i].id;
+                // remove existing DIV before reloading it
+                if (prev_div){
+                    prev_div.parentNode.removeChild(prev_div);
+                }
+
                 btn.appendChild(text);
                 btn.addEventListener('click', getSchema(json[i].id));
                 btn.addEventListener('click', getScripts(json[i].id));
