@@ -30,24 +30,25 @@ function getProjects() {
 function onProjects(status, response) {
         if (status == 200) {
             var json = JSON.parse(response);
+            if (json.length == 0){
+                return;
+            }
             for (var i = 0; i<json.length; i++){
-                var div = document.createElement("DIV");
-                var btn = document.createElement("BUTTON");
+                var div = document.createElement('DIV');
+                var btn = document.createElement('BUTTON');
                 var text = document.createTextNode(json[i].name);
 
-                div.id = "project" + json[i].id;
+                div.id = 'project' + json[i].id;
                 btn.appendChild(text);
                 btn.addEventListener('click', getSchema(json[i].id));
                 btn.addEventListener('click', getScripts(json[i].id));
                 div.appendChild(btn);
-                document.getElementById("projects_div").appendChild(div);          
-
+                document.getElementById('projects_div').appendChild(div);          
             }
         }
         else
             alert('Error:\n' + response);
     }
-
 
 function getScripts(project_id) {
     xhrWithAuth('GET', '/data/user/project/'+ project_id +'/scripts', false, onScripts);
@@ -56,22 +57,25 @@ function getScripts(project_id) {
 function onScripts(status, response) {
         if (status == 200) {
             var json = JSON.parse(response);
-            var p = document.createElement("P");
-            p.appendChild(document.createTextNode("Scripts"));
-            document.getElementById("project" + json[0].project_id).appendChild(p);
+            if (json.length == 0){
+                return;
+            }
+            var p = document.createElement('P');
+
+            p.appendChild(document.createTextNode('Scripts'));
+            document.getElementById('project' + json[0].project_id).appendChild(p);
 
             for (var i = 0; i<json.length; i++){
-                var div = document.createElement("DIV");
-                var li = document.createElement("LI");
-                var btn = document.createElement("BUTTON");
+                var div = document.createElement('DIV');
+                var li = document.createElement('LI');
+                var btn = document.createElement('BUTTON');
                 var text = document.createTextNode(json[i].name);
 
-                div.id = "script" + json[i].id;
+                div.id = 'script' + json[i].id;
                 li.appendChild(btn);
                 btn.appendChild(text);
                 div.appendChild(li);
-
-                document.getElementById("project" + json[i].project_id).appendChild(div);
+                document.getElementById('project' + json[i].project_id).appendChild(div);
             }
         }    
 }
@@ -83,16 +87,20 @@ function getSchema(project_id) {
 function onSchema(status, response) {
         if (status == 200) {
             var json = JSON.parse(response);
-            var p = document.createElement("P");
-            p.appendChild(document.createTextNode("Schema"));
-            document.getElementById("project" + json[0].project_id).appendChild(p);
+            if (json.length == 0){
+                return;
+            }
+            var p = document.createElement('P');
+
+            p.appendChild(document.createTextNode('Schema'));
+            document.getElementById('project' + json[0].project_id).appendChild(p);
 
             for (var i = 0; i<json.length; i++){
-                var li = document.createElement("LI");
-                var text = document.createTextNode(json[i].name + " : " + json[i].data_type);
+                var li = document.createElement('LI');
+                var text = document.createTextNode(json[i].name + ' : ' + json[i].data_type);
                 li.appendChild(text);
 
-                document.getElementById("project" + json[i].project_id).appendChild(li);       
+                document.getElementById('project' + json[i].project_id).appendChild(li);       
         }
     }
 
