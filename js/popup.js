@@ -1,120 +1,69 @@
-// Launch interactive dummy API call which will trigger login prompt if necessary
-function loginPrompt() {
-    xhrWithAuth('GET', '', true, function(status, response) {
-        if (status != null) {
-            document.getElementById('login').disabled = true;
-        }
-    });
-}
+var app = angular.module('extension', []);
+app.controller('main', function($scope) {
+	$scope.init = function() {
+	    $scope.scripts = false;
+	    $scope.logged_in = false;
+	    $scope.getProjects();
+	    $scope.loginPrompt();
+	    $scope.targeting = false;
+	}
 
-function getUserInfo() {
-    xhrWithAuth('GET', '/data/user', false, onUserInfo);
-}
+    // Launch interactive dummy API call which will trigger login prompt if necessary
+	$scope.loginPrompt = function() {
+	    xhrWithAuth('GET', '', true, function(status, response) {
+	        if (status != null) {
+	            $scope.logged_in = true;
+	            $scope.$digest();
+	        }
+	    });
+	}
 
-function onUserInfo(status, response) {
-    if (status == 200) {
-        alert('OK:\n' + response);
-    } else if (status == null) {
-        document.getElementById('login').disabled = false;
-        alert('Internal error:\n' + response);
-    } else {
-        alert('HTTP error: ' + status + '\n' + response);
-        document.getElementById('login').disabled = false;
-    }
-}
+	$scope.getUserInfo = function() {
+	    xhrWithAuth('GET', '/data/user', false, function(status, response) {
+		    alert('Hello this is for you');
+		});
+	}
 
-function getProjects() {
-    xhrWithAuth('GET', '/data/user/projects', false, onProjects);
-}
+	$scope.getProjects = function() {
+	    xhrWithAuth('GET', '/data/user/projects', false, function(status, response) {
+	    	$scope.projects = angular.fromJson(response);
+	    	$scope.project = {name: 'Select project', id: false, disabled: true};
+	    	$scope.projects.unshift($scope.project);
+	    	$scope.script = false;
+	    	$scope.schema = false;
+	    	$scope.$digest();
+	    });
+	}
 
-function onProjects(status, response) {
-        if (status == 200) {
-            var json = JSON.parse(response);
-            if (json.length == 0){
-                return;
-            }
-            for (var i = 0; i<json.length; i++){
-                var div = document.createElement('DIV');
-                div.id = 'project' + json[i].id;
-                var btn = document.createElement('BUTTON');
-                var text = document.createTextNode(json[i].name);
-                var prev_div = document.getElementById('project' + json[i].id);
+	$scope.getScripts = function() {
+		xhrWithAuth('GET', '/data/user/project/'+ $scope.project.id.toString() +'/scripts', false, function(status, response) {
+	    	$scope.scripts = angular.fromJson(response);
+	    	$scope.script = {name: 'Select script', id: false, disabled: true};
+	    	$scope.scripts.unshift($scope.script);
+	    	$scope.$digest();
+	    });
+	}
 
-                // remove existing DIV before reloading it
-                if (prev_div){
-                    prev_div.parentNode.removeChild(prev_div);
-                }
+	$scope.getSchema = function() {
+		xhrWithAuth('GET', '/data/user/project/'+ $scope.project.id.toString() +'/data_schemas', false, function(status, response) {
+	    	$scope.schema = angular.fromJson(response);
+	    	$scope.$digest();
+	    });
+	}
 
-                btn.appendChild(text);
-                btn.addEventListener('click', getSchema(json[i].id));
-                btn.addEventListener('click', getScripts(json[i].id));
-                div.appendChild(btn);
-                document.getElementById('projects_div').appendChild(div);          
-            }
-        }
-        else
-            alert('Error:\n' + response);
-    }
+	$scope.toggleTargeting = function() {
+		$scope.targeting = !$scope.targeting;
+		if ($scope.targeting) {
+			$('body').css('minWidth', '36px');
+			$('body').css('width', '36px');
+			$('body').css('minHeight', '30px');
+			$('body').css('height', '30px');
+		} else {
+			$('body').css('minWidth', '768px');
+			$('body').css('width', '768px');
+			$('body').css('minHeight', '300px');
+			$('body').css('height', '300px');
+		}
 
-function getScripts(project_id) {
-    xhrWithAuth('GET', '/data/user/project/'+ project_id +'/scripts', false, onScripts);
-    }
-
-function onScripts(status, response) {
-        if (status == 200) {
-            var json = JSON.parse(response);
-            if (json.length == 0){
-                return;
-            }
-            var p = document.createElement('P');
-
-            p.appendChild(document.createTextNode('Scripts'));
-            document.getElementById('project' + json[0].project_id).appendChild(p);
-
-            for (var i = 0; i<json.length; i++){
-                var div = document.createElement('DIV');
-                var li = document.createElement('LI');
-                var btn = document.createElement('BUTTON');
-                var text = document.createTextNode(json[i].name);
-
-                div.id = 'script' + json[i].id;
-                li.appendChild(btn);
-                btn.appendChild(text);
-                div.appendChild(li);
-                document.getElementById('project' + json[i].project_id).appendChild(div);
-            }
-        }    
-}
-
-function getSchema(project_id) {
-    xhrWithAuth('GET', '/data/user/project/'+ project_id +'/data_schemas', false, onSchema);
-    }
-
-function onSchema(status, response) {
-        if (status == 200) {
-            var json = JSON.parse(response);
-            if (json.length == 0){
-                return;
-            }
-            var p = document.createElement('P');
-
-            p.appendChild(document.createTextNode('Schema'));
-            document.getElementById('project' + json[0].project_id).appendChild(p);
-
-            for (var i = 0; i<json.length; i++){
-                var li = document.createElement('LI');
-                var text = document.createTextNode(json[i].name + ' : ' + json[i].data_type);
-                li.appendChild(text);
-
-                document.getElementById('project' + json[i].project_id).appendChild(li);       
-        }
-    }
-
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('login').addEventListener('click', loginPrompt);
-    document.getElementById('user_info').addEventListener('click', getUserInfo);
-    document.getElementById('projects').addEventListener('click', getProjects);
-
+	}
 });

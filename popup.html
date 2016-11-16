@@ -3,23 +3,88 @@
 <html>
   
   <head>
-    <title>Popoup</title>
+    <title>WebX Tools</title>
     <script src="js/oauth2_wrapper.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
     <script src="js/popup.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
   </head>
   
-  <body style="min-width:300px; min-height: 300px;">
-    <h1>WebX</h1>
-    <div class="buttons">
-      <br>
-      <button id="login">Log in</button>
-      <button id="user_info">User info</button>
-      <button id="projects">My projects</button>
+  <body ng-app="extension" ng-controller="main" ng-init="init()">
+    <div ng-hide="targeting">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="navbar-xs">
+            <div class="navbar-primary">
+              <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <span class="navbar-brand">WebX Tools</span>
+                  </div>
+                  <ul class="nav navbar-nav">
+                    <li><a ng-show="!logged_in" ng-click="loginPrompt()" href="#">Log in</a></li>
+                    <li><a ng-click="getUserInfo()" href="#">User info</a></li>
+                    <li><a ng-click="getProjects()" href="#">Refresh</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label>Select project:</label>
+            {{ logged_in }}
+            <select 
+              class="form-control"
+              ng-model="project"
+              ng-options="project as project.name disable when project.disabled for project in projects track by project.id"
+              ng-change="getScripts(); getSchema()">
+            </select>
+            <div ng-show="project.id">
+              <label>Select script:</label>
+              <select 
+                class="form-control"
+                ng-model="script"
+                ng-options="script as script.name disable when script.disabled for script in scripts track by script.id">
+              </select>
+            </div>
+          </div>
+          <div class="panel panel-default" ng-show="script.id">
+            <div class="panel-body">
+              <h1> {{ script.name }} </h1>
+              <p> {{ script.created_at }} </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div ng-show="project.id">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Type</th>
+                  <th>Target</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="field in schema">
+                  <td> {{field.name}} </td>
+                  <td> {{field.data_type}} </td>
+                  <td> <span class="btn btn-info" ng-click="toggleTargeting()">&#9673;</span> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="projects_div">
-      <h3>Projects</h3>
-      
+    <div ng-show="targeting">
+      <span class="btn btn-info" ng-click="toggleTargeting()">&#5130;</span>
     </div>
   </body>
-
 </html>
