@@ -1,14 +1,17 @@
 var app = angular.module('extension', []);
 app.controller('main', function($scope) {
     $scope.init = function() {
-        if(localStorage.logged_in == 'true') {
-            $scope.loginPrompt();  // In case of corrupted cookies
-            $scope.logged_in = true;
-            loadCookies();
-        }
-        else {
-            $scope.logged_in = false;
-        }
+        $scope.loading = true;
+        apiGet('', function(status, response) {
+            if (status != null) {
+                $scope.logged_in = true;
+                loadCookies();
+            } else {
+                $scope.logged_in = false;
+            }
+            $scope.loading = false;
+            $scope.$digest();
+        });
     }
 
     function loadCookies() {
@@ -50,7 +53,7 @@ app.controller('main', function($scope) {
     }
 
     $scope.getProjects = function() {
-        xhrWithAuth('GET', '/data/user/projects', false, function(status, response) {
+        apiGet('/data/user/projects', function(status, response) {
             $scope.projects = angular.fromJson(response);
             $scope.project = {name: 'Select project', id: false, disabled: true};
             $scope.projects.unshift($scope.project);
@@ -69,7 +72,7 @@ app.controller('main', function($scope) {
     }
 
     $scope.getScripts = function() {
-        xhrWithAuth('GET', '/data/user/project/' + $scope.project.id.toString() + '/scripts', false, function(status, response) {
+        apiGet('GET', '/data/user/project/' + $scope.project.id.toString() + '/scripts', function(status, response) {
             $scope.scripts = angular.fromJson(response);
             $scope.script = {name: 'Select script', id: false, disabled: true};
             $scope.scripts.unshift($scope.script);
@@ -82,7 +85,7 @@ app.controller('main', function($scope) {
     }
 
     $scope.getSchema = function() {
-        xhrWithAuth('GET', '/data/user/project/' + $scope.project.id.toString() + '/data_schemas', false, function(status, response) {
+        apiGet('/data/user/project/' + $scope.project.id.toString() + '/data_schemas', function(status, response) {
             $scope.schema = angular.fromJson(response);
 
             localStorage.schema = angular.toJson($scope.schema);
