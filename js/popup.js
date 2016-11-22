@@ -2,7 +2,7 @@ var app = angular.module('extension', []);
 app.controller('main', function($scope) {
     $scope.init = function() {
         if(localStorage.logged_in == 'true') {
-            $scope.loginPrompt(); //in case of corrupted cookies
+            $scope.loginPrompt();  // In case of corrupted cookies
             $scope.logged_in = true;
             loadCookies();
         }
@@ -69,7 +69,7 @@ app.controller('main', function($scope) {
     }
 
     $scope.getScripts = function() {
-        xhrWithAuth('GET', '/data/user/project/'+ $scope.project.id.toString() +'/scripts', false, function(status, response) {
+        xhrWithAuth('GET', '/data/user/project/' + $scope.project.id.toString() + '/scripts', false, function(status, response) {
             $scope.scripts = angular.fromJson(response);
             $scope.script = {name: 'Select script', id: false, disabled: true};
             $scope.scripts.unshift($scope.script);
@@ -82,7 +82,7 @@ app.controller('main', function($scope) {
     }
 
     $scope.getSchema = function() {
-        xhrWithAuth('GET', '/data/user/project/'+ $scope.project.id.toString() +'/data_schemas', false, function(status, response) {
+        xhrWithAuth('GET', '/data/user/project/' + $scope.project.id.toString() + '/data_schemas', false, function(status, response) {
             $scope.schema = angular.fromJson(response);
 
             localStorage.schema = angular.toJson($scope.schema);
@@ -112,7 +112,6 @@ app.controller('main', function($scope) {
             $('body').css('minHeight', '300px');
             $('body').css('height', '300px');
         }
-
     }
 
     $scope.selectProject = function() {
