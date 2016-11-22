@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "minimum_chrome_version": "33",
+  "key": "odfjpnhadepggnnihnhangccdfjophjo",
 
   "name": "Webx",
   "description": "Extension for Webx web extraction.",

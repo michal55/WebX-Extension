@@ -23,6 +23,6 @@ Integration with Webx
   - run rake db:seed
 
 TL;DR
-  - popup.html contains the extension grafic
+  - popup.html contains the extension graphic
   - popup.js logic 
 
