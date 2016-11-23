@@ -38,21 +38,27 @@
       <div class="row" ng-show="logged_in">
         <div class="col-xs-3">
           <div ng-show="projects" class="form-group">
-            <label>Select project: </label>
-            <select 
-              class="form-control"
-              ng-model="project"
-              ng-options="project as project.name disable when project.disabled for project in projects track by project.id"
-              ng-change="selectProject()">
-            </select>
-            <div ng-show="project.id">
-              <label>Select script:</label>
+            <div ng-show="projects.length > 1">
+              <label>Select project: </label>
               <select 
                 class="form-control"
-                ng-model="script"
-                ng-options="script as script.name disable when script.disabled for script in scripts track by script.id"
-                ng-change="selectScript()">
+                ng-model="project"
+                ng-options="project as project.name disable when project.disabled for project in projects track by project.id"
+                ng-change="selectProject()">
               </select>
+            </div>
+            <span ng-hide="projects.length > 1"> No projects! <a target="_blank" href="http://127.0.0.1:3000/webx/projects/new"> Add first</a> </span>
+            <div ng-show="project.id && scripts">
+              <div ng-show="scripts.length > 1">
+                <label>Select script:</label>
+                <select 
+                  class="form-control"
+                  ng-model="script"
+                  ng-options="script as script.name disable when script.disabled for script in scripts track by script.id"
+                  ng-change="selectScript()">
+                </select>
+              </div>
+              <span ng-hide="scripts.length > 1" class="padded"> No scripts! <a target="_blank" href="http://127.0.0.1:3000/webx/projects/1/scripts/new"> Add first</a> </span>
             </div>
           </div>
           <div class="panel panel-default" ng-show="script.id">
