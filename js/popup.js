@@ -72,7 +72,7 @@ app.controller('main', function($scope) {
     }
 
     $scope.getScripts = function() {
-        apiGet('GET', '/data/user/project/' + $scope.project.id.toString() + '/scripts', function(status, response) {
+        apiGet('/data/user/project/' + $scope.project.id.toString() + '/scripts', function(status, response) {
             $scope.scripts = angular.fromJson(response);
             $scope.script = {name: 'Select script', id: false, disabled: true};
             $scope.scripts.unshift($scope.script);
