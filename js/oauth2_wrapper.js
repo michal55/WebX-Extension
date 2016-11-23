@@ -66,3 +66,19 @@ function xhrWithAuth(method, url, interactive, callback) {
         callback(this.status, this.response);
     }
 }
+
+function apiGet(url, callback) {
+    xhrWithAuth('GET', url, false, callback);
+}
+
+function apiPost(url, callback) {
+    xhrWithAuth('POST', url, false, callback);
+}
+
+function apiDelete(url, callback) {
+    xhrWithAuth('DELETE', url, false, callback);
+}
+
+function apiPut(url, callback) {
+    xhrWithAuth('PUT', url, false, callback);
+}
