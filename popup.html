@@ -69,20 +69,23 @@
           </div>
         </div>
         <div class="col-xs-9">
-          <div ng-show="project.id">
+          <div ng-show="xpaths">
             <table class="table table-hover">
+              <input 
+                ng-model="xpaths.url"
+                ng-change="changeScript()"
+                placeholder="Source page url" 
+                class="form-control">
               <thead>
                 <tr>
                   <th>Field</th>
-                  <th>Type</th>
-                  <th ng-show="script.id" >Target</th>
+                  <th>Target</th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="field in schema">
+                <tr ng-repeat="field in xpaths.data">
                   <td> {{ field.name }} </td>
-                  <td> {{ field.data_type }} </td>
-                  <td ng-show="script.id">
+                  <td>
                     <div class="input-group">
                       <span 
                         class="input-group-addon" 
@@ -90,7 +93,7 @@
                         &#9673;
                       </span>
                       <input 
-                        ng-model="field.xpath"
+                        ng-model="field.value"
                         ng-change="changeScript()"
                         class="form-control">
                     </div>
@@ -99,8 +102,8 @@
               </tbody>
             </table>
             <button 
-              ng-show="script.id" 
               ng-click="saveScript()"
+              ng-disabled="saving"
               class="btn btn-primary">
               <span class="glyphicon glyphicon-floppy-disk"></span>
               Save script

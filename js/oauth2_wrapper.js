@@ -69,18 +69,18 @@ function xhrWithAuth(method, url, interactive, callback, params) {
     }
 }
 
-function apiGet(url, callback) {
-    xhrWithAuth('GET', url, false, callback, null);
+function apiGet(url, callback, params) {
+    xhrWithAuth('GET', url, false, callback, params);
 }
 
-function apiPost(url, params) {
-    xhrWithAuth('POST', url, false, function() { /* handle errors... */}, params);
+function apiPost(url, callback, params) {
+    xhrWithAuth('POST', url, false, callback, params);
 }
 
-function apiDelete(url, callback) {
-    xhrWithAuth('DELETE', url, false, callback, null);
+function apiDelete(url, callback, params) {
+    xhrWithAuth('DELETE', url, false, callback, params);
 }
 
-function apiPut(url, params) {
-    xhrWithAuth('PUT', url, false, function() { /* handle errors... */}, params);
+function apiPut(url, callback, params) {
+    xhrWithAuth('PUT', url, false, callback, params);
 }
