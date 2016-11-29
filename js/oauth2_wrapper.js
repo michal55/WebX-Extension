@@ -27,8 +27,9 @@ function extractArgFromUrl(url, arg) {
  * @param {function} callback - (status, response)
  *                            - status - HTTP status or null on internal error
  *                            - response - HTTP response or internal error message
+ * @param {String} params - Optional, parameters in JSON format to send with put and post
  */
-function xhrWithAuth(method, url, interactive, callback) {
+function xhrWithAuth(method, url, interactive, callback, params) {
     var access_token;
 
     getToken();
@@ -58,8 +59,9 @@ function xhrWithAuth(method, url, interactive, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open(method, URL_BASE + '/api' + url);
         xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+        xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = requestComplete;
-        xhr.send();
+        xhr.send(params);
     }
 
     function requestComplete() {
@@ -68,17 +70,17 @@ function xhrWithAuth(method, url, interactive, callback) {
 }
 
 function apiGet(url, callback) {
-    xhrWithAuth('GET', url, false, callback);
+    xhrWithAuth('GET', url, false, callback, null);
 }
 
-function apiPost(url, callback) {
-    xhrWithAuth('POST', url, false, callback);
+function apiPost(url, params) {
+    xhrWithAuth('POST', url, false, function() { /* handle errors... */}, params);
 }
 
 function apiDelete(url, callback) {
-    xhrWithAuth('DELETE', url, false, callback);
+    xhrWithAuth('DELETE', url, false, callback, null);
 }
 
-function apiPut(url, callback) {
-    xhrWithAuth('PUT', url, false, callback);
+function apiPut(url, params) {
+    xhrWithAuth('PUT', url, false, function() { /* handle errors... */}, params);
 }

@@ -84,6 +84,20 @@ app.controller('main', function($scope) {
         });
     }
 
+    $scope.getScriptData = function() {
+        apiGet('/data/user/project/' + $scope.project.id.toString() + '/scripts/' + $scope.script.id, function(status, response) {
+            var xpaths = angular.fromJson(response);
+            for (var i in xpaths.data) {
+                for (var j in $scope.schema) {
+                    if ($scope.schema[j].name == xpaths.data[i].name)
+                        $scope.schema[j].xpath = xpaths.data[i].value;
+                }
+            }
+
+            $scope.$digest();
+        });
+    }
+
     $scope.getSchema = function() {
         apiGet('/data/user/project/' + $scope.project.id.toString() + '/data_schemas', function(status, response) {
             $scope.schema = angular.fromJson(response);
@@ -99,7 +113,14 @@ app.controller('main', function($scope) {
     }
 
     $scope.saveScript = function() {
-        console.log(angular.toJson($scope.schema));
+        var data = {data: [], url: 'example.com'};
+        for (var i in $scope.schema) {
+            data.data.push({name: $scope.schema[i].name, value: $scope.schema[i].xpath});
+        }
+
+        console.log(data);
+        apiPut('/data/user/project/' + $scope.project.id.toString() + '/scripts/' + $scope.script.id.toString(),
+            angular.toJson(data));
     }
 
     $scope.toggleTargeting = function() {
@@ -125,5 +146,6 @@ app.controller('main', function($scope) {
 
     $scope.selectScript = function() {
         localStorage.script = angular.toJson($scope.script);
+        $scope.getScriptData();
     }
 });
