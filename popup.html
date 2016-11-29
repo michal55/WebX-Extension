@@ -2,14 +2,14 @@
 <html>
   <head>
     <title>WebX Tools</title>
-    <script src="js/oauth2_wrapper.js"></script>
+    <script src="js/oauth2_helper.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/popup.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
   </head>
-  
+
   <body ng-app="extension" ng-controller="main" ng-init="init()" ngcloak>
     <div ng-show="loading"> <h1 style="text-align: center; padding: 150px"> LOADING...</h1> </div>
     <div ng-hide="targeting || loading">
@@ -40,7 +40,7 @@
           <div ng-show="projects" class="form-group">
             <div ng-show="projects.length > 1">
               <label>Select project: </label>
-              <select 
+              <select
                 class="form-control"
                 ng-model="project"
                 ng-options="project as project.name disable when project.disabled for project in projects track by project.id"
@@ -51,7 +51,7 @@
             <div ng-show="project.id && scripts">
               <div ng-show="scripts.length > 1">
                 <label>Select script:</label>
-                <select 
+                <select
                   class="form-control"
                   ng-model="script"
                   ng-options="script as script.name disable when script.disabled for script in scripts track by script.id"
@@ -87,12 +87,12 @@
                   <td> {{ field.name }} </td>
                   <td>
                     <div class="input-group">
-                      <span 
-                        class="input-group-addon" 
+                      <span
+                        class="input-group-addon"
                         ng-click="toggleTargeting()">
                         &#9673;
                       </span>
-                      <input 
+                      <input
                         ng-model="field.value"
                         ng-change="changeScript()"
                         class="form-control">
@@ -101,7 +101,7 @@
                 </tr>
               </tbody>
             </table>
-            <button 
+            <button
               ng-click="saveScript()"
               ng-disabled="saving"
               class="btn btn-primary">
