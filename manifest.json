@@ -13,10 +13,13 @@
     "default_title": "Webx"
   },
 
-  "devtools_page": "devtools.html",
+  "devtools_page": "devtools_init.html",
 
   "background": {
-    "scripts": ["js/oauth2_wrapper.js"]
+    "scripts": [
+      "js/oauth2_wrapper.js",
+      "js/background_dispatcher.js"
+    ]
   },
 
   "permissions": [

@@ -68,11 +68,3 @@ function xhrWithAuth(method, url, interactive, callback, params) {
         callback(this.status, this.response);
     }
 }
-
-chrome.runtime.onMessage.addListener(function(request, sender, callback) {
-    xhrWithAuth(request.method, request.url, request.interactive,
-        function(status, response) {
-            callback({status: status, response: response});
-        }, request.params);
-    return true;
-});

@@ -1,7 +1,8 @@
-// Send message to oauth2_wrapper.js background script to perform
-// chrome.identity.launchWebAuthFlow API call
+// Collection of helper functions for chrome.runtime.sendMessage calls
+
+// xhrWithAuth
 function xhrWithAuth(method, url, interactive, callback, params) {
-    chrome.runtime.sendMessage({method: method, url: url, interactive: interactive, params: params},
+    chrome.runtime.sendMessage({xhrWithAuth: {method: method, url: url, interactive: interactive, params: params}},
         function(response) {
             callback(response.status, response.response);
         });
@@ -21,4 +22,9 @@ function apiDelete(url, callback, params) {
 
 function apiPut(url, callback, params) {
     xhrWithAuth('PUT', url, false, callback, params);
+}
+
+// setBadgeText
+function setBadgeText(text) {
+    chrome.runtime.sendMessage({setBadgeText: {text: text}});
 }
