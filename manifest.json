@@ -24,7 +24,8 @@
 
   "permissions": [
     "identity",
-    "http://localhost:3000/webx/api/*"
+    "http://localhost:3000/webx/api/*",
+    "tabs", "http://*/", "https://*/"
   ],
 
   "oauth2": {
