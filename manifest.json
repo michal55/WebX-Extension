@@ -6,11 +6,20 @@
   "name": "Webx",
   "description": "Extension for Webx web extraction.",
   "version": "0.0.1",
-  
+
   "browser_action": {
     "default_icon": "image/icon.png",
     "default_popup": "popup.html",
     "default_title": "Webx"
+  },
+
+  "devtools_page": "devtools_init.html",
+
+  "background": {
+    "scripts": [
+      "js/oauth2_wrapper.js",
+      "js/background_dispatcher.js"
+    ]
   },
 
   "permissions": [

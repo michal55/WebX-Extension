@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WebX Tools</title>
+    <script src="js/background_helpers.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/devtools.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+  </head>
+
+  <body ng-app="extension" ng-controller="main" ng-init="init()" ngcloak>
+    <div ng-show="loading"> <h1 style="text-align: center; padding: 150px"> LOADING...</h1> </div>
+    <div ng-hide="targeting || loading">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="navbar-xs">
+            <div class="navbar-primary">
+              <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <span class="navbar-brand">WebX Tools</span>
+                  </div>
+                  <ul class="nav navbar-nav navbar-left ">
+                    <li><a ng-show="logged_in" ng-click="getProjects()" href="#">Refresh</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-show="!logged_in">
+        <h1 style="text-align: center; padding: 150px">Please log in by using icon near address bar</h1>
+      </div>
+      <div class="row" ng-show="logged_in">
+        <div class="col-xs-3">
+          <div ng-show="projects" class="form-group">
+            <div ng-show="projects.length > 1">
+              <label>Select project: </label>
+              <select
+                class="form-control"
+                ng-model="project"
+                ng-options="project as project.name disable when project.disabled for project in projects track by project.id"
+                ng-change="selectProject()">
+              </select>
+            </div>
+            <span ng-hide="projects.length > 1"> No projects! <a target="_blank" href="http://127.0.0.1:3000/webx/projects/new"> Add first</a> </span>
+            <div ng-show="project.id && scripts">
+              <div ng-show="scripts.length > 1">
+                <label>Select script:</label>
+                <select
+                  class="form-control"
+                  ng-model="script"
+                  ng-options="script as script.name disable when script.disabled for script in scripts track by script.id"
+                  ng-change="selectScript()">
+                </select>
+              </div>
+              <span ng-hide="scripts.length > 1" class="padded"> No scripts! <a target="_blank" href="http://127.0.0.1:3000/webx/projects/1/scripts/new"> Add first</a> </span>
+            </div>
+          </div>
+          <div class="panel panel-default" ng-show="script.id">
+            <div class="panel-body">
+              <h1> {{ script.name }} </h1>
+              <p> {{ script.created_at }} </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-9">
+          <div ng-show="xpaths">
+            <table class="table table-hover">
+              <input
+                ng-model="xpaths.url"
+                ng-change="changeScript()"
+                placeholder="Source page url"
+                class="form-control">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Target</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="field in xpaths.data">
+                  <td> {{ field.name }} </td>
+                  <td>
+                    <div class="input-group">
+                      <span
+                        class="input-group-addon"
+                        ng-click="toggleTargeting()">
+                        &#9673;
+                      </span>
+                      <input
+                        ng-model="field.value"
+                        ng-change="changeScript()"
+                        class="form-control">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <button
+              ng-click="saveScript()"
+              ng-disabled="saving"
+              class="btn btn-primary">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+              Save script
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-show="targeting">
+      <span class="btn btn-info" ng-click="toggleTargeting()">&#5130;</span>
+    </div>
+  </body>
+</html>
