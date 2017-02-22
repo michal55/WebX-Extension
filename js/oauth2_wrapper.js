@@ -1,5 +1,3 @@
-var URL_BASE = 'http://localhost:3000/webx';
-
 /**
  * Extracts specified argument value from url
  * @param {String} url - URL in https://a.b/c#arg1=val1&arg2=val2 format
@@ -32,11 +30,14 @@ function extractArgFromUrl(url, arg) {
 function xhrWithAuth(method, url, interactive, callback, params) {
     var access_token;
 
-    getToken();
 
-    function getToken() {
+    getServerURL(function(url_base) {
+        getToken(url_base);
+    });
+
+    function getToken(url_base) {
         chrome.identity.launchWebAuthFlow({
-                'url' : URL_BASE + '/oauth/authorize?client_id=' + chrome.runtime.getManifest().oauth2.client_id +
+                'url' : url_base + '/oauth/authorize?client_id=' + chrome.runtime.getManifest().oauth2.client_id +
                     '&redirect_uri=' + encodeURIComponent(chrome.identity.getRedirectURL()) + '&response_type=token&scope=',
                 'interactive' : interactive
             },
@@ -49,15 +50,15 @@ function xhrWithAuth(method, url, interactive, callback, params) {
                     if (access_token == null) {
                         callback(null, 'Unable to extract access token from redirect url: ' + redirect_url);
                     } else {
-                        requestStart();
+                        requestStart(url_base);
                     }
                 }
             });
     }
 
-    function requestStart() {
+    function requestStart(url_base) {
         var xhr = new XMLHttpRequest();
-        xhr.open(method, URL_BASE + '/api' + url);
+        xhr.open(method, url_base + '/api' + url);
         xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = requestComplete;

@@ -1,13 +1,10 @@
 var app = angular.module('extension', []);
 app.controller('main', function($scope) {
     $scope.init = function() {
-        // Default options
-        $scope.DEFAULT_SERVER_URL = 'http://localhost:3000/webx';
-
         $scope.loading = true;
 
         chrome.storage.sync.get({
-            server_url: $scope.DEFAULT_SERVER_URL
+            server_url: default_options.DEFAULT_SERVER_URL
         }, function(items) {
             $scope.server_url = items.server_url;
             $scope.loading = false;

@@ -2,30 +2,35 @@ var app = angular.module('extension', []);
 app.controller('main', function($scope) {
     $scope.init = function() {
         $scope.loading = true;
-        apiGet(
-            '/login_check',
-            function(status, response) {
-                if (status != null) {
-                    $scope.logged_in = true;
-                    loadCookies();
-                } else {
-                    $scope.logged_in = false;
-                    // At this point, user is shown 'Please log in by using icon near address bar' message,
-                    // just an attempt to make the icon more noticeable
-                    for (var i = 0; i < 10; ++i) {
-                        // Why is it wrapped in a function? Idk but it doesn't work otherwise
-                        // http://stackoverflow.com/a/32567596/6022799
-                        (function(i) {
-                            setTimeout(function () {
-                                setBadgeText(i % 2 ? '' : '...');
-                            }, i * 1000);
-                        }(i));
+
+        getServerURL(function(url_base) {
+            $scope.url_base = url_base;
+
+            apiGet(
+                '/login_check',
+                function(status, response) {
+                    if (status != null) {
+                        $scope.logged_in = true;
+                        loadCookies();
+                    } else {
+                        $scope.logged_in = false;
+                        // At this point, user is shown 'Please log in by using icon near address bar' message,
+                        // just an attempt to make the icon more noticeable
+                        for (var i = 0; i < 10; ++i) {
+                            // Why is it wrapped in a function? Idk but it doesn't work otherwise
+                            // http://stackoverflow.com/a/32567596/6022799
+                            (function(i) {
+                                setTimeout(function () {
+                                    setBadgeText(i % 2 ? '' : '...');
+                                }, i * 1000);
+                            }(i));
+                        }
                     }
+                    $scope.loading = false;
+                    $scope.$digest();
                 }
-                $scope.loading = false;
-                $scope.$digest();
-            }
-        );
+            );
+        });
     };
 
     function loadCookies() {

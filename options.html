@@ -4,6 +4,7 @@
   <title>WebX Options</title>
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
+    <script src="js/options_helper.js"></script>
     <script src="js/options.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
@@ -15,7 +16,7 @@
       <div class="row">
         <div class="col-xs-3">
           <select ng-model="server_url" ng-change="optionsChanged()" class="form-control">
-            <option>{{ DEFAULT_SERVER_URL }}</option>
+            <option>http://localhost:3000/webx</option>
             <option>http://team16-16.studenti.fiit.stuba.sk/webx</option>
           </select>
         </div>
