@@ -20,6 +20,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 		for (var i = 0; i < ae.length; i++) {
 			ae[i].removeEventListener('click', arguments.callee);
 		}
+        //$('*').unbind('hover');
     	event.preventDefault();
     	event.stopPropagation();
 
@@ -70,6 +71,22 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 	for (var i = 0; i < ae.length; i++) {
 		ae[i].addEventListener('click', handler);
 	}
+    $('*').hover(
+    function(e){
+        $(this).css('border', '1px solid black');
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    },function(e){
+        $(this).css('border', 'none');
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }).click(function(){
+    $('*').unbind('mouseenter mouseleave');
+    $('*').css('border', 'none');
+    //$('*').unbind('hover');
+    });
 }
 
 function xpathArray(parent, exp) {
