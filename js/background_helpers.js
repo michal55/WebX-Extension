@@ -8,6 +8,11 @@ function xhrWithAuth(method, url, interactive, callback, params) {
         });
 }
 
+function get_xpath(callback){
+   chrome.runtime.sendMessage({get_xpath: {}});
+
+}
+
 function apiGet(url, callback, params) {
     xhrWithAuth('GET', url, false, callback, params);
 }

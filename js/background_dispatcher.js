@@ -13,6 +13,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     } else if (request.setBadgeText) {
         chrome.browserAction.setBadgeText({text: request.setBadgeText.text});
         return true;
+
+    } else if (request.get_xpath) {
+	getxpath();
+	return true
     }
 
     return true;

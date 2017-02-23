@@ -86,11 +86,11 @@
                   <td> {{ field.name }} </td>
                   <td>
                     <div class="input-group">
-                      <span
-                        class="input-group-addon"
-                        ng-click="toggleTargeting()">
+                      <button
+                        class="btn btn-primary"
+                        ng-click="toggleTargeting(field.name)">
                         &#9673;
-                      </span>
+                      </button>
                       <input
                         ng-model="field.value"
                         ng-change="changeScript()"
@@ -100,7 +100,6 @@
                 </tr>
               </tbody>
             </table>
-	    <div id='msg' style="width:300px">...</div>
             <button
               ng-click="saveScript()"
               ng-disabled="saving"
