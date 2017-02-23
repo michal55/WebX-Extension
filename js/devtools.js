@@ -133,13 +133,7 @@ app.controller('main', function($scope) {
     };
 
     $scope.toggleTargeting = function(name) {
-        console.log(name);
-        console.log("name");
-        console.log("xpaths");
-        console.log($scope.xpaths);
-        console.log($scope.xpaths.data);
         chrome.storage.local.set({ "newxpath_name": name }, function(){});
-    
         get_xpath();      
         };
 
