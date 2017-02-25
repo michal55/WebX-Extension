@@ -27,9 +27,10 @@
 
   "permissions": [
     "identity",
-    "http://localhost:3000/webx/api/*",
-    "tabs", "http://*/", "https://*/","storage"
-    "http://team16-16.studenti.fiit.stuba.sk/webx/api/*"
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*"
   ],
 
   "oauth2": {
