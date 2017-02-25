@@ -6,30 +6,25 @@ app.controller('main', function($scope) {
         getServerURL(function(url_base) {
             $scope.url_base = url_base;
 
-            apiGet(
-                '/login_check',
-                function(status, response) {
-                    if (status != null) {
-                        $scope.logged_in = true;
-                        loadCookies();
-                    } else {
-                        $scope.logged_in = false;
-                        // At this point, user is shown 'Please log in by using icon near address bar' message,
-                        // just an attempt to make the icon more noticeable
-                        for (var i = 0; i < 10; ++i) {
-                            // Why is it wrapped in a function? Idk but it doesn't work otherwise
-                            // http://stackoverflow.com/a/32567596/6022799
-                            (function(i) {
-                                setTimeout(function () {
-                                    setBadgeText(i % 2 ? '' : '...');
-                                }, i * 1000);
-                            }(i));
-                        }
+            uiLoginCheck($scope, function(status, response) {
+                if (status != null) {
+                    loadCookies();
+                } else {
+                    // At this point, user is shown 'Please log in by using icon near address bar' message,
+                    // just an attempt to make the icon more noticeable
+                    for (var i = 0; i < 10; ++i) {
+                        // Why is it wrapped in a function? Idk but it doesn't work otherwise
+                        // http://stackoverflow.com/a/32567596/6022799
+                        (function(i) {
+                            setTimeout(function () {
+                                setBadgeText(i % 2 ? '' : '...');
+                            }, i * 1000);
+                        }(i));
                     }
-                    $scope.loading = false;
-                    $scope.$digest();
                 }
-            );
+
+                $scope.loading = false;
+            });
         });
     };
 
@@ -40,6 +35,7 @@ app.controller('main', function($scope) {
         $scope.script = angular.fromJson(localStorage.script);
         $scope.xpaths = angular.fromJson(localStorage.xpaths);
     }
+
     chrome.storage.onChanged.addListener(function(changes, namespace) {
         for (key in changes) {
             var storageChange = changes[key];
@@ -52,12 +48,10 @@ app.controller('main', function($scope) {
                             $scope.$digest();
                         }
                     }
-    
-                });            
+                });
             }
         }
-      });
-
+    });
 
     $scope.getProjects = function() {
         apiGet(
@@ -132,7 +126,7 @@ app.controller('main', function($scope) {
 
     $scope.toggleTargeting = function(name) {
         chrome.storage.local.set({ "newxpath_name": name }, function() {});
-        get_xpath();      
+        get_xpath();
         };
 
     $scope.selectProject = function() {
@@ -145,5 +139,20 @@ app.controller('main', function($scope) {
         localStorage.script = angular.toJson($scope.script);
         $scope.getScriptData();
     };
-});
 
+    $scope.loginPrompt = function() {
+        uiLoginPrompt($scope, function() { $scope.getProjects(); });
+    };
+
+    $scope.logout = function() {
+        uiLogout($scope);
+    };
+
+    $scope.refresh = function() {
+        uiLoginCheck($scope, function(status, response) {
+            if (status != null) {
+                $scope.getProjects();
+            }
+        });
+    }
+});

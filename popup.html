@@ -5,6 +5,7 @@
     <script src="js/background_helpers.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
+    <script src="js/ui_shared.js"></script>
     <script src="js/popup.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
@@ -31,6 +32,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row" ng-show="!logged_in">
+        <h1 style="text-align: center; padding: 150px">Please log in to continue</h1>
       </div>
       <div class="row" ng-show="logged_in">
         <h1 style="text-align: center; padding: 150px">Press F12 and navigate to WebX tab</h1>
