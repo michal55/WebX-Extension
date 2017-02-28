@@ -18,13 +18,15 @@
   "background": {
     "scripts": [
       "js/oauth2_wrapper.js",
-      "js/background_dispatcher.js"
+      "js/background_dispatcher.js",
+      "js/xpath.js"
     ]
   },
 
   "permissions": [
     "identity",
-    "http://localhost:3000/webx/api/*"
+    "http://localhost:3000/webx/api/*",
+    "tabs", "http://*/", "https://*/","storage"
   ],
 
   "oauth2": {

@@ -35,6 +35,24 @@ app.controller('main', function($scope) {
         $scope.script = angular.fromJson(localStorage.script);
         $scope.xpaths = angular.fromJson(localStorage.xpaths);
     }
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+        for (key in changes) {
+            var storageChange = changes[key];
+            if (key == "newxpath"){
+                chrome.storage.local.get('newxpath_name',function(result){
+                    var name = result.newxpath_name;
+                    for (i in $scope.xpaths.data) {
+                        if ($scope.xpaths.data[i].name == name){
+                            $scope.xpaths.data[i].value = storageChange.newValue;
+                            $scope.$digest();
+                        }
+                    }
+    
+                });            
+            }
+        }
+      });
+
 
     $scope.getProjects = function() {
         apiGet(
@@ -107,20 +125,10 @@ app.controller('main', function($scope) {
         );
     };
 
-    $scope.toggleTargeting = function() {
-        $scope.targeting = !$scope.targeting;
-        if ($scope.targeting) {
-            $('body').css('minWidth', '36px');
-            $('body').css('width', '36px');
-            $('body').css('minHeight', '30px');
-            $('body').css('height', '30px');
-        } else {
-            $('body').css('minWidth', '768px');
-            $('body').css('width', '768px');
-            $('body').css('minHeight', '300px');
-            $('body').css('height', '300px');
-        }
-    };
+    $scope.toggleTargeting = function(name) {
+        chrome.storage.local.set({ "newxpath_name": name }, function() {});
+        get_xpath();      
+        };
 
     $scope.selectProject = function() {
         localStorage.project = angular.toJson($scope.project);
@@ -131,5 +139,6 @@ app.controller('main', function($scope) {
         $scope.xpaths = false;
         localStorage.script = angular.toJson($scope.script);
         $scope.getScriptData();
-    }
+    };
 });
+
