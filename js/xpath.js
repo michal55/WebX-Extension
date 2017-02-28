@@ -12,9 +12,8 @@ function getxpath() {
                                  });
     } catch (err) {
         console.log(err.message);
-                  }
+        }
     });
    return true;
 }
 
-//document.getElementById('button1').addEventListener('click', getxpath);

@@ -15,8 +15,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
 
     } else if (request.get_xpath) {
-	getxpath();
-	return true
+    getxpath();
+    return true
     }
 
     return true;

@@ -50,13 +50,6 @@ app.controller('main', function($scope) {
     
                 });            
             }
-            //example :
-            //console.log('Storage key "%s" in namespace "%s" changed. ' +
-            //          'Old value was "%s", new value is "%s".',
-            //          key,
-            //          namespace,
-            //          storageChange.oldValue,
-            //          storageChange.newValue);
         }
       });
 
@@ -133,7 +126,7 @@ app.controller('main', function($scope) {
     };
 
     $scope.toggleTargeting = function(name) {
-        chrome.storage.local.set({ "newxpath_name": name }, function(){});
+        chrome.storage.local.set({ "newxpath_name": name }, function() {});
         get_xpath();      
         };
 
