@@ -14,9 +14,11 @@
   },
 
   "devtools_page": "devtools_init.html",
+  "options_page": "options.html",
 
   "background": {
     "scripts": [
+      "js/options_helper.js",
       "js/oauth2_wrapper.js",
       "js/background_dispatcher.js",
       "js/xpath.js"
@@ -25,8 +27,10 @@
 
   "permissions": [
     "identity",
-    "http://localhost:3000/webx/api/*",
-    "tabs", "http://*/", "https://*/","storage"
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*"
   ],
 
   "oauth2": {

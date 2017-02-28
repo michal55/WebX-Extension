@@ -5,6 +5,7 @@
     <script src="js/background_helpers.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
+    <script src="js/options_helper.js"></script>
     <script src="js/devtools.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
@@ -46,7 +47,7 @@
                 ng-change="selectProject()">
               </select>
             </div>
-            <span ng-hide="projects.length > 1"> No projects! <a target="_blank" href="http://127.0.0.1:3000/webx/projects/new"> Add first</a> </span>
+            <span ng-hide="projects.length > 1"> No projects! <a target="_blank" ng-href="{{ url_base }}/projects/new"> Add first</a> </span>
             <div ng-show="project.id && scripts">
               <div ng-show="scripts.length > 1">
                 <label>Select script:</label>
@@ -57,7 +58,7 @@
                   ng-change="selectScript()">
                 </select>
               </div>
-              <span ng-hide="scripts.length > 1" class="padded"> No scripts! <a target="_blank" href="http://127.0.0.1:3000/webx/projects/1/scripts/new"> Add first</a> </span>
+              <span ng-hide="scripts.length > 1" class="padded"> No scripts! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}/scripts/new"> Add first</a> </span>
             </div>
           </div>
           <div class="panel panel-default" ng-show="script.id">
