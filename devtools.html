@@ -6,6 +6,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/options_helper.js"></script>
+    <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
@@ -24,7 +25,11 @@
                     <span class="navbar-brand">WebX Tools</span>
                   </div>
                   <ul class="nav navbar-nav navbar-left ">
-                    <li><a ng-show="logged_in" ng-click="getProjects()" href="#">Refresh</a></li>
+                    <li><a ng-show="!loading" ng-click="refresh()" href="#">Refresh</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right ">
+                    <li><a ng-show="!logged_in" ng-click="loginPrompt()" href="#">Log in</a></li>
+                    <li><a ng-show="logged_in" ng-click="logout()" href="#">Log out</a></li>
                   </ul>
                 </div>
               </nav>
@@ -33,7 +38,7 @@
         </div>
       </div>
       <div class="row" ng-show="!logged_in">
-        <h1 style="text-align: center; padding: 150px">Please log in by using icon near address bar</h1>
+        <h1 style="text-align: center; padding: 150px">Please log in to continue</h1>
       </div>
       <div class="row" ng-show="logged_in">
         <div class="col-xs-3">
