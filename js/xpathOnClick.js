@@ -9,12 +9,16 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
     addNodes(ae, document.getElementsByTagName("*"));
     for (var i = 0; i < ae.length; i++) {
         if (ae[i].tagName == 'IFRAME') {
-            var d = ae[i].contentDocument;
+            try {
+                var d = ae[i].contentDocument;
+                }
+            catch (err) {}
             if (d) {
                 addNodes(ae, d.getElementsByTagName("*"));
             }
         }
     }
+    $("<style type='text/css'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6);;} </style>").appendTo("head"); 
     // must be function in function - need to pass ae variable
     function handler (event) {
         for (var i = 0; i < ae.length; i++) {
@@ -71,20 +75,21 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
     for (var i = 0; i < ae.length; i++) {
         ae[i].addEventListener('click', handler);
     }
-    $('*').hover(
+    $('*').mouseover(
     function(e) {
-        $(this).css('border', '1px solid black');
+        $('*').removeClass("highlighting-mouse-over-element");
+        $(this).addClass("highlighting-mouse-over-element");//css('border', '1px solid black');
         e.preventDefault();
         e.stopPropagation();
         return false;
-    },function(e) {
-        $(this).css('border', 'none');
+    }).mouseout(function(e) {
+        $(this).removeClass("highlighting-mouse-over-element");//css('border', 'none');
         e.preventDefault();
         e.stopPropagation();
         return false;
     }).click(function() {
-    $('*').unbind('mouseenter mouseleave');
-    $('*').css('border', 'none');
+    $('*').unbind('mouseenter mouseleave mouseover mouseout');
+    $('*').removeClass("highlighting-mouse-over-element");//css('border', 'none');
     //$('*').unbind('hover');
     });
 }
