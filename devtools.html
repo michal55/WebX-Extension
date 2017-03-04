@@ -77,10 +77,15 @@
           <div ng-show="xpaths">
             <table class="table table-hover">
               <input
+                ng-show="!getStackPointer()"
                 ng-model="xpaths.url"
                 ng-change="changeScript()"
                 placeholder="Source page url"
                 class="form-control">
+              <div ng-show="getStackPointer()">
+                <span class="btn btn-default" ng-click="leavePostProcessing()"> &#8672; </span>
+                <span>postprocessing level {{ post_processing_stack.length }}: {{ getStackPointer() }}</span>
+              </div>
               <thead>
                 <tr>
                   <th>Field</th>
@@ -103,18 +108,47 @@
                         class="form-control">
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="addPositiveInput(field.name)">
+                        ng-click="addPositiveInput(field)">
                         +
                       </span>
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="addNegativeInput(field.name)">
+                        ng-click="addNegativeInput(field)">
                         -
                       </span>
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="addPostProcessing(field.name)">
-                        >
+                        ng-click="addPostProcessing(field)">
+                        &#10148;
+                      </span>
+                    </div>
+                    <div class="input-group" ng-repeat="positive in field.positives">
+                      <span
+                        class="btn btn-primary input-group-addon positive-match"
+                        ng-click="toggleTargeting(positive)">
+                        &#9673;
+                      </span>
+                      <input
+                        ng-model="positive.value"
+                        ng-change="changeScript()"
+                        class="form-control">
+                    </div>
+                    <div class="input-group" ng-repeat="negative in field.negatives">
+                      <span
+                        class="btn btn-primary input-group-addon negative-match"
+                        ng-click="toggleTargeting(negative)">
+                        &#9673;
+                      </span>
+                      <input
+                        ng-model="negative.value"
+                        ng-change="changeScript()"
+                        class="form-control">
+                    </div>
+                    <div ng-show="(field.negatives && field.negatives.length) || (field.positives && field.positives.length)">
+                      <span
+                        class="btn btn-primary"
+                        ng-click="squash(field)">
+                        Squash
                       </span>
                     </div>
                   </td>

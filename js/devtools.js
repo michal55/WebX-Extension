@@ -35,6 +35,7 @@ app.controller('main', function($scope) {
         $scope.scripts = angular.fromJson(localStorage.scripts);
         $scope.script = angular.fromJson(localStorage.script);
         $scope.xpaths = angular.fromJson(localStorage.xpaths);
+        $scope.post_processing_stack = angular.fromJson(localStorage.post_processing_stack);
     }
 
     chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -131,16 +132,70 @@ app.controller('main', function($scope) {
         get_xpath();
     };
 
-    $scope.addPositiveInput = function(name) {
-        console.log('positive input:', name);
+    $scope.addPositiveInput = function(field) {
+        console.log('positive input:', field);
+        if (typeof field.positives === 'undefined') {
+            console.log('mame prazdny positives, robiem novy');
+            field.positives = [{
+                'value': ''
+            }]
+        } else {
+            console.log('uz tam nieco mame, vid: ', field.positives);
+            field.positives.push({
+                'value': ''
+            });
+        }
     };
 
-    $scope.addNegativeInput = function(name) {
+    $scope.addNegativeInput = function(field) {
         console.log('negative input:', name);
+        if (typeof field.negatives === 'undefined') {
+            console.log('mame prazdny positives, robiem novy');
+            field.negatives = [{
+                'value': ''
+            }]
+        } else {
+            console.log('uz tam nieco mame, vid: ', field.positives);
+            field.negatives.push({
+                'value': ''
+            });
+        }
     };
 
-    $scope.addPostProcessing = function(name) {
-        console.log('postprocessing:', name);
+    $scope.squash = function(field) {
+        // field.value = YOUR CODE FOR SQUASHING
+        field.value = 'squashed xpath';
+
+        // CLEAN FIELDS
+        field.negatives = [];
+        field.positives = [];
+    }
+
+    $scope.addPostProcessing = function(field) {
+        console.log('postprocessing for field:', field.name);
+        $scope.post_processing_stack.push(field);
+
+        localStorage.post_processing_stack = angular.toJson($scope.post_processing_stack);
+    }
+
+    $scope.leavePostProcessing = function() {
+        console.log('leving post processng, stack_trace: ', $scope.post_processing_stack);
+        $scope.post_processing_stack.pop();
+
+        localStorage.post_processing_stack = angular.toJson($scope.post_processing_stack);
+    }
+
+    $scope.getStackPointer = function() {
+        if (typeof $scope.post_processing_stack === 'undefined') {
+            return false;
+        }
+
+        size = $scope.post_processing_stack.length;
+        if (size > 0) {
+            return $scope.post_processing_stack[size-1].name;
+        } else {
+            return false;
+        }
     }
 
     $scope.selectProject = function() {
@@ -152,6 +207,9 @@ app.controller('main', function($scope) {
             function(status, response) {
                 $scope.data_fields = angular.fromJson(response);
                 localStorage.data_fields = angular.toJson($scope.data_fields);
+
+                $scope.post_processing_stack = [];
+                localStorage.post_processing_stack = angular.toJson($scope.post_processing_stack);
                 $scope.$digest();
             }
         );
@@ -177,5 +235,5 @@ app.controller('main', function($scope) {
                 $scope.getProjects();
             }
         });
-    }
+    };
 });
