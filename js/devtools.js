@@ -129,7 +129,19 @@ app.controller('main', function($scope) {
     $scope.toggleTargeting = function(name) {
         chrome.storage.local.set({ "newxpath_name": name }, function() {});
         get_xpath();
-        };
+    };
+
+    $scope.addPositiveInput = function(name) {
+        console.log('positive input:', name);
+    };
+
+    $scope.addNegativeInput = function(name) {
+        console.log('negative input:', name);
+    };
+
+    $scope.addPostProcessing = function(name) {
+        console.log('postprocessing:', name);
+    }
 
     $scope.selectProject = function() {
         localStorage.project = angular.toJson($scope.project);

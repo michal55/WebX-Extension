@@ -92,15 +92,30 @@
                   <td> {{ field.name }} </td>
                   <td>
                     <div class="input-group">
-                      <button
-                        class="btn btn-primary"
+                      <span
+                        class="btn btn-primary input-group-addon"
                         ng-click="toggleTargeting(field.name)">
                         &#9673;
-                      </button>
+                      </span>
                       <input
                         ng-model="field.value"
                         ng-change="changeScript()"
                         class="form-control">
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="addPositiveInput(field.name)">
+                        +
+                      </span>
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="addNegativeInput(field.name)">
+                        -
+                      </span>
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="addPostProcessing(field.name)">
+                        >
+                      </span>
                     </div>
                   </td>
                 </tr>
