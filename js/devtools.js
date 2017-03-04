@@ -31,6 +31,7 @@ app.controller('main', function($scope) {
     function loadCookies() {
         $scope.projects = angular.fromJson(localStorage.projects);
         $scope.project = angular.fromJson(localStorage.project);
+        $scope.data_fields = angular.fromJson(localStorage.data_fields);
         $scope.scripts = angular.fromJson(localStorage.scripts);
         $scope.script = angular.fromJson(localStorage.script);
         $scope.xpaths = angular.fromJson(localStorage.xpaths);
@@ -66,6 +67,7 @@ app.controller('main', function($scope) {
 
                 localStorage.projects = angular.toJson($scope.projects);
                 localStorage.project = angular.toJson($scope.project);
+                localStorage.data_fields = false;
                 localStorage.scripts = false;
                 localStorage.script = false;
                 localStorage.xpaths = false;
@@ -132,6 +134,15 @@ app.controller('main', function($scope) {
     $scope.selectProject = function() {
         localStorage.project = angular.toJson($scope.project);
         $scope.getScripts();
+
+        apiGet(
+            '/data/user/project/' + $scope.project.id.toString() + '/data_fields',
+            function(status, response) {
+                $scope.data_fields = angular.fromJson(response);
+                localStorage.data_fields = angular.toJson($scope.data_fields);
+                $scope.$digest();
+            }
+        );
     };
 
     $scope.selectScript = function() {
