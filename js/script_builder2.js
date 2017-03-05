@@ -40,7 +40,7 @@ function ScriptBuilder(data_fields) {
             if (parent == undefined) {
                 var idx = getDataFieldIdxForName(data_fields, script.name);
                 this.data_fields[idx].root = id;
-                this.data_fields[idx].value = script.value;
+                this.data_fields[idx].valueId = id;
             // Register as child
             } else {
                 parent.children.push(id);
