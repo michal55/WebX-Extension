@@ -31,11 +31,9 @@ app.controller('main', function($scope) {
     function loadCookies() {
         $scope.projects = angular.fromJson(localStorage.projects);
         $scope.project = angular.fromJson(localStorage.project);
-        $scope.data_fields = angular.fromJson(localStorage.data_fields);
         $scope.scripts = angular.fromJson(localStorage.scripts);
         $scope.script = angular.fromJson(localStorage.script);
-        $scope.xpaths = angular.fromJson(localStorage.xpaths);
-        $scope.post_processing_stack = angular.fromJson(localStorage.post_processing_stack);
+        $scope.script_builder = angular.fromJson(localStorage.script_builder);
     }
 
     chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -64,14 +62,13 @@ app.controller('main', function($scope) {
                 $scope.projects.unshift($scope.project);
                 $scope.scripts = false;
                 $scope.script = false;
-                $scope.xpaths = false;
+                $scope.script_builder = false;
 
                 localStorage.projects = angular.toJson($scope.projects);
                 localStorage.project = angular.toJson($scope.project);
-                localStorage.data_fields = false;
                 localStorage.scripts = false;
                 localStorage.script = false;
-                localStorage.xpaths = false;
+                localStorage.script_builder = false;
 
                 $scope.$digest();
             }
@@ -80,10 +77,8 @@ app.controller('main', function($scope) {
 
     $scope.getScripts = function() {
         $scope.script = {name: 'Select script', id: false, disabled: true};
-        $scope.xpaths = false;
 
         localStorage.script = angular.toJson($scope.script);
-        localStorage.xpaths = angular.toJson($scope.xpaths);
 
         apiGet(
             '/data/user/project/' + $scope.project.id.toString() + '/scripts',
@@ -97,22 +92,19 @@ app.controller('main', function($scope) {
     };
 
     $scope.getScriptData = function() {
-        $scope.xpaths = false;
-
-        localStorage.xpaths = angular.toJson($scope.xpaths);
-
         apiGet(
             '/data/user/project/' + $scope.project.id.toString() + '/scripts/' + $scope.script.id,
             function(status, response) {
-                $scope.xpaths = angular.fromJson(response);
-                localStorage.xpaths = angular.toJson($scope.xpaths);
+                $scope.script_builder.loadScripts(angular.fromJson(response));
                 $scope.$digest();
+
+                console.log('after load... ', $scope.script_builder.data_fields)
             }
         );
     };
 
     $scope.changeScript = function() {
-        localStorage.xpaths = angular.toJson($scope.xpaths);
+
     };
 
     $scope.saveScript = function() {
@@ -123,7 +115,7 @@ app.controller('main', function($scope) {
                 $scope.saving = false;
                 $scope.$digest();
             },
-            angular.toJson($scope.xpaths)
+            angular.toJson($scope.script_builder.getJson())
         );
     };
 
@@ -169,34 +161,7 @@ app.controller('main', function($scope) {
         // CLEAN FIELDS
         field.negatives = [];
         field.positives = [];
-    }
-
-    $scope.addPostProcessing = function(field) {
-        console.log('postprocessing for field:', field.name);
-        $scope.post_processing_stack.push(field);
-
-        localStorage.post_processing_stack = angular.toJson($scope.post_processing_stack);
-    }
-
-    $scope.leavePostProcessing = function() {
-        console.log('leving post processng, stack_trace: ', $scope.post_processing_stack);
-        $scope.post_processing_stack.pop();
-
-        localStorage.post_processing_stack = angular.toJson($scope.post_processing_stack);
-    }
-
-    $scope.getStackPointer = function() {
-        if (typeof $scope.post_processing_stack === 'undefined') {
-            return false;
-        }
-
-        size = $scope.post_processing_stack.length;
-        if (size > 0) {
-            return $scope.post_processing_stack[size-1].name;
-        } else {
-            return false;
-        }
-    }
+    };
 
     $scope.selectProject = function() {
         localStorage.project = angular.toJson($scope.project);
@@ -205,18 +170,13 @@ app.controller('main', function($scope) {
         apiGet(
             '/data/user/project/' + $scope.project.id.toString() + '/data_fields',
             function(status, response) {
-                $scope.data_fields = angular.fromJson(response);
-                localStorage.data_fields = angular.toJson($scope.data_fields);
-
-                $scope.post_processing_stack = [];
-                localStorage.post_processing_stack = angular.toJson($scope.post_processing_stack);
+                $scope.script_builder = new ScriptBuilder(angular.fromJson(response));
                 $scope.$digest();
             }
         );
     };
 
     $scope.selectScript = function() {
-        $scope.xpaths = false;
         localStorage.script = angular.toJson($scope.script);
         $scope.getScriptData();
     };

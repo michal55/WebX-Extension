@@ -6,6 +6,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/options_helper.js"></script>
+    <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
@@ -74,17 +75,17 @@
           </div>
         </div>
         <div class="col-xs-9">
-          <div ng-show="xpaths">
+          <div ng-show="script_builder">
             <table class="table table-hover">
               <input
-                ng-show="!getStackPointer()"
-                ng-model="xpaths.url"
+                ng-show="!script_builder.getStackPointer()"
+                ng-model="script_builder.url"
                 ng-change="changeScript()"
                 placeholder="Source page url"
                 class="form-control">
-              <div ng-show="getStackPointer()">
-                <span class="btn btn-default" ng-click="leavePostProcessing()"> &#8672; </span>
-                <span>postprocessing level {{ post_processing_stack.length }}: {{ getStackPointer() }}</span>
+              <div ng-show="script_builder.getStackPointer()">
+                <span class="btn btn-default" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
+                <span>postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getStackPointer() }}</span>
               </div>
               <thead>
                 <tr>
@@ -93,7 +94,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="field in data_fields">
+                <tr ng-repeat="field in script_builder.data_fields">
                   <td> {{ field.name }} </td>
                   <td>
                     <div class="input-group">
@@ -118,7 +119,7 @@
                       </span>
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="addPostProcessing(field)">
+                        ng-click="script_builder.addPostProcessing(field)">
                         &#10148;
                       </span>
                     </div>
