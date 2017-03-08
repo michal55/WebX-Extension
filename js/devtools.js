@@ -40,14 +40,26 @@ app.controller('main', function($scope) {
         for (key in changes) {
             var storageChange = changes[key];
             if (key == "newxpath"){
-                chrome.storage.local.get('newxpath_name',function(result){
-                    var name = result.newxpath_name;
-                    for (i in $scope.xpaths.data) {
-                        if ($scope.xpaths.data[i].name == name){
-                            $scope.xpaths.data[i].value = storageChange.newValue;
+                chrome.storage.local.get('field_id',function(result) {
+                    var field_id = result.field_id;
+                    chrome.storage.local.get('field_type',function(result_type) {
+                        var field_type = result_type.field_type;
+                        if (field_type == "field_id") {
+                            $scope.script_builder.scripts[field_id].value = storageChange.newValue;
                             $scope.$digest();
+                        }else {
+                            chrome.storage.local.get('pos_neg_indx',function(result_indx) {
+                                var indx = result_indx.pos_neg_indx;
+                                if (field_type == "positive_id") {
+                                    $scope.script_builder.data_fields[field_id].positives[indx].value = storageChange.newValue;
+                                }else if (field_type == "negative_id") {
+                                    $scope.script_builder.data_fields[field_id].negatives[indx].value = storageChange.newValue;
+                                }
+                                $scope.$digest();
+                                
+                            });
                         }
-                    }
+                    });
                 });
             }
         }
@@ -119,8 +131,10 @@ app.controller('main', function($scope) {
         );
     };
 
-    $scope.toggleTargeting = function(name) {
-        chrome.storage.local.set({ "newxpath_name": name }, function() {});
+    $scope.toggleTargeting = function(field_id,field_type,indx) {
+        chrome.storage.local.set({ "field_id": field_id }, function() {});
+        chrome.storage.local.set({ "field_type": field_type }, function() {});
+        chrome.storage.local.set({ "pos_neg_indx":indx}, function() {});
         get_xpath();
     };
 
@@ -129,12 +143,14 @@ app.controller('main', function($scope) {
         if (typeof field.positives === 'undefined') {
             console.log('mame prazdny positives, robiem novy');
             field.positives = [{
-                'value': ''
+                'value': '',
+                'id':0
             }]
         } else {
             console.log('uz tam nieco mame, vid: ', field.positives);
             field.positives.push({
-                'value': ''
+                'value': '',
+                'id':field.positives.length
             });
         }
     };
@@ -144,12 +160,14 @@ app.controller('main', function($scope) {
         if (typeof field.negatives === 'undefined') {
             console.log('mame prazdny positives, robiem novy');
             field.negatives = [{
-                'value': ''
+                'value': '',
+                'id':0
             }]
         } else {
             console.log('uz tam nieco mame, vid: ', field.positives);
             field.negatives.push({
-                'value': ''
+                'value': '',
+                'id':field.negatives.length
             });
         }
     };
