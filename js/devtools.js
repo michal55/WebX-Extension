@@ -136,7 +136,6 @@ app.controller('main', function($scope) {
         chrome.storage.local.set({ "field_type": field_type }, function() {});
         chrome.storage.local.set({ "pos_neg_indx":indx}, function() {});
         get_xpath();
-        
     };
 
     $scope.addPositiveInput = function(field) {
@@ -231,7 +230,6 @@ app.controller('main', function($scope) {
                     continue;
                 }
  
-    
                 indx_1 = temp_n.indexOf("[");
                 indx_2 = temp_n.indexOf("]");
 
@@ -242,7 +240,7 @@ app.controller('main', function($scope) {
                             main_xpath[indx] = main_xpath[indx] + "[" + "position() != "+ num + " ]" ;
                         }
                         else{
-                            main_xpath[indx] = main_xpath[indx].replace("]", "and position() != " + num + " ]");
+                            main_xpath[indx] = main_xpath[indx].replace("]", " and position() != " + num + " ]");
                         }
                         break;
                     }
