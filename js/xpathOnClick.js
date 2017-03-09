@@ -109,3 +109,28 @@ function xpathArray(parent, exp) {
     //console.debug("xpathArray:", parent, exp, a);
     return a;
 }
+
+function start_highlight(xpath) {
+    console.log("xpath in highlight");
+    console.log(xpath);
+    $("<style type='text/css'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4);;} </style>").appendTo("head");
+    $("<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6);;} </style>").appendTo("head");
+    var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null); 
+    var el = elements_iter.iterateNext();
+    var elements = [];
+    while (el) {
+        elements.push(el);
+        el = elements_iter.iterateNext();
+    }
+    for (i in elements) {
+        elements[i].className += " highlighting-selected-elements";
+    }
+    
+}
+
+function stop_highlight() {
+    $('*').removeClass("highlighting-selected-elements");
+    $('*').removeClass("highlighting-negative-elements");
+}
+
+

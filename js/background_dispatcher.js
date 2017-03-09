@@ -15,8 +15,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
 
     } else if (request.get_xpath) {
-    getxpath();
-    return true
+        getxpath();
+        return true;
+
+    } else if (request.stop_highlight) {
+        highlight(0,[]);
+        return true;
+
+    } else if (request.start_highlight) {
+        highlight(1,request.start_highlight.xpath);
+        return true;
     }
 
     return true;

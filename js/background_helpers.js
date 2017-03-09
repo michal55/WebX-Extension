@@ -13,6 +13,16 @@ function get_xpath(callback){
 
 }
 
+function starthighlight(xpath,callback){
+   chrome.runtime.sendMessage({start_highlight: {xpath: xpath}});
+
+}
+function stophighlight(callback){
+   chrome.runtime.sendMessage({stop_highlight: {}});
+
+}
+
+
 function apiGet(url, callback, params) {
     xhrWithAuth('GET', url, false, callback, params);
 }

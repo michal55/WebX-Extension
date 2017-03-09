@@ -17,3 +17,32 @@ function getxpath() {
    return true;
 }
 
+function highlight(bool,xpath) {
+    chrome.tabs.getSelected(null, function(tab) {
+    try {
+        chrome.tabs.executeScript(tab.id, { file: "js/jquery.js" }, function() {
+            chrome.tabs.executeScript(tab.id, {     file: "js/xpathOnClick.js" }, function() {
+                if (bool == 1) {
+                    console.log("xpath in background page:");
+                    console.log(xpath);
+                    chrome.tabs.executeScript(tab.id, {     code: "try { "+
+                                                   "start_highlight(" + JSON.stringify(xpath) + "); "+
+                                                   "} catch (err) {console.error(err)}" }, function() {}
+                                            );
+                } else {
+                    chrome.tabs.executeScript(tab.id, {     code: "try { "+
+                                                   "stop_highlight();"+
+                                                   "} catch (err) {console.error(err)}" }, function() {}
+                                            );
+                }
+
+                                     });
+                                 });
+    } catch (err) {
+        console.log(err.message);
+        }
+    });
+   return true;
+}
+
+

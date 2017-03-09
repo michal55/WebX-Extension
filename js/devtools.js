@@ -136,6 +136,7 @@ app.controller('main', function($scope) {
         chrome.storage.local.set({ "field_type": field_type }, function() {});
         chrome.storage.local.set({ "pos_neg_indx":indx}, function() {});
         get_xpath();
+        
     };
 
     $scope.addPositiveInput = function(field) {
