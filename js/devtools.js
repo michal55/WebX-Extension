@@ -174,11 +174,90 @@ app.controller('main', function($scope) {
 
     $scope.squash = function(field) {
         // field.value = YOUR CODE FOR SQUASHING
-        field.value = 'squashed xpath';
+        main_xpath = $scope.script_builder.scripts[field.valueId].value
+        main_xpath = main_xpath.split("/");
 
+        for (i in field.positives) {
+            p_xpath = field.positives[i].value
+            p_xpath = p_xpath.split("/");
+
+            if (main_xpath.lenght != p_xpath.lenght){
+                console.log("xpaths does not have same lenght!");
+                console.log(main_xpath);
+                console.log(p_xpath);
+                continue;
+            }
+
+            for (indx in main_xpath) {
+                temp_m = main_xpath[indx];
+                temp_p = p_xpath[indx];
+                if (temp_m.replace(/ /g,"") == temp_p.replace(/ /g,"")) {
+                    continue;
+                } 
+                else if (temp_m.indexOf("[") == -1) {
+                    continue;
+                }        
+                else if (temp_m.substr(0,temp_m.indexOf("[")).replace(/ /g,"") != temp_p.substr(0,temp_p.indexOf("[")).replace(/ /g,"")) {
+                    conslole.log("xpaths cant by merged!");
+                    console.log(main_xpath);
+                    console.log(p_xpath);
+                    conslole.log("different in:");
+                    console.log(temp_m);
+                    console.log(temp_m);
+                    break;
+                }else {
+                    temp_m = temp_m.substr(0,temp_m.indexOf("["));
+                    main_xpath[indx] = temp_m;
+                }
+            }
+        }
+
+        for (i in field.negatives) {
+            n_xpath = field.negatives[i].value;
+            n_xpath = n_xpath.split("/");
+
+            if (main_xpath.lenght != p_xpath.lenght) {
+                console.log("xpaths does not have same lenght!");
+                console.log(main_xpath);
+                console.log(n_xpath);
+                continue;
+            }
+
+            for (indx in n_xpath) {
+                temp_n = n_xpath[indx];
+
+                if (main_xpath[indx].replace(/ /g,"") == temp_n.replace(/ /g,"")) {
+                    continue;
+                }
+ 
+    
+                indx_1 = temp_n.indexOf("[");
+                indx_2 = temp_n.indexOf("]");
+
+                if (indx_1 != -1) {
+                    num = temp_n.substr(indx_1 + 1 , indx_2 - indx_1 -1);
+                    if (!isNaN(num)){
+                        if (main_xpath[indx].indexOf("[") == -1){
+                            main_xpath[indx] = main_xpath[indx] + "[" + "position() != "+ num + " ]" ;
+                        }
+                        else{
+                            main_xpath[indx] = main_xpath[indx].replace("]", "and position() != " + num + " ]");
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        main_xpath = main_xpath.join("/");
+        $scope.script_builder.scripts[field.valueId].value = main_xpath;
+
+        field.value = 'squashed xpath';
+        //script_builder.scripts[field.valueId].value = '';
         // CLEAN FIELDS
         field.negatives = [];
         field.positives = [];
+        $scope.$digest();
     };
 
     $scope.selectProject = function() {
