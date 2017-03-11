@@ -213,7 +213,7 @@ app.controller('main', function($scope) {
         for (var i in field.negatives) {
             var n_xpath = field.negatives[i].xpath.split('/');
 
-            if (main_xpath.length != p_xpath.length) {
+            if (main_xpath.length != n_xpath.length) {
                 console.log('xpaths do not have same length!');
                 console.log(main_xpath);
                 console.log(n_xpath);
@@ -250,7 +250,6 @@ app.controller('main', function($scope) {
         // Clean fields
         field.negatives = [];
         field.positives = [];
-        $scope.$digest();
     };
 
     $scope.selectProject = function() {
