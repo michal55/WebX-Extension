@@ -33,7 +33,11 @@ app.controller('main', function($scope) {
         $scope.project = angular.fromJson(localStorage.project);
         $scope.scripts = angular.fromJson(localStorage.scripts);
         $scope.script = angular.fromJson(localStorage.script);
-        $scope.script_builder = angular.fromJson(localStorage.script_builder);
+
+        if (localStorage.script_builder) {
+            $scope.script_builder = new ScriptBuilder();
+            $scope.script_builder.fromJSON(localStorage.script_builder);
+        }
     }
 
     chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -46,6 +50,8 @@ app.controller('main', function($scope) {
                         var field_type = result_type.field_type;
                         if (field_type == 'field_id') {
                             $scope.script_builder.scripts[field_id].xpath = storageChange.newValue;
+
+                            localStorage.script_builder = $scope.script_builder.toJSON();
                             $scope.$digest();
                         } else {
                             chrome.storage.local.get('pos_neg_indx', function(result_indx) {
@@ -56,6 +62,7 @@ app.controller('main', function($scope) {
                                     $scope.script_builder.data_fields[field_id].negatives[indx].xpath = storageChange.newValue;
                                 }
 
+                                localStorage.script_builder = $scope.script_builder.toJSON();
                                 $scope.$digest();
                             });
                         }
@@ -246,6 +253,7 @@ app.controller('main', function($scope) {
 
         main_xpath = main_xpath.join('/');
         $scope.script_builder.scripts[field.scriptId].xpath = main_xpath;
+        localStorage.script_builder = $scope.script_builder.toJSON();
 
         // Clean fields
         field.negatives = [];
@@ -260,6 +268,7 @@ app.controller('main', function($scope) {
             '/data/user/project/' + $scope.project.id.toString() + '/data_fields',
             function(status, response) {
                 $scope.script_builder = new ScriptBuilder(angular.fromJson(response));
+                localStorage.script_builder = $scope.script_builder.toJSON();
                 $scope.$digest();
             }
         );

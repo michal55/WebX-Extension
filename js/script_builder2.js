@@ -1,21 +1,44 @@
-function ScriptBuilder(data_fields) {
-    this.url = "";
-    this.ROOT = -1;
-    this.scripts = [];
-    this.scripts[this.ROOT] = {
-        id: this.ROOT,
-        childrenIds: []
-    };
-    this.post_processing_stack = [this.ROOT];
-    this.data_fields = data_fields;
+class ScriptBuilder {
+    constructor(data_fields) {
+        this.url = "";
+        this.ROOT = 0;
+        this.scripts = [];
+        this.scripts[this.ROOT] = {
+            id: this.ROOT,
+            childrenIds: []
+        };
+        this.post_processing_stack = [this.ROOT];
+        this.data_fields = data_fields;
+    }
 
-    this.loadScripts = function(scripts) {
+    toJSON() {
+        return angular.toJson({
+            url: this.url,
+            ROOT: this.ROOT,
+            scripts: this.scripts,
+            post_processing_stack: this.post_processing_stack,
+            data_fields: this.data_fields
+        });
+    }
+
+    fromJSON(json) {
+        var data = angular.fromJson(json);
+        this.url = data.url;
+        this.ROOT = data.ROOT;
+        this.scripts = data.scripts;
+        this.post_processing_stack = data.post_processing_stack;
+        this.data_fields = data.data_fields;
+    }
+
+    loadScripts(scripts) {
         this.url = scripts.url;
         this._loadScripts(scripts, this.ROOT);
         this.displayScript(this.ROOT);
-    };
 
-    this.createScript = function(name, xpath, parentId) {
+        localStorage.script_builder = this.toJSON();
+    }
+
+    createScript(name, xpath, parentId) {
         var id = this.scripts.length;
         var script = {
             id: id,
@@ -28,9 +51,9 @@ function ScriptBuilder(data_fields) {
         this.scripts.push(script);
 
         return id;
-    };
+    }
 
-    this._loadScripts = function(scripts, parentId) {
+    _loadScripts(scripts, parentId) {
         for (var i in scripts.data) {
             var script = scripts.data[i];
 
@@ -47,9 +70,9 @@ function ScriptBuilder(data_fields) {
                 }
             }
         }
-    };
+    }
 
-    this.displayScript = function(scriptId) {
+    displayScript(scriptId) {
         // Find existing child or create new for each data field
         for (var i in this.data_fields) {
             var data_field = this.data_fields[i];
@@ -64,20 +87,24 @@ function ScriptBuilder(data_fields) {
                 data_field.scriptId = this.createScript(data_field.name, '', scriptId);
             }
         }
-    };
+    }
 
-    this.addPostProcessing = function(scriptId) {
+    addPostProcessing(scriptId) {
         this.displayScript(scriptId);
         this.post_processing_stack.push(scriptId);
-    };
 
-    this.leavePostProcessing = function() {
+        localStorage.script_builder = this.toJSON();
+    }
+
+    leavePostProcessing() {
         this.post_processing_stack.pop();
         var size = this.post_processing_stack.length;
         this.displayScript(this.post_processing_stack[size - 1]);
-    };
 
-    this.getStackPointer = function() {
+        localStorage.script_builder = this.toJSON();
+    }
+
+    getStackPointer() {
         if (typeof this.post_processing_stack === 'undefined') {
             return false;
         }
@@ -88,9 +115,9 @@ function ScriptBuilder(data_fields) {
         } else {
             return false;
         }
-    };
+    }
 
-    this.collectJsonData = function(json, scriptId) {
+    collectJsonData(json, scriptId) {
         var script = this.scripts[scriptId];
 
         // Nothing to collect here
@@ -108,9 +135,9 @@ function ScriptBuilder(data_fields) {
         }
 
         json.data.push(data);
-    };
+    }
 
-    this.getJson = function() {
+    getJson() {
         var json = {url: this.url, data: []};
         var root = this.scripts[this.ROOT];
 
