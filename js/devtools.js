@@ -136,6 +136,11 @@ app.controller('main', function($scope) {
         get_xpath();
     };
 
+    $scope.toggleTargetingForSquash = function(field_name, field_type, indx) {
+        var field_id = $scope.script_builder.data_fields.findIndex((field) => field.name == field_name);
+        $scope.toggleTargeting(field_id, field_type, indx);
+    };
+
     $scope.addPositiveInput = function(field) {
         console.log('positive input:', field);
         if (typeof field.positives === 'undefined') {

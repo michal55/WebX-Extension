@@ -55,6 +55,9 @@ function ScriptBuilder(data_fields) {
             var data_field = this.data_fields[i];
             var childId = this.scripts[scriptId].childrenIds.find((childId) => this.scripts[childId].name == data_field.name);
 
+            data_field.positives = [];
+            data_field.negatives = [];
+
             if (childId != undefined) {
                 data_field.scriptId = childId;
             } else {

@@ -15,7 +15,7 @@
 
   <body ng-app="extension" ng-controller="main" ng-init="init()" ngcloak>
     <div ng-show="loading"> <h1 style="text-align: center; padding: 150px"> LOADING...</h1> </div>
-    <div ng-hide="targeting || loading">
+    <div ng-hide="loading">
       <div class="row">
         <div class="col-xs-12">
           <div class="navbar-xs">
@@ -126,7 +126,7 @@
                     <div class="input-group" ng-repeat="positive in field.positives">
                       <span
                         class="btn btn-primary input-group-addon positive-match"
-                        ng-click="toggleTargeting(field.scriptId, 'positive_id', positive.id)">
+                        ng-click="toggleTargetingForSquash(field.name, 'positive_id', positive.id)">
                         &#9673;
                       </span>
                       <input
@@ -137,7 +137,7 @@
                     <div class="input-group" ng-repeat="negative in field.negatives">
                       <span
                         class="btn btn-primary input-group-addon negative-match"
-                        ng-click="toggleTargeting(field.scriptId, 'negative_id', negative.id)">
+                        ng-click="toggleTargetingForSquash(field.name, 'negative_id', negative.id)">
                         &#9673;
                       </span>
                       <input
@@ -166,9 +166,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div ng-show="targeting">
-      <span class="btn btn-info" ng-click="toggleTargeting()">&#5130;</span>
     </div>
   </body>
 </html>
