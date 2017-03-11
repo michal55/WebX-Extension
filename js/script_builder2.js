@@ -32,6 +32,13 @@ class ScriptBuilder {
 
     loadScripts(scripts) {
         this.url = scripts.url;
+        this.scripts = [];
+        this.scripts[this.ROOT] = {
+            id: this.ROOT,
+            childrenIds: []
+        };
+        this.post_processing_stack = [this.ROOT];
+
         this._loadScripts(scripts, this.ROOT);
         this.displayScript(this.ROOT);
 
