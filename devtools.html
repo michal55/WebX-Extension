@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="col-xs-9">
-          <div ng-show="script_builder">
+          <div ng-show="!script.disabled">
             <table class="table table-hover">
               <input
                 ng-show="!script_builder.getStackPointer()"
@@ -100,11 +100,11 @@
                     <div class="input-group">
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="toggleTargeting(field.valueId,'field_id',-1)">
+                        ng-click="toggleTargeting(field.scriptId, 'field_id', -1)">
                         &#9673;
                       </span>
                       <input
-                        ng-model="script_builder.scripts[field.valueId].value"
+                        ng-model="script_builder.scripts[field.scriptId].xpath"
                         ng-change="changeScript()"
                         class="form-control">
                       <span
@@ -119,29 +119,29 @@
                       </span>
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="script_builder.addPostProcessing(field)">
+                        ng-click="script_builder.addPostProcessing(field.scriptId)">
                         &#10148;
                       </span>
                     </div>
                     <div class="input-group" ng-repeat="positive in field.positives">
                       <span
                         class="btn btn-primary input-group-addon positive-match"
-                        ng-click="toggleTargeting(field.valueId,'positive_id',positive.id)">
+                        ng-click="toggleTargeting(field.scriptId, 'positive_id', positive.id)">
                         &#9673;
                       </span>
                       <input
-                        ng-model="positive.value"
+                        ng-model="positive.xpath"
                         ng-change="changeScript()"
                         class="form-control">
                     </div>
                     <div class="input-group" ng-repeat="negative in field.negatives">
                       <span
                         class="btn btn-primary input-group-addon negative-match"
-                        ng-click="toggleTargeting(field.valueId,'negative_id',negative.id)">
+                        ng-click="toggleTargeting(field.scriptId, 'negative_id', negative.id)">
                         &#9673;
                       </span>
                       <input
-                        ng-model="negative.value"
+                        ng-model="negative.xpath"
                         ng-change="changeScript()"
                         class="form-control">
                     </div>

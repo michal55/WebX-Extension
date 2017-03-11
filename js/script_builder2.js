@@ -1,17 +1,50 @@
 function ScriptBuilder(data_fields) {
     this.url = "";
-    this.post_processing_stack = [];
+    this.ROOT = -1;
     this.scripts = [];
+    this.scripts[this.ROOT] = {
+        id: this.ROOT,
+        children: []
+    };
+    this.post_processing_stack = [this.ROOT];
     this.data_fields = data_fields;
+
+    this._getChildByName = function(scriptId, name) {
+        var script = this.scripts[scriptId];
+        for (var i in script.children) {
+            if (this.scripts[script.children[i]].name == name) {
+                return this.scripts[script.children[i]];
+            }
+        }
+
+        return undefined;
+    };
 
     this.loadScripts = function(scripts) {
         console.log('dfs ', data_fields);
         console.log('script ', scripts);
         this.url = scripts.url;
-        this._loadScripts(scripts, undefined);
+        this._loadScripts(scripts, this.ROOT);
+        this.displayScript(this.ROOT);
     };
 
-    this._loadScripts = function(scripts, parent) {
+    this.createScript = function(name, xpath, parent) {
+        var id = this.scripts.length;
+        var script = {
+            id: id,
+            name: name,
+            xpath: xpath,
+            parent: parent,
+            children: []
+        };
+
+        this.scripts.push(script);
+        console.log('adding script', script);
+
+        return id;
+    };
+
+    this._loadScripts = function(scripts, parentId) {
         function getDataFieldIdxForName(data_fields, name) {
             for (var i in data_fields) {
                 if (data_fields[i].name == name) {
@@ -30,36 +63,39 @@ function ScriptBuilder(data_fields) {
                 continue;
             }
 
-            var id = this.scripts.length;
-            script.parent = (parent && parent.id) || -1;
-            script.children = [];
-            console.log('adding script', script);
-            this.scripts.push(script);
+            var id = this.createScript(script.name, script.xpath, parentId);
+            this.scripts[parentId].children.push(id);
 
-            // Register root script id and display value
-            if (parent == undefined) {
-                var idx = getDataFieldIdxForName(data_fields, script.name);
-                this.data_fields[idx].root = id;
-                this.data_fields[idx].valueId = id;
-            // Register as child
-            } else {
-                parent.children.push(id);
-            }
-
-            if (script.post_processing && script.post_processing.type == 'nested') {
-                this._loadScripts(script.post_processing, script);
+            for (var j in script.postprocessing || []) {
+                if (script.postprocessing[j] && script.postprocessing[j].type == 'nested') {
+                    this._loadScripts(script.postprocessing[j], id);
+                }
             }
         }
     };
 
-    this.addPostProcessing = function(field) {
-        console.log('postprocessing for field:', field.name);
-        this.post_processing_stack.push(field);
+    this.displayScript = function(scriptId) {
+        for (var i in this.data_fields) {
+            var data_field = this.data_fields[i];
+            var child = this._getChildByName(scriptId, data_field.name);
+
+            if (child != undefined) {
+                data_field.scriptId = child.id;
+            } else {
+                data_field.scriptId = this.createScript(data_field.name, '', scriptId);
+            }
+        }
+    };
+
+    this.addPostProcessing = function(scriptId) {
+        this.displayScript(scriptId);
+        this.post_processing_stack.push(scriptId);
     };
 
     this.leavePostProcessing = function() {
-        console.log('leving post processng, stack_trace: ', this.post_processing_stack);
         this.post_processing_stack.pop();
+        var size = this.post_processing_stack.length;
+        this.displayScript(this.post_processing_stack[size - 1]);
     };
 
     this.getStackPointer = function() {
@@ -69,7 +105,7 @@ function ScriptBuilder(data_fields) {
 
         var size = this.post_processing_stack.length;
         if (size > 0) {
-            return this.post_processing_stack[size-1].name;
+            return this.scripts[this.post_processing_stack[size - 1]].name;
         } else {
             return false;
         }
@@ -80,13 +116,18 @@ function ScriptBuilder(data_fields) {
 
         var script = this.scripts[scriptId];
 
-        var data = {name: script.name, value: script.value};
-        if (script.children.length) {
-            data.post_processing = {type: 'nested', data: []};
+        // Nothing to collect here
+        if (script.xpath == undefined || script.xpath == '') {
+            return;
         }
 
-        for (var i in script.children) {
-            this.collectJsonData(data.post_processing, script.children[i]);
+        var data = {name: script.name, xpath: script.xpath, postprocessing: []};
+        if (script.children.length) {
+            data.postprocessing.push({type: 'nested', data: []});
+
+            for (var i in script.children) {
+                this.collectJsonData(data.postprocessing[0], script.children[i]);
+            }
         }
 
         json.data.push(data);
@@ -94,17 +135,11 @@ function ScriptBuilder(data_fields) {
 
     this.getJson = function() {
         var json = {url: this.url, data: []};
-
-        for (var i in this.data_fields) {
-            var data_field = this.data_fields[i];
-
-            // Start collecting from each root
-            if (data_field.root != undefined) {
-                this.collectJsonData(json, data_field.root);
-            }
+        if (this.scripts[this.ROOT].children.length) {
+            this.collectJsonData(json, this.ROOT);
         }
 
-        console.log('collected ', json);
+        console.log('collected ', json, 'from', this.scripts);
         return json;
-    };
-}
+    }
+};

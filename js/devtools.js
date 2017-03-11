@@ -39,24 +39,24 @@ app.controller('main', function($scope) {
     chrome.storage.onChanged.addListener(function(changes, namespace) {
         for (key in changes) {
             var storageChange = changes[key];
-            if (key == "newxpath"){
-                chrome.storage.local.get('field_id',function(result) {
+            if (key == 'newxpath') {
+                chrome.storage.local.get('field_id', function(result) {
                     var field_id = result.field_id;
-                    chrome.storage.local.get('field_type',function(result_type) {
+                    chrome.storage.local.get('field_type', function(result_type) {
                         var field_type = result_type.field_type;
-                        if (field_type == "field_id") {
-                            $scope.script_builder.scripts[field_id].value = storageChange.newValue;
+                        if (field_type == 'field_id') {
+                            $scope.script_builder.scripts[field_id].xpath = storageChange.newValue;
                             $scope.$digest();
-                        }else {
-                            chrome.storage.local.get('pos_neg_indx',function(result_indx) {
+                        } else {
+                            chrome.storage.local.get('pos_neg_indx', function(result_indx) {
                                 var indx = result_indx.pos_neg_indx;
                                 if (field_type == "positive_id") {
-                                    $scope.script_builder.data_fields[field_id].positives[indx].value = storageChange.newValue;
-                                }else if (field_type == "negative_id") {
-                                    $scope.script_builder.data_fields[field_id].negatives[indx].value = storageChange.newValue;
+                                    $scope.script_builder.data_fields[field_id].positives[indx].xpath = storageChange.newValue;
+                                } else if (field_type == "negative_id") {
+                                    $scope.script_builder.data_fields[field_id].negatives[indx].xpath = storageChange.newValue;
                                 }
+
                                 $scope.$digest();
-                                
                             });
                         }
                     });
@@ -143,14 +143,14 @@ app.controller('main', function($scope) {
         if (typeof field.positives === 'undefined') {
             console.log('mame prazdny positives, robiem novy');
             field.positives = [{
-                'value': '',
-                'id':0
+                'xpath': '',
+                'id': 0
             }]
         } else {
             console.log('uz tam nieco mame, vid: ', field.positives);
             field.positives.push({
-                'value': '',
-                'id':field.positives.length
+                'xpath': '',
+                'id': field.positives.length
             });
         }
     };
@@ -160,25 +160,25 @@ app.controller('main', function($scope) {
         if (typeof field.negatives === 'undefined') {
             console.log('mame prazdny positives, robiem novy');
             field.negatives = [{
-                'value': '',
-                'id':0
+                'xpath': '',
+                'id': 0
             }]
         } else {
             console.log('uz tam nieco mame, vid: ', field.positives);
             field.negatives.push({
-                'value': '',
-                'id':field.negatives.length
+                'xpath': '',
+                'id': field.negatives.length
             });
         }
     };
 
     $scope.squash = function(field) {
-        // field.value = YOUR CODE FOR SQUASHING
-        main_xpath = $scope.script_builder.scripts[field.valueId].value
+        // $scope.script_builder.scripts[field.scriptId].xpath = YOUR CODE FOR SQUASHING
+        main_xpath = $scope.script_builder.scripts[field.scriptId].xpath
         main_xpath = main_xpath.split("/");
 
         for (i in field.positives) {
-            p_xpath = field.positives[i].value
+            p_xpath = field.positives[i].xpath
             p_xpath = p_xpath.split("/");
 
             if (main_xpath.lenght != p_xpath.lenght){
@@ -193,10 +193,10 @@ app.controller('main', function($scope) {
                 temp_p = p_xpath[indx];
                 if (temp_m.replace(/ /g,"") == temp_p.replace(/ /g,"")) {
                     continue;
-                } 
+                }
                 else if (temp_m.indexOf("[") == -1) {
                     continue;
-                }        
+                }
                 else if (temp_m.substr(0,temp_m.indexOf("[")).replace(/ /g,"") != temp_p.substr(0,temp_p.indexOf("[")).replace(/ /g,"")) {
                     conslole.log("xpaths cant by merged!");
                     console.log(main_xpath);
@@ -213,7 +213,7 @@ app.controller('main', function($scope) {
         }
 
         for (i in field.negatives) {
-            n_xpath = field.negatives[i].value;
+            n_xpath = field.negatives[i].xpath;
             n_xpath = n_xpath.split("/");
 
             if (main_xpath.lenght != p_xpath.lenght) {
@@ -229,7 +229,7 @@ app.controller('main', function($scope) {
                 if (main_xpath[indx].replace(/ /g,"") == temp_n.replace(/ /g,"")) {
                     continue;
                 }
- 
+
                 indx_1 = temp_n.indexOf("[");
                 indx_2 = temp_n.indexOf("]");
 
@@ -249,10 +249,10 @@ app.controller('main', function($scope) {
         }
 
         main_xpath = main_xpath.join("/");
-        $scope.script_builder.scripts[field.valueId].value = main_xpath;
+        $scope.script_builder.scripts[field.scriptId].xpath = main_xpath;
 
-        field.value = 'squashed xpath';
-        //script_builder.scripts[field.valueId].value = '';
+        field.xpath = 'squashed xpath';
+        //script_builder.scripts[field.scriptId].xpath = '';
         // CLEAN FIELDS
         field.negatives = [];
         field.positives = [];
