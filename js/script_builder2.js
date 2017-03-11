@@ -4,21 +4,10 @@ function ScriptBuilder(data_fields) {
     this.scripts = [];
     this.scripts[this.ROOT] = {
         id: this.ROOT,
-        children: []
+        childrenIds: []
     };
     this.post_processing_stack = [this.ROOT];
     this.data_fields = data_fields;
-
-    this._getChildByName = function(scriptId, name) {
-        var script = this.scripts[scriptId];
-        for (var i in script.children) {
-            if (this.scripts[script.children[i]].name == name) {
-                return this.scripts[script.children[i]];
-            }
-        }
-
-        return undefined;
-    };
 
     this.loadScripts = function(scripts) {
         console.log('dfs ', data_fields);
@@ -28,16 +17,16 @@ function ScriptBuilder(data_fields) {
         this.displayScript(this.ROOT);
     };
 
-    this.createScript = function(name, xpath, parent) {
+    this.createScript = function(name, xpath, parentId) {
         var id = this.scripts.length;
         var script = {
             id: id,
             name: name,
             xpath: xpath,
-            parent: parent,
-            children: []
+            childrenIds: []
         };
 
+        this.scripts[parentId].childrenIds.push(id);
         this.scripts.push(script);
         console.log('adding script', script);
 
@@ -45,26 +34,15 @@ function ScriptBuilder(data_fields) {
     };
 
     this._loadScripts = function(scripts, parentId) {
-        function getDataFieldIdxForName(data_fields, name) {
-            for (var i in data_fields) {
-                if (data_fields[i].name == name) {
-                    return i;
-                }
-            }
-
-            return undefined;
-        }
-
         for (var i in scripts.data) {
             var script = scripts.data[i];
 
             // Check if there is data field for current xpath, skip if not
-            if (getDataFieldIdxForName(data_fields, script.name) == undefined) {
+            if (!this.data_fields.some((field) => field.name == script.name)) {
                 continue;
             }
 
             var id = this.createScript(script.name, script.xpath, parentId);
-            this.scripts[parentId].children.push(id);
 
             for (var j in script.postprocessing || []) {
                 if (script.postprocessing[j] && script.postprocessing[j].type == 'nested') {
@@ -75,12 +53,13 @@ function ScriptBuilder(data_fields) {
     };
 
     this.displayScript = function(scriptId) {
+        // Find existing child or create new for each data field
         for (var i in this.data_fields) {
             var data_field = this.data_fields[i];
-            var child = this._getChildByName(scriptId, data_field.name);
+            var childId = this.scripts[scriptId].childrenIds.find((childId) => this.scripts[childId].name == data_field.name);
 
-            if (child != undefined) {
-                data_field.scriptId = child.id;
+            if (childId != undefined) {
+                data_field.scriptId = childId;
             } else {
                 data_field.scriptId = this.createScript(data_field.name, '', scriptId);
             }
@@ -122,11 +101,11 @@ function ScriptBuilder(data_fields) {
         }
 
         var data = {name: script.name, xpath: script.xpath, postprocessing: []};
-        if (script.children.length) {
+        if (script.childrenIds.length) {
             data.postprocessing.push({type: 'nested', data: []});
 
-            for (var i in script.children) {
-                this.collectJsonData(data.postprocessing[0], script.children[i]);
+            for (var i in script.childrenIds) {
+                this.collectJsonData(data.postprocessing[0], script.childrenIds[i]);
             }
         }
 
@@ -135,11 +114,13 @@ function ScriptBuilder(data_fields) {
 
     this.getJson = function() {
         var json = {url: this.url, data: []};
-        if (this.scripts[this.ROOT].children.length) {
-            this.collectJsonData(json, this.ROOT);
+        var root = this.scripts[this.ROOT];
+
+        for (var i in root.childrenIds) {
+            this.collectJsonData(json, root.childrenIds[i]);
         }
 
         console.log('collected ', json, 'from', this.scripts);
         return json;
     }
-};
+}
