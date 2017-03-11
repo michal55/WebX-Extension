@@ -10,8 +10,6 @@ function ScriptBuilder(data_fields) {
     this.data_fields = data_fields;
 
     this.loadScripts = function(scripts) {
-        console.log('dfs ', data_fields);
-        console.log('script ', scripts);
         this.url = scripts.url;
         this._loadScripts(scripts, this.ROOT);
         this.displayScript(this.ROOT);
@@ -28,7 +26,6 @@ function ScriptBuilder(data_fields) {
 
         this.scripts[parentId].childrenIds.push(id);
         this.scripts.push(script);
-        console.log('adding script', script);
 
         return id;
     };
@@ -91,8 +88,6 @@ function ScriptBuilder(data_fields) {
     };
 
     this.collectJsonData = function(json, scriptId) {
-        console.log('collecting', scriptId);
-
         var script = this.scripts[scriptId];
 
         // Nothing to collect here
@@ -120,7 +115,6 @@ function ScriptBuilder(data_fields) {
             this.collectJsonData(json, root.childrenIds[i]);
         }
 
-        console.log('collected ', json, 'from', this.scripts);
         return json;
     }
 }

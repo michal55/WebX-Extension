@@ -37,7 +37,7 @@ app.controller('main', function($scope) {
     }
 
     chrome.storage.onChanged.addListener(function(changes, namespace) {
-        for (key in changes) {
+        for (var key in changes) {
             var storageChange = changes[key];
             if (key == 'newxpath') {
                 chrome.storage.local.get('field_id', function(result) {
@@ -50,9 +50,9 @@ app.controller('main', function($scope) {
                         } else {
                             chrome.storage.local.get('pos_neg_indx', function(result_indx) {
                                 var indx = result_indx.pos_neg_indx;
-                                if (field_type == "positive_id") {
+                                if (field_type == 'positive_id') {
                                     $scope.script_builder.data_fields[field_id].positives[indx].xpath = storageChange.newValue;
-                                } else if (field_type == "negative_id") {
+                                } else if (field_type == 'negative_id') {
                                     $scope.script_builder.data_fields[field_id].negatives[indx].xpath = storageChange.newValue;
                                 }
 
@@ -109,8 +109,6 @@ app.controller('main', function($scope) {
             function(status, response) {
                 $scope.script_builder.loadScripts(angular.fromJson(response));
                 $scope.$digest();
-
-                console.log('after load... ', $scope.script_builder.data_fields)
             }
         );
     };
@@ -131,10 +129,10 @@ app.controller('main', function($scope) {
         );
     };
 
-    $scope.toggleTargeting = function(field_id,field_type,indx) {
-        chrome.storage.local.set({ "field_id": field_id }, function() {});
-        chrome.storage.local.set({ "field_type": field_type }, function() {});
-        chrome.storage.local.set({ "pos_neg_indx":indx}, function() {});
+    $scope.toggleTargeting = function(field_id, field_type, indx) {
+        chrome.storage.local.set({'field_id': field_id}, function() {});
+        chrome.storage.local.set({'field_type': field_type}, function() {});
+        chrome.storage.local.set({'pos_neg_indx': indx}, function() {});
         get_xpath();
     };
 
@@ -156,7 +154,7 @@ app.controller('main', function($scope) {
     };
 
     $scope.addNegativeInput = function(field) {
-        console.log('negative input:', name);
+        console.log('negative input:', field);
         if (typeof field.negatives === 'undefined') {
             console.log('mame prazdny positives, robiem novy');
             field.negatives = [{
@@ -164,7 +162,7 @@ app.controller('main', function($scope) {
                 'id': 0
             }]
         } else {
-            console.log('uz tam nieco mame, vid: ', field.positives);
+            console.log('uz tam nieco mame, vid: ', field.negatives);
             field.negatives.push({
                 'xpath': '',
                 'id': field.negatives.length
@@ -173,74 +171,67 @@ app.controller('main', function($scope) {
     };
 
     $scope.squash = function(field) {
-        // $scope.script_builder.scripts[field.scriptId].xpath = YOUR CODE FOR SQUASHING
-        main_xpath = $scope.script_builder.scripts[field.scriptId].xpath
-        main_xpath = main_xpath.split("/");
+        var main_xpath = $scope.script_builder.scripts[field.scriptId].xpath.split('/');
 
-        for (i in field.positives) {
-            p_xpath = field.positives[i].xpath
-            p_xpath = p_xpath.split("/");
+        for (var i in field.positives) {
+            var p_xpath = field.positives[i].xpath.split('/');
 
-            if (main_xpath.lenght != p_xpath.lenght){
-                console.log("xpaths does not have same lenght!");
+            if (main_xpath.length != p_xpath.length) {
+                console.log('xpaths do not have same length!');
                 console.log(main_xpath);
                 console.log(p_xpath);
                 continue;
             }
 
-            for (indx in main_xpath) {
-                temp_m = main_xpath[indx];
-                temp_p = p_xpath[indx];
-                if (temp_m.replace(/ /g,"") == temp_p.replace(/ /g,"")) {
+            for (var indx in main_xpath) {
+                var temp_m = main_xpath[indx];
+                var temp_p = p_xpath[indx];
+                if (temp_m.replace(/ /g, '') == temp_p.replace(/ /g, '')) {
                     continue;
-                }
-                else if (temp_m.indexOf("[") == -1) {
+                } else if (temp_m.indexOf('[') == -1) {
                     continue;
-                }
-                else if (temp_m.substr(0,temp_m.indexOf("[")).replace(/ /g,"") != temp_p.substr(0,temp_p.indexOf("[")).replace(/ /g,"")) {
-                    conslole.log("xpaths cant by merged!");
+                } else if (temp_m.substr(0,temp_m.indexOf('[')).replace(/ /g, '') != temp_p.substr(0,temp_p.indexOf('[')).replace(/ /g, '')) {
+                    conslole.log('xpaths cant by merged!');
                     console.log(main_xpath);
                     console.log(p_xpath);
-                    conslole.log("different in:");
+                    conslole.log('different in:');
                     console.log(temp_m);
                     console.log(temp_m);
                     break;
-                }else {
-                    temp_m = temp_m.substr(0,temp_m.indexOf("["));
+                } else {
+                    temp_m = temp_m.substr(0, temp_m.indexOf('['));
                     main_xpath[indx] = temp_m;
                 }
             }
         }
 
-        for (i in field.negatives) {
-            n_xpath = field.negatives[i].xpath;
-            n_xpath = n_xpath.split("/");
+        for (var i in field.negatives) {
+            var n_xpath = field.negatives[i].xpath.split('/');
 
-            if (main_xpath.lenght != p_xpath.lenght) {
-                console.log("xpaths does not have same lenght!");
+            if (main_xpath.length != p_xpath.length) {
+                console.log('xpaths do not have same length!');
                 console.log(main_xpath);
                 console.log(n_xpath);
                 continue;
             }
 
-            for (indx in n_xpath) {
-                temp_n = n_xpath[indx];
+            for (var indx in n_xpath) {
+                var temp_n = n_xpath[indx];
 
-                if (main_xpath[indx].replace(/ /g,"") == temp_n.replace(/ /g,"")) {
+                if (main_xpath[indx].replace(/ /g, '') == temp_n.replace(/ /g, '')) {
                     continue;
                 }
 
-                indx_1 = temp_n.indexOf("[");
-                indx_2 = temp_n.indexOf("]");
+                var indx_1 = temp_n.indexOf('[');
+                var indx_2 = temp_n.indexOf(']');
 
                 if (indx_1 != -1) {
-                    num = temp_n.substr(indx_1 + 1 , indx_2 - indx_1 -1);
-                    if (!isNaN(num)){
-                        if (main_xpath[indx].indexOf("[") == -1){
-                            main_xpath[indx] = main_xpath[indx] + "[" + "position() != "+ num + " ]" ;
-                        }
-                        else{
-                            main_xpath[indx] = main_xpath[indx].replace("]", " and position() != " + num + " ]");
+                    var num = temp_n.substr(indx_1 + 1 , indx_2 - indx_1 -1);
+                    if (!isNaN(num)) {
+                        if (main_xpath[indx].indexOf('[') == -1) {
+                            main_xpath[indx] = main_xpath[indx] + '[' + 'position() != '+ num + ' ]' ;
+                        } else {
+                            main_xpath[indx] = main_xpath[indx].replace(']', ' and position() != ' + num + ' ]');
                         }
                         break;
                     }
@@ -248,12 +239,10 @@ app.controller('main', function($scope) {
             }
         }
 
-        main_xpath = main_xpath.join("/");
+        main_xpath = main_xpath.join('/');
         $scope.script_builder.scripts[field.scriptId].xpath = main_xpath;
 
-        field.xpath = 'squashed xpath';
-        //script_builder.scripts[field.scriptId].xpath = '';
-        // CLEAN FIELDS
+        // Clean fields
         field.negatives = [];
         field.positives = [];
         $scope.$digest();
