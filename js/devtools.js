@@ -120,7 +120,7 @@ app.controller('main', function($scope) {
         );
     };
 
-    $scope.changeScript = function() {
+    $scope.changeXpath = function() {
         localStorage.script_builder = $scope.script_builder.toJSON();
     };
 
@@ -148,13 +148,13 @@ app.controller('main', function($scope) {
         $scope.toggleTargeting(field_id, field_type, indx);
     };
 
-    $scope.focusScript = function(field) {
+    $scope.focusXpath = function(field) {
         starthighlight($scope.script_builder.scripts[field.scriptId].xpath, 'base');
         (field.positives || []).forEach((element) => starthighlight(element.xpath, 'positive'));
         (field.negatives || []).forEach((element) => starthighlight(element.xpath, 'negative'));
     };
 
-    $scope.blurScript = function() {
+    $scope.blurXpath = function() {
         stophighlight();
     };
 

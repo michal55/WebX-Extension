@@ -80,7 +80,7 @@
               <input
                 ng-show="!script_builder.getStackPointer()"
                 ng-model="script_builder.url"
-                ng-change="changeScript()"
+                ng-change="changeXpath()"
                 placeholder="Source page url"
                 class="form-control">
               <div ng-show="script_builder.getStackPointer()">
@@ -105,9 +105,9 @@
                       </span>
                       <input
                         ng-model="script_builder.scripts[field.scriptId].xpath"
-                        ng-change="changeScript()"
-                        ng-focus="focusScript(field)"
-                        ng-blur="blurScript()"
+                        ng-change="changeXpath()"
+                        ng-focus="focusXpath(field)"
+                        ng-blur="blurXpath()"
                         class="form-control">
                       <span
                         class="btn btn-primary input-group-addon"
@@ -133,9 +133,9 @@
                       </span>
                       <input
                         ng-model="positive.xpath"
-                        ng-change="changeScript()"
-                        ng-focus="focusScript(field)"
-                        ng-blur="blurScript()"
+                        ng-change="changeXpath()"
+                        ng-focus="focusXpath(field)"
+                        ng-blur="blurXpath()"
                         class="form-control">
                     </div>
                     <div class="input-group" ng-repeat="negative in field.negatives">
@@ -146,9 +146,9 @@
                       </span>
                       <input
                         ng-model="negative.xpath"
-                        ng-change="changeScript()"
-                        ng-focus="focusScript(field)"
-                        ng-blur="blurScript()"
+                        ng-change="changeXpath()"
+                        ng-focus="focusXpath(field)"
+                        ng-blur="blurXpath()"
                         class="form-control">
                     </div>
                     <div ng-show="(field.negatives && field.negatives.length) || (field.positives && field.positives.length)">
