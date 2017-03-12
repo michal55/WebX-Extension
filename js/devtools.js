@@ -148,6 +148,16 @@ app.controller('main', function($scope) {
         $scope.toggleTargeting(field_id, field_type, indx);
     };
 
+    $scope.focusScript = function(field) {
+        starthighlight($scope.script_builder.scripts[field.scriptId].xpath, 'base');
+        (field.positives || []).forEach((element) => starthighlight(element.xpath, 'positive'));
+        (field.negatives || []).forEach((element) => starthighlight(element.xpath, 'negative'));
+    };
+
+    $scope.blurScript = function() {
+        stophighlight();
+    };
+
     $scope.addPositiveInput = function(field) {
         console.log('positive input:', field);
         if (typeof field.positives === 'undefined') {

@@ -17,16 +17,16 @@ function getxpath() {
    return true;
 }
 
-function highlight(bool,xpath) {
+function highlight(start, xpath, type) {
     chrome.tabs.getSelected(null, function(tab) {
     try {
         chrome.tabs.executeScript(tab.id, { file: "js/jquery.js" }, function() {
             chrome.tabs.executeScript(tab.id, {     file: "js/xpathOnClick.js" }, function() {
-                if (bool == 1) {
+                if (start) {
                     console.log("xpath in background page:");
                     console.log(xpath);
                     chrome.tabs.executeScript(tab.id, {     code: "try { "+
-                                                   "start_highlight(" + JSON.stringify(xpath) + "); "+
+                                                   "start_highlight(" + JSON.stringify(xpath) + ", " + JSON.stringify(type) + "); " +
                                                    "} catch (err) {console.error(err)}" }, function() {}
                                             );
                 } else {

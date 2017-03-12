@@ -8,18 +8,17 @@ function xhrWithAuth(method, url, interactive, callback, params) {
         });
 }
 
-function get_xpath(callback){
-   chrome.runtime.sendMessage({get_xpath: {}});
-
+function get_xpath() {
+    chrome.runtime.sendMessage({get_xpath: {}});
 }
 
-function starthighlight(xpath,callback){
-   chrome.runtime.sendMessage({start_highlight: {xpath: xpath}});
-
+function starthighlight(xpath, type) {
+    if (xpath != '') {
+        chrome.runtime.sendMessage({start_highlight: {xpath: xpath, type: type}});
+    }
 }
-function stophighlight(callback){
-   chrome.runtime.sendMessage({stop_highlight: {}});
-
+function stophighlight() {
+    chrome.runtime.sendMessage({stop_highlight: {}});
 }
 
 

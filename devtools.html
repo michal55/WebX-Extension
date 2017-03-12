@@ -106,6 +106,8 @@
                       <input
                         ng-model="script_builder.scripts[field.scriptId].xpath"
                         ng-change="changeScript()"
+                        ng-focus="focusScript(field)"
+                        ng-blur="blurScript()"
                         class="form-control">
                       <span
                         class="btn btn-primary input-group-addon"
@@ -132,6 +134,8 @@
                       <input
                         ng-model="positive.xpath"
                         ng-change="changeScript()"
+                        ng-focus="focusScript(field)"
+                        ng-blur="blurScript()"
                         class="form-control">
                     </div>
                     <div class="input-group" ng-repeat="negative in field.negatives">
@@ -143,6 +147,8 @@
                       <input
                         ng-model="negative.xpath"
                         ng-change="changeScript()"
+                        ng-focus="focusScript(field)"
+                        ng-blur="blurScript()"
                         class="form-control">
                     </div>
                     <div ng-show="(field.negatives && field.negatives.length) || (field.positives && field.positives.length)">

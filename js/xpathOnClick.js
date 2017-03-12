@@ -18,7 +18,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             }
         }
     }
-    $("<style type='text/css'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6);;} </style>").appendTo("head"); 
+    $("<style type='text/css'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6);;} </style>").appendTo("head");
     // must be function in function - need to pass ae variable
     function handler (event) {
         for (var i = 0; i < ae.length; i++) {
@@ -29,13 +29,13 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         event.stopPropagation();
 
         var e = this;
-    
+
         for (var path = ''; e && e.nodeType == 1; e = e.parentNode) {
             var predicate = [];
             var brothers = e.parentNode.children;
             var count = 0;
             var unique = false;
-    
+
             for (var i = 0; brothers && (i < brothers.length); i++) {
                 if (brothers[i].tagName == e.tagName) {
                     count++;
@@ -61,7 +61,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             idx = ( useIdx && idx && !unique ) ? ('[' + idx + ']') : '';
             predicate = (predicate.length > 0) ? ('[' + predicate.join(' and ') + ']') : '';
             path='/' + e.tagName.toLowerCase() + idx + predicate + path;
-      
+
             if (unique && relative) {
             path = '/' + path;
             break;
@@ -110,12 +110,21 @@ function xpathArray(parent, exp) {
     return a;
 }
 
-function start_highlight(xpath) {
+function start_highlight(xpath, type) {
     console.log("xpath in highlight");
     console.log(xpath);
     $("<style type='text/css'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4);;} </style>").appendTo("head");
     $("<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6);;} </style>").appendTo("head");
-    var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null); 
+    $("<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6);;} </style>").appendTo("head");
+
+    var style = 'highlighting-selected-elements';
+    if (type == 'positive') {
+        style = 'highlighting-positive-elements';
+    } else if (type == 'negative') {
+        style = 'highlighting-negative-elements';
+    }
+
+    var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements_iter.iterateNext();
     var elements = [];
     while (el) {
@@ -123,14 +132,15 @@ function start_highlight(xpath) {
         el = elements_iter.iterateNext();
     }
     for (i in elements) {
-        elements[i].className += " highlighting-selected-elements";
+        elements[i].className += ' ' + style;
     }
-    
+
 }
 
 function stop_highlight() {
-    $('*').removeClass("highlighting-selected-elements");
-    $('*').removeClass("highlighting-negative-elements");
+    $('*').removeClass('highlighting-selected-elements');
+    $('*').removeClass('highlighting-negative-elements');
+    $('*').removeClass('highlighting-positive-elements');
 }
 
 

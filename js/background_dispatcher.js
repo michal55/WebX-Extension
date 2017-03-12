@@ -19,11 +19,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
 
     } else if (request.stop_highlight) {
-        highlight(0,[]);
+        highlight(false);
         return true;
 
     } else if (request.start_highlight) {
-        highlight(1,request.start_highlight.xpath);
+        highlight(true, request.start_highlight.xpath, request.start_highlight.type);
         return true;
     }
 
