@@ -121,7 +121,7 @@ app.controller('main', function($scope) {
     };
 
     $scope.changeScript = function() {
-
+        localStorage.script_builder = $scope.script_builder.toJSON();
     };
 
     $scope.saveScript = function() {
