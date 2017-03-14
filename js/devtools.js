@@ -50,7 +50,6 @@ app.controller('main', function($scope) {
                         var field_type = result_type.field_type;
                         if (field_type == 'field_id') {
                             $scope.script_builder.scripts[field_id].xpath = storageChange.newValue;
-
                             localStorage.script_builder = $scope.script_builder.toJSON();
                             $scope.$digest();
                         } else {
@@ -159,15 +158,12 @@ app.controller('main', function($scope) {
     };
 
     $scope.addPositiveInput = function(field) {
-        console.log('positive input:', field);
         if (typeof field.positives === 'undefined') {
-            console.log('mame prazdny positives, robiem novy');
             field.positives = [{
                 'xpath': '',
                 'id': 0
             }]
         } else {
-            console.log('uz tam nieco mame, vid: ', field.positives);
             field.positives.push({
                 'xpath': '',
                 'id': field.positives.length
@@ -176,15 +172,12 @@ app.controller('main', function($scope) {
     };
 
     $scope.addNegativeInput = function(field) {
-        console.log('negative input:', field);
         if (typeof field.negatives === 'undefined') {
-            console.log('mame prazdny positives, robiem novy');
             field.negatives = [{
                 'xpath': '',
                 'id': 0
             }]
         } else {
-            console.log('uz tam nieco mame, vid: ', field.negatives);
             field.negatives.push({
                 'xpath': '',
                 'id': field.negatives.length
@@ -199,9 +192,6 @@ app.controller('main', function($scope) {
             var p_xpath = field.positives[i].xpath.split('/');
 
             if (main_xpath.length != p_xpath.length) {
-                console.log('xpaths do not have same length!');
-                console.log(main_xpath);
-                console.log(p_xpath);
                 continue;
             }
 
@@ -213,12 +203,6 @@ app.controller('main', function($scope) {
                 } else if (temp_m.indexOf('[') == -1) {
                     continue;
                 } else if (temp_m.substr(0,temp_m.indexOf('[')).replace(/ /g, '') != temp_p.substr(0,temp_p.indexOf('[')).replace(/ /g, '')) {
-                    conslole.log('xpaths cant by merged!');
-                    console.log(main_xpath);
-                    console.log(p_xpath);
-                    conslole.log('different in:');
-                    console.log(temp_m);
-                    console.log(temp_m);
                     break;
                 } else {
                     temp_m = temp_m.substr(0, temp_m.indexOf('['));
@@ -231,9 +215,6 @@ app.controller('main', function($scope) {
             var n_xpath = field.negatives[i].xpath.split('/');
 
             if (main_xpath.length != n_xpath.length) {
-                console.log('xpaths do not have same length!');
-                console.log(main_xpath);
-                console.log(n_xpath);
                 continue;
             }
 

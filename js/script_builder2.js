@@ -117,6 +117,7 @@ class ScriptBuilder {
         }
 
         var size = this.post_processing_stack.length;
+
         if (size > 0) {
             return this.scripts[this.post_processing_stack[size - 1]].name;
         } else {

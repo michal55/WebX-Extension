@@ -21,7 +21,6 @@ function stophighlight() {
     chrome.runtime.sendMessage({stop_highlight: {}});
 }
 
-
 function apiGet(url, callback, params) {
     xhrWithAuth('GET', url, false, callback, params);
 }
