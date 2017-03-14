@@ -6,6 +6,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/options_helper.js"></script>
+    <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
@@ -14,7 +15,7 @@
 
   <body ng-app="extension" ng-controller="main" ng-init="init()" ngcloak>
     <div ng-show="loading"> <h1 style="text-align: center; padding: 150px"> LOADING...</h1> </div>
-    <div ng-hide="targeting || loading">
+    <div ng-hide="loading">
       <div class="row">
         <div class="col-xs-12">
           <div class="navbar-xs">
@@ -74,13 +75,18 @@
           </div>
         </div>
         <div class="col-xs-9">
-          <div ng-show="xpaths">
+          <div ng-show="!script.disabled">
             <table class="table table-hover">
               <input
-                ng-model="xpaths.url"
-                ng-change="changeScript()"
+                ng-show="!script_builder.getStackPointer()"
+                ng-model="script_builder.url"
+                ng-change="changeXpath()"
                 placeholder="Source page url"
                 class="form-control">
+              <div ng-show="script_builder.getStackPointer()">
+                <span class="btn btn-default" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
+                <span>postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getStackPointer() }}</span>
+              </div>
               <thead>
                 <tr>
                   <th>Field</th>
@@ -88,19 +94,69 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="field in xpaths.data">
+                <tr ng-repeat="field in script_builder.data_fields">
                   <td> {{ field.name }} </td>
                   <td>
                     <div class="input-group">
-                      <button
-                        class="btn btn-primary"
-                        ng-click="toggleTargeting(field.name)">
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="toggleTargeting(field.scriptId, 'field_id', -1)">
                         &#9673;
-                      </button>
+                      </span>
                       <input
-                        ng-model="field.value"
-                        ng-change="changeScript()"
+                        ng-model="script_builder.scripts[field.scriptId].xpath"
+                        ng-change="changeXpath()"
+                        ng-focus="focusXpath(field)"
+                        ng-blur="blurXpath()"
                         class="form-control">
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="addPositiveInput(field)">
+                        +
+                      </span>
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="addNegativeInput(field)">
+                        -
+                      </span>
+                      <span
+                        class="btn btn-primary input-group-addon"
+                        ng-click="script_builder.addPostProcessing(field.scriptId)">
+                        &#10148;
+                      </span>
+                    </div>
+                    <div class="input-group" ng-repeat="positive in field.positives">
+                      <span
+                        class="btn btn-primary input-group-addon positive-match"
+                        ng-click="toggleTargetingForSquash(field.name, 'positive_id', positive.id)">
+                        &#9673;
+                      </span>
+                      <input
+                        ng-model="positive.xpath"
+                        ng-change="changeXpath()"
+                        ng-focus="focusXpath(field)"
+                        ng-blur="blurXpath()"
+                        class="form-control">
+                    </div>
+                    <div class="input-group" ng-repeat="negative in field.negatives">
+                      <span
+                        class="btn btn-primary input-group-addon negative-match"
+                        ng-click="toggleTargetingForSquash(field.name, 'negative_id', negative.id)">
+                        &#9673;
+                      </span>
+                      <input
+                        ng-model="negative.xpath"
+                        ng-change="changeXpath()"
+                        ng-focus="focusXpath(field)"
+                        ng-blur="blurXpath()"
+                        class="form-control">
+                    </div>
+                    <div ng-show="(field.negatives && field.negatives.length) || (field.positives && field.positives.length)">
+                      <span
+                        class="btn btn-primary"
+                        ng-click="squash(field)">
+                        Squash
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -116,9 +172,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div ng-show="targeting">
-      <span class="btn btn-info" ng-click="toggleTargeting()">&#5130;</span>
     </div>
   </body>
 </html>
