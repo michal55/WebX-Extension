@@ -11,12 +11,13 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         if (ae[i].tagName == 'IFRAME') {
             try {
                 var d = ae[i].contentDocument;
-            }
-            catch (err) { }
 
-            if (d) {
-                addNodes(ae, d.getElementsByTagName("*"));
-            }
+                if (d) {
+                    addNodes(ae, d.getElementsByTagName("*"));
+                    }
+                }
+
+            catch (err) {}
         }
     }
 
@@ -40,7 +41,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             var count = 0;
             var unique = false;
 
-            for (var i = 0; brothers && (i < brothers.length); i++) {
+            for ( i = 0; brothers && (i < brothers.length); i++) {
                 if (brothers[i].tagName == e.tagName) {
                     count++;
                     if (brothers[i] == e) {
@@ -76,7 +77,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         return false;
     }
 
-    for (var i = 0; i < ae.length; i++) {
+    for ( i = 0; i < ae.length; i++) {
         ae[i].addEventListener('click', handler);
     }
 
@@ -99,19 +100,19 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 }
 
 function xpathArray(parent, exp) {
-    if (! parent ) {
+    if (! parent ) { 
         return parent;
-    }
+        }
 
-    if (parent != document && exp.match("^\\/")) {
-        console.error('path', exp, 'should be relative to a specific parent but seems to be absolute. Did you forget a starting dot?');
-    }
+        if (parent != document && exp.match("^\\/")) {
+            console.error('path', exp, 'should be relative to a specific parent but seems to be absolute. Did you forget a starting dot?');
+        }
 
     var it = document.evaluate(exp, parent, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var a = [];
     var i = it.iterateNext();
 
-    while (i != null) {
+    while (i !== null) {
         a.push(i);
         i = it.iterateNext();
     }
