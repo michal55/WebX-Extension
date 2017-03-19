@@ -9,7 +9,7 @@ class Nested {
 
     save() {
         return {
-            type: 'nested',
+            type: Nested.type,
             data: []
         }
     };
@@ -25,4 +25,5 @@ class Nested {
     };
 }
 
-Postprocessing.register('nested', Nested);
+Nested.type = 'nested';
+Postprocessing.register(Nested);

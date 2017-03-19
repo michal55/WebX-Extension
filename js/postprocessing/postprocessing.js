@@ -12,10 +12,10 @@ class PostprocessingName {
         return false;
     };
 
-
     save() {
         // Returns javascript object which is converted to JSON and saved
         return {
+            type: PostprocessingName.type,
             foo: this.foo
         };
     };
@@ -29,8 +29,9 @@ class PostprocessingName {
     registerChild(childId) { };
 }
 
-// Register postprocessing under chosen name
-Postprocessing.register('name', PostprocessingName);
+// Register postprocessing under chosen type
+PostprocessingName.type = 'type';
+Postprocessing.register(PostprocessingName);
 */
 
 
@@ -38,8 +39,8 @@ function Postprocessing() { }
 
 Postprocessing.types = [];
 
-Postprocessing.register = function(name, proto) {
-    Postprocessing.types[name] = proto;
+Postprocessing.register = function(proto) {
+    Postprocessing.types[proto.type] = proto;
 };
 
 Postprocessing.create = function(name) {
