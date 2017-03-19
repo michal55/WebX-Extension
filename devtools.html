@@ -6,6 +6,8 @@
     <script src="js/jquery.js"></script>
     <script src="js/angular.js"></script>
     <script src="js/options_helper.js"></script>
+    <script src="js/postprocessing/postprocessing.js"></script>
+    <script src="js/postprocessing/nested.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
@@ -121,7 +123,7 @@
                       </span>
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="script_builder.addPostProcessing(field.scriptId)">
+                        ng-click="script_builder.addPostProcessing(field.scriptId, 0, 'nested')">
                         &#10148;
                       </span>
                     </div>
