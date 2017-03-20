@@ -37,3 +37,15 @@ h1 {
 .negative-match {
 	background-color: #F44336;
 }
+
+.tabs-headers .tab {
+	display: inline;
+}
+
+.tab .del {
+	color: red;
+}
+
+.tab .del:hover {
+	color: #FF0;
+}
