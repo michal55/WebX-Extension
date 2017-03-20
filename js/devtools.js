@@ -286,4 +286,33 @@ app.controller('main', function($scope) {
             }
         });
     };
+
+    $scope.script_postprocessings = [
+        {
+            name: 'nested'
+        },
+        {
+            name: 'href cleaning'
+        }
+    ];
+
+    $scope.postprocessings = [
+        {
+            name: 'Nested',
+            type: 'nested'
+        },
+        {
+            name: 'Href cleaning',
+            type: 'hrefcleaning'
+        }
+    ]
+
+    $scope.deletePostprocessing = function(postprocessing) {
+        $scope.script_postprocessings.pop(postprocessing);
+        $scope.digest();
+    }
+
+    $scope.addPostprocessing = function(postprocessing) {
+        $scope.script_postprocessings.push($scope.selected_postprocessing);
+    }
 });
