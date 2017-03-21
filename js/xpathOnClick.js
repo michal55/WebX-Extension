@@ -14,8 +14,8 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 
                 if (d) {
                     addNodes(ae, d.getElementsByTagName("*"));
-                    }
                 }
+            }
 
             catch (err) {}
         }
@@ -102,11 +102,11 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 function xpathArray(parent, exp) {
     if (! parent ) { 
         return parent;
-        }
+    }
 
-        if (parent != document && exp.match("^\\/")) {
-            console.error('path', exp, 'should be relative to a specific parent but seems to be absolute. Did you forget a starting dot?');
-        }
+    if (parent != document && exp.match("^\\/")) {
+        console.error('path', exp, 'should be relative to a specific parent but seems to be absolute. Did you forget a starting dot?');
+    }
 
     var it = document.evaluate(exp, parent, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
     var a = [];
