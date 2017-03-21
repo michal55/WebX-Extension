@@ -84,7 +84,7 @@
                 placeholder="Source page url"
                 class="form-control">
               <div ng-show="script_builder.getStackPointer()">
-                <span class="btn btn-default" ng-click="isDisabled" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
+                <span class="btn btn-default" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
                 <span>postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getStackPointer() }}</span>
               </div>
               <thead>
@@ -100,7 +100,7 @@
                     <div class="input-group">
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="isDisabled && toggleTargeting(field.scriptId, 'field_id', -1)">
+                        ng-click="isEnabled && toggleTargeting(field.scriptId, 'field_id', -1)">
                         &#9673;
                       </span>
                       <input
@@ -128,7 +128,7 @@
                     <div class="input-group" ng-repeat="positive in field.positives">
                       <span
                         class="btn btn-primary input-group-addon positive-match"
-                        ng-click="isDisabled && toggleTargetingForSquash(field.name, 'positive_id', positive.id)">
+                        ng-click="isEnabled && toggleTargetingForSquash(field.name, 'positive_id', positive.id)">
                         &#9673;
                       </span>
                       <input
@@ -141,7 +141,7 @@
                     <div class="input-group" ng-repeat="negative in field.negatives">
                       <span
                         class="btn btn-primary input-group-addon negative-match"
-                        ng-click="isDisabled && toggleTargetingForSquash(field.name, 'negative_id', negative.id)">
+                        ng-click="isEnabled && toggleTargetingForSquash(field.name, 'negative_id', negative.id)">
                         &#9673;
                       </span>
                       <input
