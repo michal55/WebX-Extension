@@ -100,7 +100,7 @@
                     <div class="input-group">
                       <span
                         class="btn btn-primary input-group-addon"
-                        ng-click="isEnabled && toggleTargeting(field.scriptId, 'field_id', -1)">
+                        ng-click="toggleTargeting(field.scriptId, 'field_id', -1)">
                         &#9673;
                       </span>
                       <input
@@ -128,7 +128,7 @@
                     <div class="input-group" ng-repeat="positive in field.positives">
                       <span
                         class="btn btn-primary input-group-addon positive-match"
-                        ng-click="isEnabled && toggleTargetingForSquash(field.name, 'positive_id', positive.id)">
+                        ng-click="toggleTargetingForSquash(field.name, 'positive_id', positive.id)">
                         &#9673;
                       </span>
                       <input
@@ -141,7 +141,7 @@
                     <div class="input-group" ng-repeat="negative in field.negatives">
                       <span
                         class="btn btn-primary input-group-addon negative-match"
-                        ng-click="isEnabled && toggleTargetingForSquash(field.name, 'negative_id', negative.id)">
+                        ng-click="toggleTargetingForSquash(field.name, 'negative_id', negative.id)">
                         &#9673;
                       </span>
                       <input

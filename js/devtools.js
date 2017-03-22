@@ -1,9 +1,9 @@
 var app = angular.module('extension', []);
 app.controller('main', function($scope) {
-    
     $scope.init = function() {
         $scope.loading = true;
-        $scope.isEnabled = true;
+        $scope.targeting_in_progress = false;
+
         getServerURL(function(url_base) {
             $scope.url_base = url_base;
 
@@ -68,7 +68,8 @@ app.controller('main', function($scope) {
                         }
                     });
                 });
-                $scope.isEnabled = true;
+
+                $scope.targeting_in_progress = false;
             }
         }
     });
@@ -138,11 +139,14 @@ app.controller('main', function($scope) {
     };
 
     $scope.toggleTargeting = function(field_id, field_type, indx) {
-        $scope.isEnabled = false;
         chrome.storage.local.set({'field_id': field_id}, function() {});
         chrome.storage.local.set({'field_type': field_type}, function() {});
         chrome.storage.local.set({'pos_neg_indx': indx}, function() {});
-        get_xpath();
+
+        if ($scope.targeting_in_progress == false) {
+            $scope.targeting_in_progress = true;
+            get_xpath();
+        }
     };
 
     $scope.toggleTargetingForSquash = function(field_name, field_type, indx) {
@@ -284,7 +288,7 @@ app.controller('main', function($scope) {
     $scope.refresh = function() {
         uiLoginCheck($scope, function(status, response) {
             if (status != null) {
-                $scope.isEnabled = true;
+                $scope.targeting_in_progress = false;
                 $scope.getProjects();
             }
         });

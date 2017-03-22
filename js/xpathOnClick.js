@@ -16,8 +16,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
                     addNodes(ae, d.getElementsByTagName("*"));
                 }
             }
-
-            catch (err) {}
+            catch (err) { }
         }
     }
 
@@ -41,7 +40,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             var count = 0;
             var unique = false;
 
-            for ( i = 0; brothers && (i < brothers.length); i++) {
+            for (var i = 0; brothers && (i < brothers.length); i++) {
                 if (brothers[i].tagName == e.tagName) {
                     count++;
                     if (brothers[i] == e) {
@@ -77,7 +76,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         return false;
     }
 
-    for ( i = 0; i < ae.length; i++) {
+    for (var i = 0; i < ae.length; i++) {
         ae[i].addEventListener('click', handler);
     }
 
@@ -100,7 +99,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 }
 
 function xpathArray(parent, exp) {
-    if (! parent ) { 
+    if (! parent ) {
         return parent;
     }
 
