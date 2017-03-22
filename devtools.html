@@ -80,8 +80,11 @@
           <div ng-show="!script.disabled">
             <div class="tabs-headers row">
               <div class="col-md-8">
-                <div ng-repeat="postprocessing in script_postprocessings" class="tab btn btn-default form-control">
-                  {{ postprocessing.name }} <span class="del" ng-click="deletePostprocessing(postprocessing)">X</span>
+                <div 
+                  ng-repeat="postprocessing in script_builder.scripts[script_builder.state].postprocessing"
+                  class="tab btn btn-default form-control"
+                  ng-click="script_builder.selectPostprocessing(postprocessing)">
+                  {{ postprocessing.label }} <span class="del" ng-click="deletePostprocessing(postprocessing)">X</span>
                 </div>
               </div>
               <div class="col-md-4">
@@ -91,11 +94,13 @@
                     ng-model="selected_postprocessing"
                     ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
                   </select>
-                  <span class="btn btn-default input-group-addon" ng-click="addPostprocessing()"> add </span>
+                  <span class="btn btn-default input-group-addon" ng-click="script_builder.addPostProcessing(script_builder.state, selected_postprocessing.type)">
+                    add
+                  </span>
                 </div>
               </div>
             </div>
-            <div class="tab-container row">
+            <div class="tab-container row" ng-show="script_builder.isSelected('nested')">
               <div class="col-md-12">
                 <table class="table table-hover">
                   <input
@@ -142,7 +147,7 @@
                           </span>
                           <span
                             class="btn btn-primary input-group-addon"
-                            ng-click="script_builder.addPostProcessing(field.scriptId, 0, 'nested')">
+                            ng-click="script_builder.showPostProcessings(field)">
                             &#10148;
                           </span>
                         </div>

@@ -1,6 +1,8 @@
 class Nested {
     constructor() {
         this.children_ids = [];
+        this.label = 'Nested';
+        this.type = 'nested';
     }
 
     canHaveChildren() {

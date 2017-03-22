@@ -287,15 +287,6 @@ app.controller('main', function($scope) {
         });
     };
 
-    $scope.script_postprocessings = [
-        {
-            name: 'nested'
-        },
-        {
-            name: 'href cleaning'
-        }
-    ];
-
     $scope.postprocessings = [
         {
             name: 'Nested',
@@ -314,5 +305,10 @@ app.controller('main', function($scope) {
 
     $scope.addPostprocessing = function(postprocessing) {
         $scope.script_postprocessings.push($scope.selected_postprocessing);
+        $scope.script_builder.addPostProcessing(field.scriptId, 0, 'nested')
+    }
+
+    $scope.selectPostProcesssing = function() {
+        
     }
 });

@@ -10,6 +10,8 @@ class ScriptBuilder {
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.data_fields = data_fields;
+        this.state = this.ROOT;
+        this.selected_postprocessing = this.ROOT_PP;
     }
 
     //!!! To be reworked
@@ -88,6 +90,7 @@ class ScriptBuilder {
     }
 
     displayScript(scriptId, postprocessingId) {
+        this.post_processing_stack.push([scriptId, postprocessingId]);
         console.assert(this.scripts[scriptId].postprocessing[postprocessingId].canHaveChildren(), 'Attempt to display script / postprocessing combination without children');
 
         // Find existing child or create new for each data field
@@ -106,17 +109,28 @@ class ScriptBuilder {
         }
     }
 
+    selectPostprocessing(postprocessing) {
+        this.selected_postprocessing = postprocessing;
+        console.log("selected: ", postprocessing);
+        this.displayScript(this.state, 0);
+    }
+
+    showPostProcessings(current_field) {
+        this.state = current_field.scriptId;
+        this.selected_postprocessing = false;
+        this.displayScript(this.state, 0);
+    }
+
+    isSelected(name) {
+        return name == this.selected_postprocessing.type;
+    }
+
     // scriptId - id of script, same as before
     // postprocessingId - id of postprocessing, relevant for ordering and indexing
     // postprocessingName - postprocessing to be created if one doesn't exist, ignored if postprocessing with supplied id exists
-    addPostProcessing(scriptId, postprocessingId, postprocessingName) {
-        if (this.scripts[scriptId].postprocessing[postprocessingId] == undefined) {
-            this.scripts[scriptId].postprocessing[postprocessingId] = Postprocessing.create(postprocessingName);
-        }
-
-        this.displayScript(scriptId, postprocessingId);
-        this.post_processing_stack.push([scriptId, postprocessingId]);
-
+    addPostProcessing(scriptId, postprocessingName) {
+        this.scripts[scriptId].postprocessing.push(Postprocessing.create(postprocessingName));
+        this.selected_postprocessing = this.scripts[scriptId].postprocessing[this.scripts[scriptId].postprocessing.length - 1]
         localStorage.script_builder = this.toJSON();
     }
 
