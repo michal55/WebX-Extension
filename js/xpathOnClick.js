@@ -1,3 +1,4 @@
+
 // Message handler for xpathOnClick.js content script
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
@@ -168,4 +169,30 @@ function stop_highlight() {
     $('*').removeClass('highlighting-positive-elements');
 }
 
+function get_attributes(xpath) {
+    var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
+    var el = elements.iterateNext();
+    var attributes = [];
+
+    while (el !== null) {
+        if ( el.textContent !== undefined) {
+            attributes.push("string");
+            if (isNaN(parseFloat(el.textContent)) !== true) {
+                attributes.push("float");
+                attributes.push("integer");
+            }
+        }
+        
+        var i = 0;
+        while ( i < el.attributes.length) {
+            if (attributes.indexOf(el.attributes[i].name) == -1 ) {
+                attributes.push(el.attributes[i].name);
+            }
+            i += 1;
+        }
+        el = elements.iterateNext();
+    }
+
+    chrome.storage.local.set({'attributes': JSON.stringify(attributes)}, function() {});
+}
 
