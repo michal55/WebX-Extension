@@ -35,3 +35,22 @@ function highlight(tab_id, start, xpath, type) {
 
     return true;
 }
+
+function get_attributes(xpath) {
+    chrome.tabs.getSelected(null, function(tab) {
+        try {
+            chrome.tabs.executeScript(tab.id, { file: 'js/jquery.js' }, function() {
+                chrome.tabs.executeScript(tab.id, { file: 'js/xpathOnClick.js' }, function() {
+                    chrome.tabs.executeScript(tab.id, { code:
+                        'try { ' +
+                            'get_attributes(' + JSON.stringify(xpath) + '); ' +
+                        '} catch (err) { console.error(err) }' }, function() {});
+                });
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+    });
+
+    return true;
+}
