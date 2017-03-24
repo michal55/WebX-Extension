@@ -1,3 +1,4 @@
+
 // Message handler for xpathOnClick.js content script
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
