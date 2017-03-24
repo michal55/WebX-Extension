@@ -67,6 +67,10 @@ app.controller('main', function($scope) {
                         }
                     });
                 });
+
+            } else if (key == 'attributes') {
+                console.log("attributes");
+                console.log(storageChange.newValue);
             }
         }
     });

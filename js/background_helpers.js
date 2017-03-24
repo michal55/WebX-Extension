@@ -21,6 +21,10 @@ function stophighlight() {
     chrome.runtime.sendMessage({stop_highlight: {}});
 }
 
+function get_attributes(xpath){
+    chrome.runtime.sendMessage({get_attributes: {xpath: xpath}});
+}
+
 function apiGet(url, callback, params) {
     xhrWithAuth('GET', url, false, callback, params);
 }
