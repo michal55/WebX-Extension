@@ -14,25 +14,24 @@ class ScriptBuilder {
         this.selected_postprocessing_id = this.ROOT_PP;
     }
 
-    //!!! To be reworked
     toJSON() {
         return angular.toJson({
-            url: this.url,
-            ROOT: this.ROOT,
-            scripts: this.scripts,
+            json: this.getJson(),
             post_processing_stack: this.post_processing_stack,
-            data_fields: this.data_fields
+            data_fields: this.data_fields,
+            selected_script_id: this.selected_script_id,
+            selected_postprocessing_id: this.selected_postprocessing_id
         });
     }
 
-    //!!! To be reworked
     fromJSON(json) {
         var data = angular.fromJson(json);
-        this.url = data.url;
-        this.ROOT = data.ROOT;
-        this.scripts = data.scripts;
-        this.post_processing_stack = data.post_processing_stack;
         this.data_fields = data.data_fields;
+        this.loadScripts(data.json);
+        this.post_processing_stack = data.post_processing_stack;
+        this.selected_script_id = data.selected_script_id;
+        this.selected_postprocessing_id = data.selected_postprocessing_id;
+        this.show(this.selected_script_id, this.selected_postprocessing_id);
     }
 
     loadScripts(scripts) {
@@ -133,12 +132,14 @@ class ScriptBuilder {
     selectPostprocessing(postprocessing) {
         this.show(this.selected_script_id, postprocessing.id);
 
-        console.log('selected: ', postprocessing);
+        localStorage.script_builder = this.toJSON();
     }
 
     // On arrow (->) click right of xpath input field
     showPostProcessings(current_field) {
         this.show(current_field.script_id, 0, true);
+
+        localStorage.script_builder = this.toJSON();
     }
 
     isSelectedPostprocessing(name) {
@@ -170,6 +171,8 @@ class ScriptBuilder {
         } else if (postprocessing_id < this.selected_postprocessing_id) {
             this.show(this.selected_script_id, this.selected_postprocessing_id - 1);
         }
+
+        localStorage.script_builder = this.toJSON();
     }
 
     leavePostProcessing() {
@@ -177,7 +180,6 @@ class ScriptBuilder {
         var size = this.post_processing_stack.length;
         this.show(this.post_processing_stack[size - 1][0], this.post_processing_stack[size - 1][1]);
 
-        console.log('leaving ', this.post_processing_stack);
         localStorage.script_builder = this.toJSON();
     }
 

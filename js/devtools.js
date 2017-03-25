@@ -34,10 +34,9 @@ app.controller('main', function($scope) {
         $scope.scripts = angular.fromJson(localStorage.scripts);
         $scope.script = angular.fromJson(localStorage.script);
 
-        //!!! To be reworked, click refresh after load
         if (localStorage.script_builder) {
-            //$scope.script_builder = new ScriptBuilder();
-            //$scope.script_builder.fromJSON(localStorage.script_builder);
+            $scope.script_builder = new ScriptBuilder();
+            $scope.script_builder.fromJSON(localStorage.script_builder);
         }
     }
 
