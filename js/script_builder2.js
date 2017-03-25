@@ -203,7 +203,11 @@ class ScriptBuilder {
             return;
         }
 
-        var data = {name: script.name, xpath: script.xpath, postprocessing: []};
+        var data = {name: script.name, xpath: script.xpath};
+
+        if (script.postprocessing.length) {
+            data.postprocessing = [];
+        }
 
         for (var i in script.postprocessing) {
             var postprocessing = script.postprocessing[i];
