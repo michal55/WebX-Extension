@@ -157,6 +157,19 @@ class ScriptBuilder {
     // On postprocessing tab X click
     deletePostprocessing(postprocessing_id) {
         this.getSelectedScript().postprocessing.splice(postprocessing_id, 1);
+
+        // Update ids
+        for (var i = postprocessing_id; i < this.getSelectedScript().postprocessing.length; ++i) {
+            this.getSelectedScript().postprocessing[i].id = i;
+        }
+
+        // If user deleted currently show postprocessing, show postprocessing 0
+        if (postprocessing_id == this.selected_postprocessing_id) {
+            this.show(this.selected_script_id, 0);
+        // If user deleted postprocessing left of shown one, keep showing the same one (now with id one less)
+        } else if (postprocessing_id < this.selected_postprocessing_id) {
+            this.show(this.selected_script_id, this.selected_postprocessing_id - 1);
+        }
     }
 
     leavePostProcessing() {
