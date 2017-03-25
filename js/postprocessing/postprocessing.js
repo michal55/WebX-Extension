@@ -5,6 +5,10 @@ class PostprocessingName {
     constructor() {
         // Constructor code, define attributes
         this.foo = 'bar';
+        // Label - shows in UI
+        this.label = 'Label';
+        // Type - same value as passed into Postprocessing.register
+        this.type = 'type';
     }
 
     canHaveChildren() {
@@ -30,8 +34,7 @@ class PostprocessingName {
 }
 
 // Register postprocessing under chosen type
-PostprocessingName.type = 'type';
-Postprocessing.register(PostprocessingName);
+Postprocessing.register(PostprocessingName, 'type');
 */
 
 
@@ -39,10 +42,12 @@ function Postprocessing() { }
 
 Postprocessing.types = [];
 
-Postprocessing.register = function(proto) {
-    Postprocessing.types[proto.type] = proto;
+Postprocessing.register = function(proto, name) {
+    Postprocessing.types[name] = proto;
 };
 
-Postprocessing.create = function(name) {
-    return new Postprocessing.types[name];
+Postprocessing.create = function(name, id) {
+    var postprocessing = new Postprocessing.types[name];
+    postprocessing.id = id;
+    return postprocessing;
 };

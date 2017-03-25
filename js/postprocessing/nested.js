@@ -27,5 +27,4 @@ class Nested {
     };
 }
 
-Nested.type = 'nested';
-Postprocessing.register(Nested);
+Postprocessing.register(Nested, 'nested');

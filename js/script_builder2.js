@@ -6,12 +6,12 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested')]
+            postprocessing: [Postprocessing.create('nested', this.ROOT_PP)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.data_fields = data_fields;
-        this.state = this.ROOT;
-        this.selected_postprocessing = this.ROOT_PP;
+        this.selected_script_id = this.ROOT;
+        this.selected_postprocessing_id = this.ROOT_PP;
     }
 
     //!!! To be reworked
@@ -40,17 +40,19 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested')]
+            postprocessing: [Postprocessing.create('nested', this.ROOT_PP)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
+        this.selected_script_id = this.ROOT;
+        this.selected_postprocessing_id = this.ROOT_PP;
 
         this._loadScripts(scripts, this.ROOT, this.ROOT_PP);
-        this.displayScript(this.ROOT, this.ROOT_PP);
+        this.show(this.ROOT, this.ROOT_PP);
 
         localStorage.script_builder = this.toJSON();
     }
 
-    createScript(name, xpath, parentScriptId, parentPostprocessingId) {
+    createScript(name, xpath, parent_script_id, parent_postprocessing_id) {
         var id = this.scripts.length;
         var script = {
             id: id,
@@ -59,13 +61,13 @@ class ScriptBuilder {
             postprocessing: []
         };
 
-        this.scripts[parentScriptId].postprocessing[parentPostprocessingId].registerChild(id);
+        this.scripts[parent_script_id].postprocessing[parent_postprocessing_id].registerChild(id);
         this.scripts.push(script);
 
         return id;
     }
 
-    _loadScripts(scripts, parentScriptId, parentPostprocessingId) {
+    _loadScripts(scripts, parent_script_id, parent_postprocessing_id) {
         for (var i in scripts.data) {
             var script = scripts.data[i];
 
@@ -74,12 +76,12 @@ class ScriptBuilder {
                 continue;
             }
 
-            var id = this.createScript(script.name, script.xpath, parentScriptId, parentPostprocessingId);
+            var id = this.createScript(script.name, script.xpath, parent_script_id, parent_postprocessing_id);
 
             for (var j in script.postprocessing || []) {
                 var postprocessing = script.postprocessing[j];
 
-                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type);
+                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, j);
                 this.scripts[id].postprocessing[j].load(postprocessing);
 
                 if (this.scripts[id].postprocessing[j].canHaveChildren()) {
@@ -89,56 +91,80 @@ class ScriptBuilder {
         }
     }
 
-    displayScript(scriptId, postprocessingId) {
-        this.post_processing_stack.push([scriptId, postprocessingId]);
-        console.assert(this.scripts[scriptId].postprocessing[postprocessingId].canHaveChildren(), 'Attempt to display script / postprocessing combination without children');
+    show(script_id, postprocessing_id, new_level) {
+        this.selected_script_id = script_id;
+        this.selected_postprocessing_id = postprocessing_id;
+
+        if (new_level) {
+            this.post_processing_stack.push([script_id, postprocessing_id]);
+        } else {
+            this.post_processing_stack[this.post_processing_stack.length - 1] = [script_id, postprocessing_id];
+        }
+
+        if (!this.getSelectedPostprocessing() || !this.getSelectedPostprocessing().canHaveChildren()) {
+            return;
+        }
 
         // Find existing child or create new for each data field
         for (var i in this.data_fields) {
             var data_field = this.data_fields[i];
-            var childId = this.scripts[scriptId].postprocessing[postprocessingId].children_ids.find((childId) => this.scripts[childId].name == data_field.name);
+            var childId = this.getSelectedPostprocessing().children_ids.find((childId) => this.scripts[childId].name == data_field.name);
 
             data_field.positives = [];
             data_field.negatives = [];
 
             if (childId != undefined) {
-                data_field.scriptId = childId;
+                data_field.script_id = childId;
             } else {
-                data_field.scriptId = this.createScript(data_field.name, '', scriptId, postprocessingId);
+                data_field.script_id = this.createScript(data_field.name, '', script_id, postprocessing_id);
             }
         }
     }
 
+    getSelectedScript() {
+        return this.scripts[this.selected_script_id];
+    }
+
+    getSelectedPostprocessing() {
+        return this.scripts[this.selected_script_id].postprocessing[this.selected_postprocessing_id];
+    }
+
+    // On postprocessing tab click
     selectPostprocessing(postprocessing) {
-        this.selected_postprocessing = postprocessing;
-        console.log("selected: ", postprocessing);
-        this.displayScript(this.state, 0);
+        this.show(this.selected_script_id, postprocessing.id);
+
+        console.log('selected: ', postprocessing);
     }
 
+    // On arrow (->) click right of xpath input field
     showPostProcessings(current_field) {
-        this.state = current_field.scriptId;
-        this.selected_postprocessing = false;
-        this.displayScript(this.state, 0);
+        this.show(current_field.script_id, 0, true);
     }
 
-    isSelected(name) {
-        return name == this.selected_postprocessing.type;
+    isSelectedPostprocessing(name) {
+        return this.getSelectedPostprocessing() && name == this.getSelectedPostprocessing().type;
     }
 
-    // scriptId - id of script, same as before
-    // postprocessingId - id of postprocessing, relevant for ordering and indexing
-    // postprocessingName - postprocessing to be created if one doesn't exist, ignored if postprocessing with supplied id exists
-    addPostProcessing(scriptId, postprocessingName) {
-        this.scripts[scriptId].postprocessing.push(Postprocessing.create(postprocessingName));
-        this.selected_postprocessing = this.scripts[scriptId].postprocessing[this.scripts[scriptId].postprocessing.length - 1]
+    // On add postprocessing button click
+    addPostProcessing(postprocessing_name) {
+        var new_postprocessing_id = this.getSelectedScript().postprocessing.length;
+        this.getSelectedScript().postprocessing.push(Postprocessing.create(postprocessing_name, new_postprocessing_id));
+        this.show(this.selected_script_id, new_postprocessing_id);
+
         localStorage.script_builder = this.toJSON();
+    }
+
+    // On postprocessing tab X click
+    deletePostprocessing(postprocessing_id) {
+        this.getSelectedScript().postprocessing.splice(postprocessing_id, 1);
     }
 
     leavePostProcessing() {
         this.post_processing_stack.pop();
         var size = this.post_processing_stack.length;
-        this.displayScript(this.post_processing_stack[size - 1][0], this.post_processing_stack[size - 1][1]);
+        this.show(this.post_processing_stack[size - 1][0], this.post_processing_stack[size - 1][1]);
 
+        console.log('leaving ', this.post_processing_stack);
         localStorage.script_builder = this.toJSON();
     }
 
@@ -156,8 +182,8 @@ class ScriptBuilder {
         }
     }
 
-    collectJsonData(json, scriptId) {
-        var script = this.scripts[scriptId];
+    collectJsonData(json, script_id) {
+        var script = this.scripts[script_id];
 
         // Nothing to collect here
         if (script.xpath == undefined || script.xpath == '') {
