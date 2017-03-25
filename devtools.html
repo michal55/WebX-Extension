@@ -98,14 +98,14 @@
                     add
                   </span>
                   <input
-                    ng-show="!script_builder.getStackPointer()"
+                    ng-show="!script_builder.getPostprocessingStackTopName()"
                     ng-model="script_builder.url"
                     ng-change="changeXpath()"
                     placeholder="Source page url"
                     class="form-control">
-                  <div ng-show="script_builder.getStackPointer()">
+                  <div ng-show="script_builder.getPostprocessingStackTopName()">
                     <span class="btn btn-default" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
-                    <span>postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getStackPointer() }}</span>
+                    <span>postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}</span>
                   </div>
                 </div>
               </div>

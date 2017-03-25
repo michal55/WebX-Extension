@@ -1,6 +1,6 @@
 class ScriptBuilder {
     constructor(data_fields) {
-        this.url = "";
+        this.url = '';
         this.ROOT = 0;
         this.ROOT_PP = 0;
         this.scripts = [];
@@ -16,9 +16,9 @@ class ScriptBuilder {
 
     toJSON() {
         return angular.toJson({
+            data_fields: this.data_fields,
             json: this.getJson(),
             post_processing_stack: this.post_processing_stack,
-            data_fields: this.data_fields,
             selected_script_id: this.selected_script_id,
             selected_postprocessing_id: this.selected_postprocessing_id
         });
@@ -29,9 +29,7 @@ class ScriptBuilder {
         this.data_fields = data.data_fields;
         this.loadScripts(data.json);
         this.post_processing_stack = data.post_processing_stack;
-        this.selected_script_id = data.selected_script_id;
-        this.selected_postprocessing_id = data.selected_postprocessing_id;
-        this.show(this.selected_script_id, this.selected_postprocessing_id);
+        this.show(data.selected_script_id, data.selected_postprocessing_id);
     }
 
     loadScripts(scripts) {
@@ -97,7 +95,7 @@ class ScriptBuilder {
         if (new_level) {
             this.post_processing_stack.push([script_id, postprocessing_id]);
         } else {
-            this.post_processing_stack[this.post_processing_stack.length - 1] = [script_id, postprocessing_id];
+            this.setPostprocessingStackTop([script_id, postprocessing_id]);
         }
 
         if (!this.getSelectedPostprocessing() || !this.getSelectedPostprocessing().canHaveChildren()) {
@@ -107,13 +105,13 @@ class ScriptBuilder {
         // Find existing child or create new for each data field
         for (var i in this.data_fields) {
             var data_field = this.data_fields[i];
-            var childId = this.getSelectedPostprocessing().children_ids.find((childId) => this.scripts[childId].name == data_field.name);
+            var child_id = this.getSelectedPostprocessing().children_ids.find((childId) => this.scripts[childId].name == data_field.name);
 
             data_field.positives = [];
             data_field.negatives = [];
 
-            if (childId != undefined) {
-                data_field.script_id = childId;
+            if (child_id != undefined) {
+                data_field.script_id = child_id;
             } else {
                 data_field.script_id = this.createScript(data_field.name, '', script_id, postprocessing_id);
             }
@@ -126,6 +124,18 @@ class ScriptBuilder {
 
     getSelectedPostprocessing() {
         return this.scripts[this.selected_script_id].postprocessing[this.selected_postprocessing_id];
+    }
+
+    getPostprocessingStackTop() {
+        return this.post_processing_stack[this.post_processing_stack.length - 1];
+    }
+
+    setPostprocessingStackTop(value) {
+        this.post_processing_stack[this.post_processing_stack.length - 1] = value;
+    }
+
+    getPostprocessingStackTopName() {
+        return this.scripts[this.getPostprocessingStackTop()[0]].name;
     }
 
     // On postprocessing tab click
@@ -177,24 +187,9 @@ class ScriptBuilder {
 
     leavePostProcessing() {
         this.post_processing_stack.pop();
-        var size = this.post_processing_stack.length;
-        this.show(this.post_processing_stack[size - 1][0], this.post_processing_stack[size - 1][1]);
+        this.show(this.getPostprocessingStackTop()[0], this.getPostprocessingStackTop()[1]);
 
         localStorage.script_builder = this.toJSON();
-    }
-
-    getStackPointer() {
-        if (typeof this.post_processing_stack === 'undefined') {
-            return false;
-        }
-
-        var size = this.post_processing_stack.length;
-
-        if (size > 0) {
-            return this.scripts[this.post_processing_stack[size - 1][0]].name;
-        } else {
-            return false;
-        }
     }
 
     collectJsonData(json, script_id) {
