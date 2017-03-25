@@ -11,7 +11,7 @@ class Nested {
 
     save() {
         return {
-            type: Nested.type,
+            type: this.type,
             data: []
         }
     };
