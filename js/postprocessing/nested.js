@@ -12,6 +12,7 @@ class Nested {
     save() {
         return {
             type: this.type,
+            // Will be filled by 'generic' functionality in script_builder2.js
             data: []
         }
     };
