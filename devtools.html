@@ -85,8 +85,12 @@
                 <div
                   ng-repeat="postprocessing in script_builder.getSelectedScript().postprocessing"
                   class="tab btn btn-default form-control"
-                  ng-click="script_builder.selectPostprocessing(postprocessing)">
-                  {{ postprocessing.label }} <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">X</span>
+                  ng-click="script_builder.selectPostprocessing(postprocessing)"
+                >
+                  {{ postprocessing.label }}
+                  <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </span>
                 </div>
               </div>
               <div class="col-md-4">
