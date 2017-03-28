@@ -54,3 +54,7 @@ h1 {
 .active {
 	font-weight: bold;
 }
+
+.content-container {
+	padding: 20px;
+}

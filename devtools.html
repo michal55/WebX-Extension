@@ -43,7 +43,7 @@
       <div class="row" ng-show="!logged_in">
         <h1 style="text-align: center; padding: 150px">Please log in to continue</h1>
       </div>
-      <div class="row" ng-show="logged_in">
+      <div class="row content-container" ng-show="logged_in">
         <div class="col-xs-3">
           <div ng-show="projects" class="form-group">
             <div ng-show="projects.length > 1">
@@ -110,10 +110,13 @@
                     ng-model="script_builder.url"
                     ng-change="changeXpath()"
                     placeholder="Source page url"
-                    class="form-control">
-                  <div ng-show="script_builder.getPostprocessingStackTopName()">
+                    class="form-control"
+                  >
+                  <div ng-show="script_builder.getPostprocessingStackTopName()" class="form-control">
                     <span class="btn btn-default" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
-                    <span>postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}</span>
+                    <span>
+                      postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
+                    </span>
                   </div>
                 </div>
               </div>
