@@ -99,6 +99,7 @@
                   <select
                     class="form-control"
                     ng-model="selected_postprocessing"
+                    ng-init="selected_postprocessing=postprocessings[0]"
                     ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
                   </select>
                   <span class="btn btn-default input-group-addon" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
