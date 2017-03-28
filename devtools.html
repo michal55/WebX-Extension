@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/custom.css">
   </head>
-
   <body ng-app="extension" ng-controller="main" ng-init="init()" ngcloak>
     <div ng-show="loading"> <h1 style="text-align: center; padding: 150px"> LOADING...</h1> </div>
     <div ng-hide="loading">
@@ -43,6 +42,7 @@
       <div class="row" ng-show="!logged_in">
         <h1 style="text-align: center; padding: 150px">Please log in to continue</h1>
       </div>
+      <!-- ==================== MAIN CONTENT ========================== -->
       <div class="row content-container" ng-show="logged_in">
         <div class="col-xs-3">
           <div ng-show="projects" class="form-group">
@@ -80,8 +80,37 @@
         <div class="col-xs-9">
           <div ng-show="script && !script.disabled">
             <!-- ==============  HEADERS  ========================-->
+            <div class="row">
+              <div class="post-select">
+                <select
+                  class="form-control"
+                  ng-model="selected_postprocessing"
+                  ng-init="selected_postprocessing=postprocessings[0]"
+                  ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
+                </select>
+              </div>
+              <div class="post-add">
+                <span class="btn btn-default form-control" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
+                  add
+                </span>
+              </div>
+              <div class="post-info">
+                <input
+                  ng-show="!script_builder.getPostprocessingStackTopName()"
+                  ng-model="script_builder.url"
+                  ng-change="changeXpath()"
+                  placeholder="Source page url"
+                  class="form-control"
+                >
+                <div ng-show="script_builder.getPostprocessingStackTopName()">
+                  <span class="btn btn-default form-control" ng-click="script_builder.leavePostProcessing()">
+                    &#8672; postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
+                  </span>
+                </div>
+              </div>
+            </div>
             <div class="tabs-headers row">
-              <div class="col-md-8">
+              <div class="col-md-12">
                 <div
                   ng-repeat="postprocessing in script_builder.getSelectedScript().postprocessing"
                   class="tab btn btn-default form-control"
@@ -92,32 +121,6 @@
                   <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">
                     <span class="glyphicon glyphicon-remove"></span>
                   </span>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="input-group">
-                  <select
-                    class="form-control"
-                    ng-model="selected_postprocessing"
-                    ng-init="selected_postprocessing=postprocessings[0]"
-                    ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
-                  </select>
-                  <span class="btn btn-default input-group-addon" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
-                    add
-                  </span>
-                  <input
-                    ng-show="!script_builder.getPostprocessingStackTopName()"
-                    ng-model="script_builder.url"
-                    ng-change="changeXpath()"
-                    placeholder="Source page url"
-                    class="form-control"
-                  >
-                  <div ng-show="script_builder.getPostprocessingStackTopName()" class="form-control">
-                    <span class="btn btn-default" ng-click="script_builder.leavePostProcessing()"> &#8672; </span>
-                    <span>
-                      postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>

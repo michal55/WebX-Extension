@@ -38,6 +38,9 @@ h1 {
 	background-color: #F44336;
 }
 
+.tabs-headers {
+	margin-top: 10px;
+}
 .tabs-headers .tab {
 	display: inline;
 }
@@ -58,3 +61,20 @@ h1 {
 .content-container {
 	padding: 20px;
 }
+
+.post-select {
+	width: 20%;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+.post-add {
+	width: 10%;
+	display: inline-block;
+}
+
+.post-info {
+	width: 65%;
+	display: inline-block;
+}
+
