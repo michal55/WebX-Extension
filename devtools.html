@@ -76,8 +76,10 @@
             </div>
           </div>
         </div>
+        <!-- ==============  WORK DESKTOP  ========================-->
         <div class="col-xs-9">
-          <div ng-show="!script.disabled">
+          <div ng-show="script && !script.disabled">
+            <!-- ==============  HEADERS  ========================-->
             <div class="tabs-headers row">
               <div class="col-md-8">
                 <div
@@ -110,6 +112,7 @@
                 </div>
               </div>
             </div>
+            <!-- ==============  BODY  ========================-->
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessing('nested')">
               <div class="col-md-12">
                 <table class="table table-hover">

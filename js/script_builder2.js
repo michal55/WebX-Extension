@@ -27,9 +27,11 @@ class ScriptBuilder {
     fromJSON(json) {
         var data = angular.fromJson(json);
         this.data_fields = data.data_fields;
-        this.loadScripts(data.json);
-        this.post_processing_stack = data.post_processing_stack;
-        this.show(data.selected_script_id, data.selected_postprocessing_id);
+        if (typeof data.json !== 'undefined') {
+            this.loadScripts(data.json);
+            this.post_processing_stack = data.post_processing_stack;
+            this.show(data.selected_script_id, data.selected_postprocessing_id);
+        }
     }
 
     loadScripts(scripts) {
