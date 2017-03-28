@@ -86,6 +86,7 @@
                   ng-repeat="postprocessing in script_builder.getSelectedScript().postprocessing"
                   class="tab btn btn-default form-control"
                   ng-click="script_builder.selectPostprocessing(postprocessing)"
+                  ng-class="{'active': script_builder.isActivePostprocessing(postprocessing)}"
                 >
                   {{ postprocessing.label }}
                   <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">

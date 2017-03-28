@@ -44,9 +44,13 @@ h1 {
 
 .tab .del {
 	color: #FA9;
-	margin-left: 15px;
+	margin-left: 18px;
 }
 
 .tab .del:hover {
 	color: #F33;
+}
+
+.active {
+	font-weight: bold;
 }

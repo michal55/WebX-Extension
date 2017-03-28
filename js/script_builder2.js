@@ -120,6 +120,10 @@ class ScriptBuilder {
         }
     }
 
+    isActivePostprocessing(postprocessing) {
+        return this.selected_postprocessing_id == postprocessing.id;
+    }
+
     getSelectedScript() {
         return this.scripts[this.selected_script_id];
     }
