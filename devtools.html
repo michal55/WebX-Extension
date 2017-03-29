@@ -115,7 +115,7 @@
                   ng-repeat="postprocessing in script_builder.getSelectedScript().postprocessing"
                   class="tab btn btn-default form-control"
                   ng-click="script_builder.selectPostprocessing(postprocessing)"
-                  ng-class="{'active': script_builder.isActivePostprocessing(postprocessing)}"
+                  ng-class="{'active': script_builder.isSelectedPostprocessing(postprocessing)}"
                 >
                   {{ postprocessing.label }}
                   <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">
@@ -125,7 +125,7 @@
               </div>
             </div>
             <!-- ==============  BODY  ========================-->
-            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessing('nested')">
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('nested')">
               <div class="col-md-12">
                 <table class="table table-hover">
                   <thead>

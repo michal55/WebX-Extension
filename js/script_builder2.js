@@ -120,10 +120,6 @@ class ScriptBuilder {
         }
     }
 
-    isActivePostprocessing(postprocessing) {
-        return this.selected_postprocessing_id == postprocessing.id;
-    }
-
     getSelectedScript() {
         return this.scripts[this.selected_script_id];
     }
@@ -158,8 +154,12 @@ class ScriptBuilder {
         localStorage.script_builder = this.toJSON();
     }
 
-    isSelectedPostprocessing(name) {
-        return this.getSelectedPostprocessing() && name == this.getSelectedPostprocessing().type;
+    isSelectedPostprocessing(postprocessing) {
+        return this.selected_postprocessing_id == postprocessing.id;
+    }
+
+    isSelectedPostprocessingType(type) {
+        return this.getSelectedPostprocessing() && type == this.getSelectedPostprocessing().type;
     }
 
     // On add postprocessing button click

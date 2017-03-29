@@ -2,7 +2,7 @@
 // 1. Create new js file in postprocessing folder, copy template bellow and edit as necessary
 // 2. Add new entry to devtools.js - $scope.postprocessings table with type same as in your new class and name should match the label variable
 // 3. Update devtools.html to contain some user interface elements for your new postprocessing,
-//     use ng-show="script_builder.isSelectedPostprocessing('type')" to show UI element only if the specific postprocessing type is selected
+//     use ng-show="script_builder.isSelectedPostprocessingType('type')" to show UI element only if the specific postprocessing type is selected
 //     and script_builder.getSelectedPostprocessing() to bind variables from your new class to UI elements, for example:
 //     script_builder.getSelectedPostprocessing().foo
 //
