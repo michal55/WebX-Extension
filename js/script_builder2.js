@@ -120,10 +120,6 @@ class ScriptBuilder {
         }
     }
 
-    movePostprocessing(id, index) {
-        console.log('move:', id, 'to: ', index);
-    }
-
     getSelectedScript() {
         return this.scripts[this.selected_script_id];
     }
@@ -184,7 +180,7 @@ class ScriptBuilder {
             this.getSelectedScript().postprocessing[i].id = i;
         }
 
-        // If user deleted currently show postprocessing, show postprocessing 0
+        // If user deleted currently shown postprocessing, show postprocessing 0
         if (postprocessing_id == this.selected_postprocessing_id) {
             this.show(this.selected_script_id, 0);
         // If user deleted postprocessing left of shown one, keep showing the same one (now with id one less)
@@ -193,6 +189,55 @@ class ScriptBuilder {
         }
 
         localStorage.script_builder = this.toJSON();
+    }
+
+    // On postprocessing tab movement
+    movePostprocessing(old_idx, new_idx) {
+        console.log('move:', old_idx, 'to: ', new_idx);
+
+        // Nothing to do
+        if (old_idx == new_idx) {
+            return;
+        }
+
+        var moving_pp = this.getSelectedScript().postprocessing[old_idx];
+
+        // ->
+        if (old_idx < new_idx) {
+            for (var i = old_idx; i < new_idx; ++i) {
+                this.getSelectedScript().postprocessing[i] = this.getSelectedScript().postprocessing[i + 1];
+            }
+        // <-
+        } else if (old_idx > new_idx) {
+            for (var i = old_idx; i > new_idx; --i) {
+                this.getSelectedScript().postprocessing[i] = this.getSelectedScript().postprocessing[i - 1];
+            }
+        }
+
+        this.getSelectedScript().postprocessing[new_idx] = moving_pp;
+
+        // Reassign id's since they are in fact indexes
+        for (var i = Math.min(old_idx, new_idx); i <= Math.max(old_idx, new_idx); ++i) {
+            this.getSelectedScript().postprocessing[i].id = i;
+        }
+
+        // Show the same postprocessing as before - could be done smarter
+
+        // Swap old <-> new
+        if (this.selected_postprocessing_id == new_idx) {
+            this.show(this.selected_script_id, old_idx);
+        } else if (this.selected_postprocessing_id == old_idx) {
+            this.show(this.selected_script_id, new_idx);
+        // Shown index was between old and new
+        } else if (Math.min(old_idx, new_idx) < this.selected_postprocessing_id && this.selected_postprocessing_id < Math.max(old_idx, new_idx)) {
+            // Everything between was moved to the left
+            if (old_idx < new_idx) {
+                this.show(this.selected_script_id, this.selected_postprocessing_id - 1);
+            // Else to the right
+            } else if (old_idx > new_idx) {
+                this.show(this.selected_script_id, this.selected_postprocessing_id + 1);
+            }
+        }
     }
 
     leavePostProcessing() {

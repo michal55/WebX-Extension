@@ -28,7 +28,7 @@ app.controller('main', function($scope) {
         });
 
         document.addEventListener("dragend", function(event){
-            id = event.srcElement.attributes.id.value.replace("tab-", "");
+            id = parseInt(event.srcElement.attributes.id.value.replace("tab-", ""));
             for (var i = 0; ; i++) {
                 tab = $('#tab-' + i.toString());
                 if (tab.length === 0) {
@@ -40,6 +40,8 @@ app.controller('main', function($scope) {
                     break;
                 }
             }
+
+            $scope.$digest();
         });
     };
 
