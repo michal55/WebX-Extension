@@ -223,13 +223,12 @@ class ScriptBuilder {
 
         // Show the same postprocessing as before - could be done smarter
 
-        // Swap old <-> new
-        if (this.selected_postprocessing_id == new_idx) {
-            this.show(this.selected_script_id, old_idx);
-        } else if (this.selected_postprocessing_id == old_idx) {
+        // old_idx is now new_idx
+        if (this.selected_postprocessing_id == old_idx) {
             this.show(this.selected_script_id, new_idx);
-        // Shown index was between old and new
-        } else if (Math.min(old_idx, new_idx) < this.selected_postprocessing_id && this.selected_postprocessing_id < Math.max(old_idx, new_idx)) {
+        // Shown index was between old and new or equal to new
+        } else if ((Math.min(old_idx, new_idx) < this.selected_postprocessing_id && this.selected_postprocessing_id < Math.max(old_idx, new_idx)) ||
+            this.selected_postprocessing_id == new_idx) {
             // Everything between was moved to the left
             if (old_idx < new_idx) {
                 this.show(this.selected_script_id, this.selected_postprocessing_id - 1);
