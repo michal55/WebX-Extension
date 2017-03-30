@@ -26,6 +26,21 @@ app.controller('main', function($scope) {
                 $scope.loading = false;
             });
         });
+
+        document.addEventListener("dragend", function(event){
+            id = event.srcElement.attributes.id.value.replace("tab-", "");
+            for (var i = 0; ; i++) {
+                tab = $('#tab-' + i.toString());
+                if (tab.length === 0) {
+                    $scope.script_builder.movePostprocessing(id, i-1);
+                    break;
+                }
+                if (tab.offset().left >= event.clientX) {
+                    $scope.script_builder.movePostprocessing(id, i);
+                    break;
+                }
+            }
+        });
     };
 
     function loadCookies() {

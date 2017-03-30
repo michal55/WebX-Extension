@@ -120,6 +120,10 @@ class ScriptBuilder {
         }
     }
 
+    movePostprocessing(id, index) {
+        console.log('move:', id, 'to: ', index);
+    }
+
     getSelectedScript() {
         return this.scripts[this.selected_script_id];
     }

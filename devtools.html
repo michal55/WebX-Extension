@@ -80,7 +80,7 @@
         <div class="col-xs-9">
           <div ng-show="script && !script.disabled">
             <!-- ==============  HEADERS  ========================-->
-            <div class="row">
+            <div id="headers" class="row">
               <div class="col-md-12" ng-show="!script_builder.getPostprocessingStackTopName()">
                 <input
                   ng-model="script_builder.url"
@@ -121,6 +121,9 @@
                   ng-click="script_builder.selectPostprocessing(postprocessing)"
                   ng-class="{'active': script_builder.isSelectedPostprocessing(postprocessing)}"
                   ng-show="script_builder.getPostprocessingStackTopName()"
+                  draggable="true"
+                  droppable="true"
+                  ng-attr-id="{{'tab-' + $index}}"
                 >
                   {{ postprocessing.label }}
                   <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">
