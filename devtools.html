@@ -81,31 +81,35 @@
           <div ng-show="script && !script.disabled">
             <!-- ==============  HEADERS  ========================-->
             <div class="row">
-              <div class="post-select">
-                <select
-                  class="form-control"
-                  ng-model="selected_postprocessing"
-                  ng-init="selected_postprocessing=postprocessings[0]"
-                  ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
-                </select>
-              </div>
-              <div class="post-add">
-                <span class="btn btn-default form-control" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
-                  add
-                </span>
-              </div>
-              <div class="post-info">
+              <div class="col-md-12" ng-show="!script_builder.getPostprocessingStackTopName()">
                 <input
-                  ng-show="!script_builder.getPostprocessingStackTopName()"
                   ng-model="script_builder.url"
                   ng-change="changeXpath()"
                   placeholder="Source page url"
                   class="form-control"
                 >
-                <div ng-show="script_builder.getPostprocessingStackTopName()">
-                  <span class="btn btn-default form-control" ng-click="script_builder.leavePostProcessing()">
-                    &#8672; postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
+              </div>
+              <div ng-show="script_builder.getPostprocessingStackTopName()">
+                <div class="post-info">
+                  <span class="btn btn-default btn-small" ng-click="script_builder.leavePostProcessing()">
+                    &#8672;
                   </span>
+                  <span>
+                    postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
+                  </span>
+                </div>
+                <div class="post-add">
+                  <span class="btn btn-default form-control" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
+                    add
+                  </span>
+                </div>
+                <div class="post-select">
+                  <select
+                    class="form-control"
+                    ng-model="selected_postprocessing"
+                    ng-init="selected_postprocessing=postprocessings[0]"
+                    ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
+                  </select>
                 </div>
               </div>
             </div>
@@ -113,9 +117,10 @@
               <div class="col-md-12">
                 <div
                   ng-repeat="postprocessing in script_builder.getSelectedScript().postprocessing"
-                  class="tab btn btn-default form-control"
+                  class="tab btn btn-default"
                   ng-click="script_builder.selectPostprocessing(postprocessing)"
                   ng-class="{'active': script_builder.isSelectedPostprocessing(postprocessing)}"
+                  ng-show="script_builder.getPostprocessingStackTopName()"
                 >
                   {{ postprocessing.label }}
                   <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">

@@ -40,6 +40,7 @@ h1 {
 
 .tabs-headers {
 	margin-top: 10px;
+	min-height: 22px;
 }
 .tabs-headers .tab {
 	display: inline;
@@ -65,16 +66,17 @@ h1 {
 .post-select {
 	width: 20%;
 	display: inline-block;
-	margin-left: 15px;
+	float: right;
 }
 
 .post-add {
-	width: 10%;
 	display: inline-block;
+	float: right;
+	margin-right: 15px;
 }
 
 .post-info {
-	width: 65%;
+	margin-left: 15px;
 	display: inline-block;
 }
 
