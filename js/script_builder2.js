@@ -6,7 +6,7 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested', this.ROOT_PP)]
+            postprocessing: [Postprocessing.create('nested', this.ROOT_PP, this)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.data_fields = data_fields;
@@ -39,7 +39,7 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested', this.ROOT_PP)]
+            postprocessing: [Postprocessing.create('nested', this.ROOT_PP, this)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.selected_script_id = this.ROOT;
@@ -80,7 +80,7 @@ class ScriptBuilder {
             for (var j in script.postprocessing || []) {
                 var postprocessing = script.postprocessing[j];
 
-                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, j);
+                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, j, this);
                 this.scripts[id].postprocessing[j].load(postprocessing);
 
                 if (this.scripts[id].postprocessing[j].canHaveChildren()) {
@@ -91,8 +91,18 @@ class ScriptBuilder {
     }
 
     show(script_id, postprocessing_id, new_level) {
+        // Trigger postprocessing hooks if selected postprocessing is going to change
+        var triggerHooks = script_id != this.selected_script_id || postprocessing_id != this.selected_postprocessing_id;
+        if (triggerHooks && this.getSelectedPostprocessing()) {
+            this.getSelectedPostprocessing().hide();
+        }
+
         this.selected_script_id = script_id;
         this.selected_postprocessing_id = postprocessing_id;
+
+        if (triggerHooks && this.getSelectedPostprocessing()) {
+            this.getSelectedPostprocessing().show();
+        }
 
         if (new_level) {
             this.post_processing_stack.push([script_id, postprocessing_id]);
@@ -125,7 +135,7 @@ class ScriptBuilder {
     }
 
     getSelectedPostprocessing() {
-        return this.scripts[this.selected_script_id].postprocessing[this.selected_postprocessing_id];
+        return this.getSelectedScript() ? this.getSelectedScript().postprocessing[this.selected_postprocessing_id] : undefined;
     }
 
     getPostprocessingStackTop() {
@@ -165,7 +175,7 @@ class ScriptBuilder {
     // On add postprocessing button click
     addPostProcessing(postprocessing_name) {
         var new_postprocessing_id = this.getSelectedScript().postprocessing.length;
-        this.getSelectedScript().postprocessing.push(Postprocessing.create(postprocessing_name, new_postprocessing_id));
+        this.getSelectedScript().postprocessing.push(Postprocessing.create(postprocessing_name, new_postprocessing_id, this));
         this.show(this.selected_script_id, new_postprocessing_id);
 
         localStorage.script_builder = this.toJSON();

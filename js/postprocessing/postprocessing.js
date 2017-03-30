@@ -37,6 +37,19 @@ class PostprocessingName {
         this.foo = postprocessing.foo;
         // We could validate postprocessing.type here but who cares, it should match or we have bigger problem
     };
+
+    /// Optional hook functions, use them to update visual state of postprocessing
+    /// To get Xpath of parent script use this.getParentXpath()
+
+    // Called before postprocessing is shown to user, update variables bound to UI or show highlight
+    show() {
+        this.foo = 'Shown at ' + new Date().getTime() + ' with parent Xpath ' + this.getParentXpath();
+    };
+
+    // Called before postprocessing is hidden from view, cleanup highlight effects related to this postprocessing
+    hide() {
+        this.foo = '?#@*&%!, but user will never see this';
+    };
 }
 
 // Register postprocessing under chosen type
@@ -52,8 +65,18 @@ Postprocessing.register = function(proto, name) {
     Postprocessing.types[name] = proto;
 };
 
-Postprocessing.create = function(name, id) {
+Postprocessing.create = function(name, id, script_builder) {
     var postprocessing = new Postprocessing.types[name];
     postprocessing.id = id;
+
+    // Create empty 'virtual' functions if they are not defined in postprocessing
+    postprocessing.show = postprocessing.show || function() {};
+    postprocessing.hide = postprocessing.hide || function() {};
+
+    // Create helper functions
+    postprocessing.getParentXpath = function() {
+        return script_builder.getSelectedScript().xpath;
+    };
+
     return postprocessing;
 };
