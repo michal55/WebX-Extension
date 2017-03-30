@@ -1,8 +1,8 @@
 /* navbar */
 .navbar-primary .navbar { background:#222; border-bottom:none; }
-.navbar-primary .navbar .nav > li > a {color: #ff0;}
+.navbar-primary .navbar .nav > li > a {color: #FFEB3B;}
 .navbar-primary .navbar .nav > li > a:hover {color: #fff; background-color: #222;}
-.navbar-primary .navbar .nav .active > a,.navbar .nav .active > a:hover {color: #fff; background-color: #ff0;}
+.navbar-primary .navbar .nav .active > a,.navbar .nav .active > a:hover {color: #fff; background-color: #FFEB3B;}
 .navbar-primary .navbar .nav li > a .caret, .tnav .navbar .nav li > a:hover .caret {border-top-color: #fff;border-bottom-color: #fff;}
 .navbar-primary .navbar .nav > li.dropdown.open.active > a:hover {}
 .navbar-primary .navbar .nav > li.dropdown.open > a {color: #fff;background-color: #222;border-color: #fff;}
@@ -42,8 +42,14 @@ h1 {
 	margin-top: 10px;
 	min-height: 22px;
 }
-.tabs-headers .tab {
+.tab {
 	display: inline;
+	margin: 0 4px 0 4px;
+	padding: 6px 6px 4px 6px;
+	cursor: pointer;
+	border: 1px #aaa solid;
+	border-radius: 5px 5px 0px 0px;
+	border-bottom: 0px;
 }
 
 .tab .del {
@@ -57,6 +63,13 @@ h1 {
 
 .active {
 	font-weight: bold;
+	background-color: #FFEB3B;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFEB3B), to(#FFF176));
+}
+.tab-container {
+	border-top: 4px #FFF176 solid;
+	border-bottom: 4px #FFF176 solid;
+	margin-left: 4px;
 }
 
 .content-container {
