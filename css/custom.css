@@ -63,13 +63,11 @@ h1 {
 
 .active {
 	font-weight: bold;
-	background-color: #FFEB3B;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFEB3B), to(#FFF176));
+	background-color: #E0E0E0;
 }
 .tab-container {
-	border-top: 4px #FFF176 solid;
-	border-bottom: 4px #FFF176 solid;
 	margin-left: 4px;
+	background-color: #E0E0E0;
 }
 
 .content-container {
