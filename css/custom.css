@@ -37,3 +37,44 @@ h1 {
 .negative-match {
 	background-color: #F44336;
 }
+
+.tabs-headers {
+	margin-top: 10px;
+}
+.tabs-headers .tab {
+	display: inline;
+}
+
+.tab .del {
+	color: #FA9;
+	margin-left: 18px;
+}
+
+.tab .del:hover {
+	color: #F33;
+}
+
+.active {
+	font-weight: bold;
+}
+
+.content-container {
+	padding: 20px;
+}
+
+.post-select {
+	width: 20%;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+.post-add {
+	width: 10%;
+	display: inline-block;
+}
+
+.post-info {
+	width: 65%;
+	display: inline-block;
+}
+

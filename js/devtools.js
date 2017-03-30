@@ -148,7 +148,7 @@ app.controller('main', function($scope) {
     };
 
     $scope.focusXpath = function(field) {
-        starthighlight($scope.script_builder.scripts[field.scriptId].xpath, 'base');
+        starthighlight($scope.script_builder.scripts[field.script_id].xpath, 'base');
         (field.positives || []).forEach((element) => starthighlight(element.xpath, 'positive'));
         (field.negatives || []).forEach((element) => starthighlight(element.xpath, 'negative'));
     };
@@ -186,7 +186,7 @@ app.controller('main', function($scope) {
     };
 
     $scope.squash = function(field) {
-        var main_xpath = $scope.script_builder.scripts[field.scriptId].xpath.split('/');
+        var main_xpath = $scope.script_builder.scripts[field.script_id].xpath.split('/');
 
         for (var i in field.positives) {
             var p_xpath = field.positives[i].xpath.split('/');
@@ -243,7 +243,7 @@ app.controller('main', function($scope) {
         }
 
         main_xpath = main_xpath.join('/');
-        $scope.script_builder.scripts[field.scriptId].xpath = main_xpath;
+        $scope.script_builder.scripts[field.script_id].xpath = main_xpath;
         localStorage.script_builder = $scope.script_builder.toJSON();
 
         // Clean fields
@@ -285,4 +285,15 @@ app.controller('main', function($scope) {
             }
         });
     };
+
+    $scope.postprocessings = [
+        {
+            name: 'Nested',
+            type: 'nested'
+        },
+        {
+            name: 'Href cleaning',
+            type: 'hrefcleaning'
+        }
+    ];
 });
