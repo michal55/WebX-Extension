@@ -123,9 +123,9 @@
                   ng-show="script_builder.getPostprocessingStackTopName()"
                   draggable="true"
                   droppable="true"
-                  ng-attr-id="{{'tab-' + postprocessing.id}}"
+                  ng-attr-id="{{'tab-' + $index}}"
                 >
-                  {{ postprocessing.label + postprocessing.id }}
+                  {{ postprocessing.label + $index + ' - ' + postprocessing.$$hashKey }}
                   <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">
                     <span class="glyphicon glyphicon-remove"></span>
                   </span>

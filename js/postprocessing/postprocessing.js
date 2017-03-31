@@ -52,8 +52,6 @@ Postprocessing.register = function(proto, name) {
     Postprocessing.types[name] = proto;
 };
 
-Postprocessing.create = function(name, id) {
-    var postprocessing = new Postprocessing.types[name];
-    postprocessing.id = id;
-    return postprocessing;
+Postprocessing.create = function(name) {
+    return new Postprocessing.types[name];
 };
