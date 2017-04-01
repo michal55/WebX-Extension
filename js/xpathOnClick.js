@@ -1,3 +1,18 @@
+// Message handler for xpathOnClick.js content script
+chrome.runtime.onMessage.addListener(function(request, sender, callback) {
+    if (request.onClickXPath) {
+        try {
+            onClickXPath(true, true, true, callback, true);
+        } catch (err) {
+            console.error(err);
+        }
+
+        return true;
+    }
+
+    return true;
+});
+
 function addNodes(array, collection) {
     for (var i = 0; collection && collection.length && i < collection.length; i++) {
         array.push(collection[i]);
@@ -72,7 +87,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             }
         }
 
-        chrome.storage.local.set({'newxpath': path}, function() {});
+        callback(path);
         return false;
     }
 

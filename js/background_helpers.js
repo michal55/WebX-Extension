@@ -8,8 +8,8 @@ function xhrWithAuth(method, url, interactive, callback, params) {
         });
 }
 
-function get_xpath() {
-    chrome.runtime.sendMessage({get_xpath: {}});
+function get_xpath(callback) {
+    chrome.runtime.sendMessage({get_xpath: {}}, callback);
 }
 
 function starthighlight(xpath, type) {

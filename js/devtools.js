@@ -41,39 +41,6 @@ app.controller('main', function($scope) {
         }
     }
 
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-        for (var key in changes) {
-            var storageChange = changes[key];
-            if (key == 'newxpath') {
-                chrome.storage.local.get('field_id', function(result) {
-                    var field_id = result.field_id;
-                    chrome.storage.local.get('field_type', function(result_type) {
-                        var field_type = result_type.field_type;
-                        if (field_type == 'field_id') {
-                            $scope.script_builder.scripts[field_id].xpath = storageChange.newValue;
-                            localStorage.script_builder = $scope.script_builder.toJSON();
-                            $scope.$digest();
-                        } else {
-                            chrome.storage.local.get('pos_neg_indx', function(result_indx) {
-                                var indx = result_indx.pos_neg_indx;
-                                if (field_type == 'positive_id') {
-                                    $scope.script_builder.data_fields[field_id].positives[indx].xpath = storageChange.newValue;
-                                } else if (field_type == 'negative_id') {
-                                    $scope.script_builder.data_fields[field_id].negatives[indx].xpath = storageChange.newValue;
-                                }
-
-                                localStorage.script_builder = $scope.script_builder.toJSON();
-                                $scope.$digest();
-                            });
-                        }
-                    });
-                });
-
-                $scope.targeting_in_progress = false;
-            }
-        }
-    });
-
     $scope.getProjects = function() {
         apiGet(
             '/data/user/projects',
@@ -139,13 +106,25 @@ app.controller('main', function($scope) {
     };
 
     $scope.toggleTargeting = function(field_id, field_type, indx) {
-        chrome.storage.local.set({'field_id': field_id}, function() {});
-        chrome.storage.local.set({'field_type': field_type}, function() {});
-        chrome.storage.local.set({'pos_neg_indx': indx}, function() {});
+        $scope.targeting_field_id = field_id;
+        $scope.targeting_field_type = field_type;
+        $scope.targeting_indx = indx;
 
         if ($scope.targeting_in_progress == false) {
             $scope.targeting_in_progress = true;
-            get_xpath();
+            get_xpath(function(result) {
+                if ($scope.targeting_field_type == 'field_id') {
+                    $scope.script_builder.scripts[$scope.targeting_field_id].xpath = result;
+                } else if ($scope.targeting_field_type == 'positive_id') {
+                    $scope.script_builder.data_fields[$scope.targeting_field_id].positives[$scope.targeting_indx].xpath = result;
+                } else if ($scope.targeting_field_type == 'negative_id') {
+                    $scope.script_builder.data_fields[$scope.targeting_field_id].negatives[$scope.targeting_indx].xpath = result;
+                }
+
+                $scope.targeting_in_progress = false;
+                localStorage.script_builder = $scope.script_builder.toJSON();
+                $scope.$digest();
+            });
         }
     };
 
