@@ -1,4 +1,4 @@
-// All chrome messages are handled here, if you want to add new one, add another 'else if' block.
+// All chrome messages for background page are handled here, if you want to add new one, add another 'else if' block.
 //
 // 'request' is javascript object, which should have only one field on first level,
 // for example 'request.xhrWithAuth' and parameters for 'xhrWithAuth' action should be fields of 'request.xhrWithAuth',
@@ -15,7 +15,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
 
     } else if (request.get_xpath) {
-        getxpath();
+        getxpath(function(result) {
+            callback(result);
+        });
         return true;
 
     } else if (request.stop_highlight) {

@@ -1,3 +1,18 @@
+// Message handler for xpathOnClick.js content script
+chrome.runtime.onMessage.addListener(function(request, sender, callback) {
+    if (request.onClickXPath) {
+        try {
+            onClickXPath(true, true, true, callback, true);
+        } catch (err) {
+            console.error(err);
+        }
+
+        return true;
+    }
+
+    return true;
+});
+
 function addNodes(array, collection) {
     for (var i = 0; collection && collection.length && i < collection.length; i++) {
         array.push(collection[i]);
@@ -11,12 +26,12 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         if (ae[i].tagName == 'IFRAME') {
             try {
                 var d = ae[i].contentDocument;
+
+                if (d) {
+                    addNodes(ae, d.getElementsByTagName("*"));
+                }
             }
             catch (err) { }
-
-            if (d) {
-                addNodes(ae, d.getElementsByTagName("*"));
-            }
         }
     }
 
@@ -72,7 +87,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             }
         }
 
-        chrome.storage.local.set({'newxpath': path}, function() {});
+        callback(path);
         return false;
     }
 
@@ -111,7 +126,7 @@ function xpathArray(parent, exp) {
     var a = [];
     var i = it.iterateNext();
 
-    while (i != null) {
+    while (i !== null) {
         a.push(i);
         i = it.iterateNext();
     }
