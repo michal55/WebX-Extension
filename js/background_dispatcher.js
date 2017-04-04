@@ -10,10 +10,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
                 callback({status: status, response: response});
             }, request.xhrWithAuth.params);
         return true;
-    } else if (request.setBadgeText) {
-        chrome.browserAction.setBadgeText({text: request.setBadgeText.text});
-        return true;
-
     } else if (request.get_xpath) {
         getxpath(function(result) {
             callback(result);

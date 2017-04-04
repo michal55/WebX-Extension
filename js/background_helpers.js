@@ -36,8 +36,3 @@ function apiDelete(url, callback, params) {
 function apiPut(url, callback, params) {
     xhrWithAuth('PUT', url, false, callback, params);
 }
-
-// setBadgeText
-function setBadgeText(text) {
-    chrome.runtime.sendMessage({setBadgeText: {text: text}});
-}

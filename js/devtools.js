@@ -10,18 +10,6 @@ app.controller('main', function($scope) {
             uiLoginCheck($scope, function(status, response) {
                 if (status != null) {
                     loadCookies();
-                } else {
-                    // At this point, user is shown 'Please log in by using icon near address bar' message,
-                    // just an attempt to make the icon more noticeable
-                    for (var i = 0; i < 10; ++i) {
-                        // Why is it wrapped in a function? Idk but it doesn't work otherwise
-                        // http://stackoverflow.com/a/32567596/6022799
-                        (function(i) {
-                            setTimeout(function () {
-                                setBadgeText(i % 2 ? '' : '...');
-                            }, i * 1000);
-                        }(i));
-                    }
                 }
 
                 $scope.loading = false;
