@@ -1,6 +1,5 @@
-// This object is present in options.js, oauth2_wrapper.js files, update it everywhere at once
 var default_options = {
-    DEFAULT_SERVER_URL: 'http://localhost:3000/webx'
+    DEFAULT_SERVER_URL: 'http://team16-16.studenti.fiit.stuba.sk/webx'
 };
 
 function getServerURL(callback) {
