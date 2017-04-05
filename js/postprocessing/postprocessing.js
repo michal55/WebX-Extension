@@ -59,6 +59,9 @@ Postprocessing.register = function(proto) {
     });
 };
 
-Postprocessing.create = function(type) {
-    return new (Postprocessing.types.find((field) => field.type == type).proto);
+Postprocessing.create = function(type, visual_only_id) {
+    var postprocessing = new (Postprocessing.types.find((field) => field.type == type).proto);
+    postprocessing.visual_only_id = visual_only_id;
+
+    return postprocessing;
 };

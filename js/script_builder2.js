@@ -6,7 +6,7 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested')]
+            postprocessing: [Postprocessing.create('nested', 1)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.data_fields = data_fields;
@@ -39,7 +39,7 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested')]
+            postprocessing: [Postprocessing.create('nested', 1)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.selected_script_id = this.ROOT;
@@ -57,7 +57,8 @@ class ScriptBuilder {
             id: id,
             name: name,
             xpath: xpath,
-            postprocessing: []
+            postprocessing: [],
+            visual_only_postprocessing_id: 1
         };
 
         this.scripts[parent_script_id].postprocessing[parent_postprocessing_idx].registerChild(id);
@@ -80,7 +81,7 @@ class ScriptBuilder {
             for (var j in script.postprocessing || []) {
                 var postprocessing = script.postprocessing[j];
 
-                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type);
+                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, this.scripts[id].visual_only_postprocessing_id++);
                 this.scripts[id].postprocessing[j].load(postprocessing);
 
                 if (this.scripts[id].postprocessing[j].canHaveChildren()) {
@@ -168,7 +169,7 @@ class ScriptBuilder {
 
     // On add postprocessing button click
     addPostProcessing(postprocessing_name) {
-        this.insertPostprocessing(Postprocessing.create(postprocessing_name), this.getSelectedScript().postprocessing.length, true);
+        this.insertPostprocessing(Postprocessing.create(postprocessing_name, this.getSelectedScript().visual_only_postprocessing_id++), this.getSelectedScript().postprocessing.length, true);
     }
 
     // On postprocessing tab X click
