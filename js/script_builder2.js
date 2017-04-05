@@ -172,7 +172,8 @@ class ScriptBuilder {
     }
 
     // On postprocessing tab X click
-    deletePostprocessing(postprocessing_idx) {
+    deletePostprocessing(postprocessing) {
+        var postprocessing_idx = this.getPostprocessingIdx(postprocessing)
         this.getSelectedScript().postprocessing.splice(postprocessing_idx, 1);
 
         // If user deleted currently shown postprocessing, show postprocessing 0
@@ -206,7 +207,7 @@ class ScriptBuilder {
 
         var moving_pp = this.getSelectedScript().postprocessing[old_idx];
         var show_new = this.selected_postprocessing_idx == old_idx;
-        this.deletePostprocessing(old_idx);
+        this.deletePostprocessing(moving_pp);
         this.insertPostprocessing(moving_pp, new_idx, show_new);
     }
 
