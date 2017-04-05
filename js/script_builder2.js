@@ -6,12 +6,12 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested', this.ROOT_PP)]
+            postprocessing: [Postprocessing.create('nested', 1)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.data_fields = data_fields;
         this.selected_script_id = this.ROOT;
-        this.selected_postprocessing_id = this.ROOT_PP;
+        this.selected_postprocessing_idx = this.ROOT_PP;
     }
 
     toJSON() {
@@ -20,7 +20,7 @@ class ScriptBuilder {
             json: this.getJson(),
             post_processing_stack: this.post_processing_stack,
             selected_script_id: this.selected_script_id,
-            selected_postprocessing_id: this.selected_postprocessing_id
+            selected_postprocessing_idx: this.selected_postprocessing_idx
         });
     }
 
@@ -30,7 +30,7 @@ class ScriptBuilder {
         if (typeof data.json !== 'undefined') {
             this.loadScripts(data.json);
             this.post_processing_stack = data.post_processing_stack;
-            this.show(data.selected_script_id, data.selected_postprocessing_id);
+            this.show(data.selected_script_id, data.selected_postprocessing_idx);
         }
     }
 
@@ -39,11 +39,11 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested', this.ROOT_PP)]
+            postprocessing: [Postprocessing.create('nested', 1)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.selected_script_id = this.ROOT;
-        this.selected_postprocessing_id = this.ROOT_PP;
+        this.selected_postprocessing_idx = this.ROOT_PP;
 
         this._loadScripts(scripts, this.ROOT, this.ROOT_PP);
         this.show(this.ROOT, this.ROOT_PP);
@@ -51,22 +51,23 @@ class ScriptBuilder {
         localStorage.script_builder = this.toJSON();
     }
 
-    createScript(name, xpath, parent_script_id, parent_postprocessing_id) {
+    createScript(name, xpath, parent_script_id, parent_postprocessing_idx) {
         var id = this.scripts.length;
         var script = {
             id: id,
             name: name,
             xpath: xpath,
-            postprocessing: []
+            postprocessing: [],
+            visual_only_postprocessing_id: 1
         };
 
-        this.scripts[parent_script_id].postprocessing[parent_postprocessing_id].registerChild(id);
+        this.scripts[parent_script_id].postprocessing[parent_postprocessing_idx].registerChild(id);
         this.scripts.push(script);
 
         return id;
     }
 
-    _loadScripts(scripts, parent_script_id, parent_postprocessing_id) {
+    _loadScripts(scripts, parent_script_id, parent_postprocessing_idx) {
         for (var i in scripts.data) {
             var script = scripts.data[i];
 
@@ -75,12 +76,12 @@ class ScriptBuilder {
                 continue;
             }
 
-            var id = this.createScript(script.name, script.xpath, parent_script_id, parent_postprocessing_id);
+            var id = this.createScript(script.name, script.xpath, parent_script_id, parent_postprocessing_idx);
 
             for (var j in script.postprocessing || []) {
                 var postprocessing = script.postprocessing[j];
 
-                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, j);
+                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, this.scripts[id].visual_only_postprocessing_id++);
                 this.scripts[id].postprocessing[j].load(postprocessing);
 
                 if (this.scripts[id].postprocessing[j].canHaveChildren()) {
@@ -90,14 +91,14 @@ class ScriptBuilder {
         }
     }
 
-    show(script_id, postprocessing_id, new_level) {
+    show(script_id, postprocessing_idx, new_level) {
         this.selected_script_id = script_id;
-        this.selected_postprocessing_id = postprocessing_id;
+        this.selected_postprocessing_idx = postprocessing_idx;
 
         if (new_level) {
-            this.post_processing_stack.push([script_id, postprocessing_id]);
+            this.post_processing_stack.push([script_id, postprocessing_idx]);
         } else {
-            this.setPostprocessingStackTop([script_id, postprocessing_id]);
+            this.setPostprocessingStackTop([script_id, postprocessing_idx]);
         }
 
         if (!this.getSelectedPostprocessing() || !this.getSelectedPostprocessing().canHaveChildren()) {
@@ -115,7 +116,7 @@ class ScriptBuilder {
             if (child_id != undefined) {
                 data_field.script_id = child_id;
             } else {
-                data_field.script_id = this.createScript(data_field.name, '', script_id, postprocessing_id);
+                data_field.script_id = this.createScript(data_field.name, '', script_id, postprocessing_idx);
             }
         }
     }
@@ -125,7 +126,11 @@ class ScriptBuilder {
     }
 
     getSelectedPostprocessing() {
-        return this.scripts[this.selected_script_id].postprocessing[this.selected_postprocessing_id];
+        return this.scripts[this.selected_script_id].postprocessing[this.selected_postprocessing_idx];
+    }
+
+    getPostprocessingIdx(postprocessing) {
+        return this.getSelectedScript().postprocessing.indexOf(postprocessing);
     }
 
     getPostprocessingStackTop() {
@@ -142,7 +147,7 @@ class ScriptBuilder {
 
     // On postprocessing tab click
     selectPostprocessing(postprocessing) {
-        this.show(this.selected_script_id, postprocessing.id);
+        this.show(this.selected_script_id, this.getPostprocessingIdx(postprocessing));
 
         localStorage.script_builder = this.toJSON();
     }
@@ -155,7 +160,7 @@ class ScriptBuilder {
     }
 
     isSelectedPostprocessing(postprocessing) {
-        return this.selected_postprocessing_id == postprocessing.id;
+        return this.selected_postprocessing_idx == this.getPostprocessingIdx(postprocessing);
     }
 
     isSelectedPostprocessingType(type) {
@@ -164,31 +169,45 @@ class ScriptBuilder {
 
     // On add postprocessing button click
     addPostProcessing(postprocessing_name) {
-        var new_postprocessing_id = this.getSelectedScript().postprocessing.length;
-        this.getSelectedScript().postprocessing.push(Postprocessing.create(postprocessing_name, new_postprocessing_id));
-        this.show(this.selected_script_id, new_postprocessing_id);
+        this.insertPostprocessing(Postprocessing.create(postprocessing_name, this.getSelectedScript().visual_only_postprocessing_id++), this.getSelectedScript().postprocessing.length, true);
+    }
+
+    // On postprocessing tab X click
+    deletePostprocessing(postprocessing) {
+        var postprocessing_idx = this.getPostprocessingIdx(postprocessing)
+        this.getSelectedScript().postprocessing.splice(postprocessing_idx, 1);
+
+        // If user deleted currently shown postprocessing, show postprocessing 0
+        if (postprocessing_idx == this.selected_postprocessing_idx) {
+            this.show(this.selected_script_id, 0);
+        // If user deleted postprocessing left of shown one, keep showing the same one (now with id one less)
+        } else if (postprocessing_idx < this.selected_postprocessing_idx) {
+            this.show(this.selected_script_id, this.selected_postprocessing_idx - 1);
+        }
 
         localStorage.script_builder = this.toJSON();
     }
 
-    // On postprocessing tab X click
-    deletePostprocessing(postprocessing_id) {
-        this.getSelectedScript().postprocessing.splice(postprocessing_id, 1);
+    insertPostprocessing(postprocessing, idx, show_new) {
+        this.getSelectedScript().postprocessing.splice(idx, 0, postprocessing);
 
-        // Update ids
-        for (var i = postprocessing_id; i < this.getSelectedScript().postprocessing.length; ++i) {
-            this.getSelectedScript().postprocessing[i].id = i;
-        }
-
-        // If user deleted currently show postprocessing, show postprocessing 0
-        if (postprocessing_id == this.selected_postprocessing_id) {
-            this.show(this.selected_script_id, 0);
-        // If user deleted postprocessing left of shown one, keep showing the same one (now with id one less)
-        } else if (postprocessing_id < this.selected_postprocessing_id) {
-            this.show(this.selected_script_id, this.selected_postprocessing_id - 1);
+        // Show newly inserted postprocessing
+        if (show_new) {
+            this.show(this.selected_script_id, idx);
+        // If we inserted postprocessing left of the shown one or at its place, keep showing the same one (now with id one more)
+        } else if (idx <= this.selected_postprocessing_idx) {
+            this.show(this.selected_script_id, this.selected_postprocessing_idx + 1);
         }
 
         localStorage.script_builder = this.toJSON();
+    }
+
+    // On postprocessing tab movement
+    movePostprocessing(old_idx, new_idx) {
+        var moving_pp = this.getSelectedScript().postprocessing[old_idx];
+        var show_new = this.selected_postprocessing_idx == old_idx;
+        this.deletePostprocessing(moving_pp);
+        this.insertPostprocessing(moving_pp, new_idx, show_new);
     }
 
     leavePostProcessing() {

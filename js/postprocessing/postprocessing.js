@@ -1,10 +1,11 @@
 // How to create new postprocessing in few easy steps
 // 1. Create new js file in postprocessing folder, copy template bellow and edit as necessary
-// 2. Add new entry to devtools.js - $scope.postprocessings table with type same as in your new class and name should match the label variable
+// 2. Update devtools.html to contain <script src="js/postprocessing/%new_postprocessing%.js"></script> below
+//    <script src="js/postprocessing/postprocessing.js"></script> but above non-postprocessing scripts
 // 3. Update devtools.html to contain some user interface elements for your new postprocessing,
-//     use ng-show="script_builder.isSelectedPostprocessingType('type')" to show UI element only if the specific postprocessing type is selected
-//     and script_builder.getSelectedPostprocessing() to bind variables from your new class to UI elements, for example:
-//     script_builder.getSelectedPostprocessing().foo
+//    use ng-show="script_builder.isSelectedPostprocessingType('type')" to show UI element only if the specific postprocessing type is selected
+//    and script_builder.getSelectedPostprocessing() to bind variables from your new class to UI elements, for example:
+//    script_builder.getSelectedPostprocessing().foo
 //
 /* NEW POSTPROCESSING TEMPLATE START
 // All methods are mandatory (can be left empty though)
@@ -39,8 +40,8 @@ class PostprocessingName {
     };
 }
 
-// Register postprocessing under chosen type
-Postprocessing.register(PostprocessingName, 'type');
+// Register postprocessing
+Postprocessing.register(PostprocessingName);
 // NEW POSTPROCESSING TEMPLATE END */
 
 
@@ -48,12 +49,19 @@ function Postprocessing() { }
 
 Postprocessing.types = [];
 
-Postprocessing.register = function(proto, name) {
-    Postprocessing.types[name] = proto;
+Postprocessing.register = function(proto) {
+    var dummy = new proto;
+
+    Postprocessing.types.push({
+        name: dummy.label,
+        type: dummy.type,
+        proto: proto
+    });
 };
 
-Postprocessing.create = function(name, id) {
-    var postprocessing = new Postprocessing.types[name];
-    postprocessing.id = id;
+Postprocessing.create = function(type, visual_only_id) {
+    var postprocessing = new (Postprocessing.types.find((field) => field.type == type).proto);
+    postprocessing.visual_only_id = visual_only_id;
+
     return postprocessing;
 };
