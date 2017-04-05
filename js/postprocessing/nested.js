@@ -28,4 +28,4 @@ class Nested {
     };
 }
 
-Postprocessing.register(Nested, 'nested');
+Postprocessing.register(Nested);

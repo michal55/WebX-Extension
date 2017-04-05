@@ -10,22 +10,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
                 callback({status: status, response: response});
             }, request.xhrWithAuth.params);
         return true;
-    } else if (request.setBadgeText) {
-        chrome.browserAction.setBadgeText({text: request.setBadgeText.text});
-        return true;
-
     } else if (request.get_xpath) {
-        getxpath(function(result) {
+        getxpath(request.get_xpath.tab_id, function(result) {
             callback(result);
         });
         return true;
 
     } else if (request.stop_highlight) {
-        highlight(false);
+        highlight(request.stop_highlight.tab_id, false);
         return true;
 
     } else if (request.start_highlight) {
-        highlight(true, request.start_highlight.xpath, request.start_highlight.type);
+        highlight(request.start_highlight.tab_id, true, request.start_highlight.xpath, request.start_highlight.type);
         return true;
     }
 

@@ -9,16 +9,16 @@ function xhrWithAuth(method, url, interactive, callback, params) {
 }
 
 function get_xpath(callback) {
-    chrome.runtime.sendMessage({get_xpath: {}}, callback);
+    chrome.runtime.sendMessage({get_xpath: {tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
 }
 
 function starthighlight(xpath, type) {
     if (xpath != '') {
-        chrome.runtime.sendMessage({start_highlight: {xpath: xpath, type: type}});
+        chrome.runtime.sendMessage({start_highlight: {xpath: xpath, type: type, tab_id: chrome.devtools.inspectedWindow.tabId}});
     }
 }
 function stophighlight() {
-    chrome.runtime.sendMessage({stop_highlight: {}});
+    chrome.runtime.sendMessage({stop_highlight: {tab_id: chrome.devtools.inspectedWindow.tabId}});
 }
 
 function apiGet(url, callback, params) {
@@ -35,9 +35,4 @@ function apiDelete(url, callback, params) {
 
 function apiPut(url, callback, params) {
     xhrWithAuth('PUT', url, false, callback, params);
-}
-
-// setBadgeText
-function setBadgeText(text) {
-    chrome.runtime.sendMessage({setBadgeText: {text: text}});
 }

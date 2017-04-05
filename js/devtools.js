@@ -10,22 +10,27 @@ app.controller('main', function($scope) {
             uiLoginCheck($scope, function(status, response) {
                 if (status != null) {
                     loadCookies();
-                } else {
-                    // At this point, user is shown 'Please log in by using icon near address bar' message,
-                    // just an attempt to make the icon more noticeable
-                    for (var i = 0; i < 10; ++i) {
-                        // Why is it wrapped in a function? Idk but it doesn't work otherwise
-                        // http://stackoverflow.com/a/32567596/6022799
-                        (function(i) {
-                            setTimeout(function () {
-                                setBadgeText(i % 2 ? '' : '...');
-                            }, i * 1000);
-                        }(i));
-                    }
                 }
 
                 $scope.loading = false;
             });
+        });
+
+        document.addEventListener("dragend", function(event){
+            id = parseInt(event.srcElement.attributes.id.value.replace("tab-", ""));
+            for (var i = 0; ; i++) {
+                tab = $('#tab-' + i.toString());
+                if (tab.length === 0) {
+                    $scope.script_builder.movePostprocessing(id, i-1);
+                    break;
+                }
+                if (tab.offset().left >= event.clientX) {
+                    $scope.script_builder.movePostprocessing(id, i);
+                    break;
+                }
+            }
+
+            $scope.$digest();
         });
     };
 
@@ -273,14 +278,5 @@ app.controller('main', function($scope) {
         });
     };
 
-    $scope.postprocessings = [
-        {
-            name: 'Nested',
-            type: 'nested'
-        },
-        {
-            name: 'Href cleaning',
-            type: 'hrefcleaning'
-        }
-    ];
+    $scope.postprocessings = Postprocessing.types;
 });

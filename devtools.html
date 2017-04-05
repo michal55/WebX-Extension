@@ -55,7 +55,7 @@
                 ng-change="selectProject()">
               </select>
             </div>
-            <span ng-hide="projects.length > 1"> No projects! <a target="_blank" ng-href="{{ url_base }}/projects/new"> Add first</a> </span>
+            <span ng-hide="projects.length > 1"> You have no projects! <a target="_blank" ng-href="{{ url_base }}/projects"> Add project</a> </span>
             <div ng-show="project.id && scripts">
               <div ng-show="scripts.length > 1">
                 <label>Select script:</label>
@@ -66,7 +66,7 @@
                   ng-change="selectScript()">
                 </select>
               </div>
-              <span ng-hide="scripts.length > 1" class="padded"> No scripts! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}/scripts/new"> Add first</a> </span>
+              <span ng-hide="scripts.length > 1" class="padded"> Your project does not have any scripts! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add script</a> </span>
             </div>
           </div>
           <div class="panel panel-default" ng-show="script.id">
@@ -78,34 +78,38 @@
         </div>
         <!-- ==============  WORK DESKTOP  ========================-->
         <div class="col-xs-9">
-          <div ng-show="script && !script.disabled">
+          <div ng-show="script && !project.disabled">
             <!-- ==============  HEADERS  ========================-->
-            <div class="row">
-              <div class="post-select">
-                <select
-                  class="form-control"
-                  ng-model="selected_postprocessing"
-                  ng-init="selected_postprocessing=postprocessings[0]"
-                  ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
-                </select>
-              </div>
-              <div class="post-add">
-                <span class="btn btn-default form-control" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
-                  add
-                </span>
-              </div>
-              <div class="post-info">
+            <div id="headers" class="row">
+              <div class="col-md-12" ng-show="!script_builder.getPostprocessingStackTopName()">
                 <input
-                  ng-show="!script_builder.getPostprocessingStackTopName()"
                   ng-model="script_builder.url"
                   ng-change="changeXpath()"
                   placeholder="Source page url"
                   class="form-control"
                 >
-                <div ng-show="script_builder.getPostprocessingStackTopName()">
-                  <span class="btn btn-default form-control" ng-click="script_builder.leavePostProcessing()">
-                    &#8672; postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
+              </div>
+              <div ng-show="script_builder.getPostprocessingStackTopName()">
+                <div class="post-info">
+                  <span class="btn btn-default btn-small" ng-click="script_builder.leavePostProcessing()">
+                    &#8672;
                   </span>
+                  <span>
+                    postprocessing level {{ script_builder.post_processing_stack.length }}: {{ script_builder.getPostprocessingStackTopName() }}
+                  </span>
+                </div>
+                <div class="post-add">
+                  <span class="btn btn-default form-control" ng-click="script_builder.addPostProcessing(selected_postprocessing.type)">
+                    add
+                  </span>
+                </div>
+                <div class="post-select">
+                  <select
+                    class="form-control"
+                    ng-model="selected_postprocessing"
+                    ng-init="selected_postprocessing=postprocessings[0]"
+                    ng-options="postprocessing as postprocessing.name for postprocessing in postprocessings track by postprocessing.type">
+                  </select>
                 </div>
               </div>
             </div>
@@ -113,12 +117,16 @@
               <div class="col-md-12">
                 <div
                   ng-repeat="postprocessing in script_builder.getSelectedScript().postprocessing"
-                  class="tab btn btn-default form-control"
+                  class="tab"
                   ng-click="script_builder.selectPostprocessing(postprocessing)"
                   ng-class="{'active': script_builder.isSelectedPostprocessing(postprocessing)}"
+                  ng-show="script_builder.getPostprocessingStackTopName()"
+                  draggable="true"
+                  droppable="true"
+                  ng-attr-id="{{'tab-' + $index}}"
                 >
-                  {{ postprocessing.label }}
-                  <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing.id)">
+                  {{ postprocessing.label + ' ' + postprocessing.visual_only_id }}
+                  <span class="del" ng-click="script_builder.deletePostprocessing(postprocessing)">
                     <span class="glyphicon glyphicon-remove"></span>
                   </span>
                 </div>
@@ -127,7 +135,7 @@
             <!-- ==============  BODY  ========================-->
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('nested')">
               <div class="col-md-12">
-                <table class="table table-hover">
+                <table class="table table-hover" ng-show="script_builder.data_fields.length >= 1">
                   <thead>
                     <tr>
                       <th>Field</th>
@@ -205,7 +213,9 @@
                 </table>
               </div>
             </div>
+            <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>
             <button
+              ng-show="script_builder.data_fields.length >= 1"
               ng-click="saveScript()"
               ng-disabled="saving"
               class="btn btn-primary">
