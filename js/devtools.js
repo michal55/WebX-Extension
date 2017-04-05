@@ -303,14 +303,5 @@ app.controller('main', function($scope) {
         });
     };
 
-    $scope.postprocessings = [
-        {
-            name: 'Nested',
-            type: 'nested'
-        },
-        {
-            name: 'Href cleaning',
-            type: 'hrefcleaning'
-        }
-    ];
+    $scope.postprocessings = Postprocessing.types;
 });
