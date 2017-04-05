@@ -1,11 +1,11 @@
 // How to create new postprocessing in few easy steps
 // 1. Create new js file in postprocessing folder, copy template bellow and edit as necessary
 // 2. Update devtools.html to contain <script src="js/postprocessing/%new_postprocessing%.js"></script> below
-//     <script src="js/postprocessing/postprocessing.js"></script> but above non-postprocessing scripts
+//    <script src="js/postprocessing/postprocessing.js"></script> but above non-postprocessing scripts
 // 3. Update devtools.html to contain some user interface elements for your new postprocessing,
-//     use ng-show="script_builder.isSelectedPostprocessingType('type')" to show UI element only if the specific postprocessing type is selected
-//     and script_builder.getSelectedPostprocessing() to bind variables from your new class to UI elements, for example:
-//     script_builder.getSelectedPostprocessing().foo
+//    use ng-show="script_builder.isSelectedPostprocessingType('type')" to show UI element only if the specific postprocessing type is selected
+//    and script_builder.getSelectedPostprocessing() to bind variables from your new class to UI elements, for example:
+//    script_builder.getSelectedPostprocessing().foo
 //
 /* NEW POSTPROCESSING TEMPLATE START
 // All methods are mandatory (can be left empty though)

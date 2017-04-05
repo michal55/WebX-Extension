@@ -204,8 +204,6 @@ class ScriptBuilder {
 
     // On postprocessing tab movement
     movePostprocessing(old_idx, new_idx) {
-        console.log('move:', old_idx, 'to: ', new_idx);
-
         var moving_pp = this.getSelectedScript().postprocessing[old_idx];
         var show_new = this.selected_postprocessing_idx == old_idx;
         this.deletePostprocessing(moving_pp);
