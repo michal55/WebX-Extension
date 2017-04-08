@@ -27,3 +27,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
 
     return true;
 });
+
+chrome.runtime.onConnect.addListener(function (port) {
+    port.onDisconnect.addListener(function(port) {
+        highlight(parseInt(port.name), false);
+    });
+});

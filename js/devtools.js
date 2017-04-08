@@ -276,7 +276,13 @@ app.controller('main', function($scope) {
                 $scope.getProjects();
             }
         });
+
+        stophighlight();
     };
 
     $scope.postprocessings = Postprocessing.types;
+});
+
+chrome.runtime.connect({
+    name: chrome.devtools.inspectedWindow.tabId.toString()
 });
