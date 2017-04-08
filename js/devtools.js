@@ -277,6 +277,7 @@ app.controller('main', function($scope) {
             }
         });
 
+        stopRestrictHighlight();
         stophighlight();
     };
 

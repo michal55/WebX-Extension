@@ -21,6 +21,14 @@ function stophighlight() {
     chrome.runtime.sendMessage({stop_highlight: {tab_id: chrome.devtools.inspectedWindow.tabId}});
 }
 
+function startRestrictHighlight(xpath) {
+    chrome.runtime.sendMessage({start_restrict_highlight: {tab_id: chrome.devtools.inspectedWindow.tabId, xpath: xpath}});
+}
+
+function stopRestrictHighlight(xpath) {
+    chrome.runtime.sendMessage({stop_restrict_highlight: {tab_id: chrome.devtools.inspectedWindow.tabId}});
+}
+
 function apiGet(url, callback, params) {
     xhrWithAuth('GET', url, false, callback, params);
 }

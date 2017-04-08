@@ -168,4 +168,23 @@ function stop_highlight() {
     $('*').removeClass('highlighting-positive-elements');
 }
 
+$("<style type='text/css'> .restrict-selected-highlight {background-color: rgba(194, 188, 9, 0.23);} </style>").appendTo("head");
 
+function startRestrictHighlight(xpath) {
+    var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
+    var el = elements_iter.iterateNext();
+    var elements = [];
+
+    while (el) {
+        elements.push(el);
+        el = elements_iter.iterateNext();
+    }
+
+    for (var i in elements) {
+        elements[i].className += ' restrict-selected-highlight';
+    }
+}
+
+function stopRestrictHighlight() {
+    $('.restrict-selected-highlight').removeClass('restrict-selected-highlight');
+}
