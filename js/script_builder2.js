@@ -31,6 +31,7 @@ class ScriptBuilder {
             this.loadScripts(data.json);
             this.post_processing_stack = data.post_processing_stack;
             this.show(data.selected_script_id, data.selected_postprocessing_idx);
+            localStorage.script_builder = this.toJSON();
         }
     }
 
@@ -166,6 +167,11 @@ class ScriptBuilder {
     showPostProcessings(current_field) {
         this.show(current_field.script_id, 0, true);
 
+        // If current script has zero postprocessings, set selected index to invalid value
+        if (!this.getSelectedPostprocessing()) {
+            this.selected_postprocessing_idx = -1;
+        }
+
         localStorage.script_builder = this.toJSON();
     }
 
@@ -186,7 +192,7 @@ class ScriptBuilder {
 
     // On postprocessing tab X click
     deletePostprocessing(postprocessing) {
-        var postprocessing_idx = this.getPostprocessingIdx(postprocessing)
+        var postprocessing_idx = this.getPostprocessingIdx(postprocessing);
         this.getSelectedScript().postprocessing.splice(postprocessing_idx, 1);
 
         // If user deleted currently shown postprocessing, show postprocessing 0
