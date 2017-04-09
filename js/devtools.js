@@ -280,7 +280,7 @@ app.controller('main', function($scope) {
         stophighlight();
     };
 
-    $scope.postprocessings = Postprocessing.types;
+    $scope.postprocessings = Postprocessing.types.filter((pp) => !pp.disabled);
 });
 
 chrome.runtime.connect({

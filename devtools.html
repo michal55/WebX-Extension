@@ -9,6 +9,7 @@
     <script src="js/postprocessing/postprocessing.js"></script>
     <script src="js/postprocessing/nested.js"></script>
     <script src="js/postprocessing/pagination.js"></script>
+    <script src="js/postprocessing/unimplemented.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
@@ -212,6 +213,13 @@
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('unimplemented')">
+              <div class="col-md-12">
+                This type of postprocessing is not implemented in extension. Try to update your extension or <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}/scripts/{{ script.id }}">correct the script in web application.</a> </span>
+                <br/><br/>
+                {{ script_builder.getSelectedPostprocessing().postprocessing }}
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('pagination')">
