@@ -36,7 +36,6 @@ function highlight(tab_id, start, xpath, type) {
     return true;
 }
 
-
 function get_attributes(xpath,tab_id,callback) {
 
         console.log([xpath,tab_id,callback]);
@@ -53,3 +52,4 @@ function get_attributes(xpath,tab_id,callback) {
 
     return true;
 }
+

@@ -46,6 +46,7 @@ app.controller('main', function($scope) {
         }
     }
 
+
     $scope.getProjects = function() {
         apiGet(
             '/data/user/projects',
