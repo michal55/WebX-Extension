@@ -29,10 +29,6 @@
                   <ul class="nav navbar-nav navbar-left ">
                     <li><a ng-show="!loading" ng-click="refresh()" href="#">Refresh</a></li>
                   </ul>
-                  <ul class="nav navbar-nav navbar-right ">
-                    <li><a ng-show="!logged_in" ng-click="loginPrompt()" href="#">Log in</a></li>
-                    <li><a ng-show="logged_in" ng-click="logout()" href="#">Log out</a></li>
-                  </ul>
                 </div>
               </nav>
             </div>
@@ -40,7 +36,7 @@
         </div>
       </div>
       <div class="row" ng-show="!logged_in">
-        <h1 style="text-align: center; padding: 150px">Please log in to continue</h1>
+        <button ng-show="!logged_in" ng-click="loginPrompt()" href="#">Please log in to continue</button>
       </div>
       <!-- ==================== MAIN CONTENT ========================== -->
       <div class="row content-container" ng-show="logged_in">
