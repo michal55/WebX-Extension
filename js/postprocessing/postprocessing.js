@@ -62,18 +62,21 @@ function Postprocessing() { }
 
 Postprocessing.types = [];
 
-Postprocessing.register = function(proto) {
+Postprocessing.register = function(proto, disabled) {
     var dummy = new proto;
 
     Postprocessing.types.push({
         name: dummy.label,
         type: dummy.type,
+        disabled: disabled,
         proto: proto
     });
 };
 
 Postprocessing.create = function(type, visual_only_id, script_builder) {
-    var postprocessing = new (Postprocessing.types.find((field) => field.type == type).proto);
+    // Create 'unimplemented' postprocessing if requested one is not registered
+    var postprocessing = new (Postprocessing.types.find((field) => field.type == type) || Postprocessing.types.find((field) => field.type == 'unimplemented')).proto;
+
     postprocessing.visual_only_id = visual_only_id;
 
     // Create empty 'virtual' functions if they are not defined in postprocessing
