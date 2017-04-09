@@ -6,7 +6,7 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested', 1)]
+            postprocessing: [Postprocessing.create('nested', 1, this)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.data_fields = data_fields;
@@ -31,6 +31,7 @@ class ScriptBuilder {
             this.loadScripts(data.json);
             this.post_processing_stack = data.post_processing_stack;
             this.show(data.selected_script_id, data.selected_postprocessing_idx);
+            localStorage.script_builder = this.toJSON();
         }
     }
 
@@ -39,7 +40,7 @@ class ScriptBuilder {
         this.scripts = [];
         this.scripts[this.ROOT] = {
             id: this.ROOT,
-            postprocessing: [Postprocessing.create('nested', 1)]
+            postprocessing: [Postprocessing.create('nested', 1, this)]
         };
         this.post_processing_stack = [[this.ROOT, this.ROOT_PP]];
         this.selected_script_id = this.ROOT;
@@ -81,7 +82,7 @@ class ScriptBuilder {
             for (var j in script.postprocessing || []) {
                 var postprocessing = script.postprocessing[j];
 
-                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, this.scripts[id].visual_only_postprocessing_id++);
+                this.scripts[id].postprocessing[j] = Postprocessing.create(postprocessing.type, this.scripts[id].visual_only_postprocessing_id++, this);
                 this.scripts[id].postprocessing[j].load(postprocessing);
 
                 if (this.scripts[id].postprocessing[j].canHaveChildren()) {
@@ -92,8 +93,18 @@ class ScriptBuilder {
     }
 
     show(script_id, postprocessing_idx, new_level) {
+        // Trigger postprocessing hooks if selected postprocessing is going to change
+        var triggerHooks = script_id != this.selected_script_id || postprocessing_idx != this.selected_postprocessing_idx;
+        if (triggerHooks && this.getSelectedPostprocessing()) {
+            this.getSelectedPostprocessing().hide();
+        }
+
         this.selected_script_id = script_id;
         this.selected_postprocessing_idx = postprocessing_idx;
+
+        if (triggerHooks && this.getSelectedPostprocessing()) {
+            this.getSelectedPostprocessing().show();
+        }
 
         if (new_level) {
             this.post_processing_stack.push([script_id, postprocessing_idx]);
@@ -126,7 +137,7 @@ class ScriptBuilder {
     }
 
     getSelectedPostprocessing() {
-        return this.scripts[this.selected_script_id].postprocessing[this.selected_postprocessing_idx];
+        return this.getSelectedScript() ? this.getSelectedScript().postprocessing[this.selected_postprocessing_idx] : undefined;
     }
 
     getPostprocessingIdx(postprocessing) {
@@ -156,6 +167,11 @@ class ScriptBuilder {
     showPostProcessings(current_field) {
         this.show(current_field.script_id, 0, true);
 
+        // If current script has zero postprocessings, set selected index to invalid value
+        if (!this.getSelectedPostprocessing()) {
+            this.selected_postprocessing_idx = -1;
+        }
+
         localStorage.script_builder = this.toJSON();
     }
 
@@ -169,12 +185,14 @@ class ScriptBuilder {
 
     // On add postprocessing button click
     addPostProcessing(postprocessing_name) {
-        this.insertPostprocessing(Postprocessing.create(postprocessing_name, this.getSelectedScript().visual_only_postprocessing_id++), this.getSelectedScript().postprocessing.length, true);
+        this.insertPostprocessing(Postprocessing.create(postprocessing_name,
+            this.getSelectedScript().visual_only_postprocessing_id++, this),
+            this.getSelectedScript().postprocessing.length, true);
     }
 
     // On postprocessing tab X click
     deletePostprocessing(postprocessing) {
-        var postprocessing_idx = this.getPostprocessingIdx(postprocessing)
+        var postprocessing_idx = this.getPostprocessingIdx(postprocessing);
         this.getSelectedScript().postprocessing.splice(postprocessing_idx, 1);
 
         // If user deleted currently shown postprocessing, show postprocessing 0
