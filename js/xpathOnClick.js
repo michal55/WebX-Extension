@@ -11,6 +11,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
     }
 
+    else if (request.get_attributes){
+        try {
+            get_attributes(request.get_attributes.xpath, callback);
+        } catch (err) {
+            console.error(err);
+        }
+        return true;
+    }
+
     return true;
 });
 
@@ -169,14 +178,16 @@ function stop_highlight() {
     $('*').removeClass('highlighting-positive-elements');
 }
 
-function get_attributes(xpath) {
+function get_attributes(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
     var el = elements.iterateNext();
     var attributes = [];
+    attributes.push("string");
+    attributes.push("innerhtml");
 
     while (el !== null) {
         if ( el.textContent !== undefined) {
-            attributes.push("string");
+            
             if (isNaN(parseFloat(el.textContent)) !== true) {
                 attributes.push("float");
                 attributes.push("integer");
@@ -192,7 +203,6 @@ function get_attributes(xpath) {
         }
         el = elements.iterateNext();
     }
-
-    chrome.storage.local.set({'attributes': JSON.stringify(attributes)}, function() {});
+    callback(attributes);
 }
 

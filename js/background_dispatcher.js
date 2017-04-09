@@ -25,7 +25,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
 
     } else if (request.get_attributes) {
-        get_attributes(request.get_attributes.xpath);
+        get_attributes(request.get_attributes.xpath, request.get_attributes.tab_id ,  function(result) {
+            callback(result);
+        });
         return true;
     }
 
