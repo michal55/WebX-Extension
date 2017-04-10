@@ -130,7 +130,7 @@ app.controller('main', function($scope) {
                 $scope.targeting_in_progress = false;
                 localStorage.script_builder = $scope.script_builder.toJSON();
                 $scope.$digest();
-            });   
+            });
         }
     };
 
