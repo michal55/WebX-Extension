@@ -5,14 +5,13 @@ class Attributes {
         this.postprocessing = {};
         //default is always string
         this.attribute = "string";
-        this.attributes = []; 
+        this.attributes = [];
     }
 
     canHaveChildren() {
         return false;
     };
 
-    
     save() {
         return {
             type: this.type,
@@ -32,7 +31,9 @@ class Attributes {
             // wont work if I put only this into callback
             var thisclass = this;
             get_attributes(this.getParentXpath(),function(result){
-                thisclass.attributes = result;
+                // Take only unique values from result
+                thisclass.attributes = [...new Set(result)];
+                angular.element('[ng-controller="main"]').scope().$digest();
             } );
         }
     }
