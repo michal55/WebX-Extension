@@ -230,7 +230,7 @@
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('attributes')">
               <div class="col-md-12">
-                <input type="text" name="Attributes" data-ng-model="attribute" list="attributes">
+                <input type="text" name="Attributes" ng-change="save_attribute(script_builder.getSelectedPostprocessing())" ng-model="attribute" list="attributes">
                   <datalist id="attributes">
                     <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
                   </datalist>

@@ -243,6 +243,10 @@ app.controller('main', function($scope) {
         field.positives = [];
     };
 
+    $scope.save_attribute = function(postprocessing){
+        postprocessing.attribute = $scope.attribute;
+    };
+
     $scope.selectProject = function() {
         localStorage.project = angular.toJson($scope.project);
         $scope.getScripts();
