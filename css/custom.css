@@ -17,17 +17,19 @@
 .navbar-sm .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 40px; }
 
 body {
-	min-width:768px;
-	min-height: 300px;
+	min-width:350px;
+	min-height: 100px;
 	background-color: #eee;
 }
 
 h1 {
+	
 	font-size: 16px;
 }
 
 button{
   margin:auto;
+  margin-top:10%;
   display:block;
 }
 
