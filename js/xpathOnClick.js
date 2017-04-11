@@ -1,3 +1,4 @@
+
 // Message handler for xpathOnClick.js content script
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
@@ -7,6 +8,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             console.error(err);
         }
 
+        return true;
+    }
+
+    else if (request.get_attributes){
+        try {
+            get_attributes(request.get_attributes.xpath, callback);
+        } catch (err) {
+            console.error(err);
+        }
         return true;
     }
 
@@ -168,4 +178,31 @@ function stop_highlight() {
     $('*').removeClass('highlighting-positive-elements');
 }
 
+function get_attributes(xpath , callback) {
+    var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
+    var el = elements.iterateNext();
+    var attributes = [];
+    attributes.push("string");
+    attributes.push("innerhtml");
+
+    while (el !== null) {
+        if ( el.textContent !== undefined) {
+            
+            if ((isNaN(parseFloat(el.textContent)) !== true) && (attributes.indexOf("float") == -1 ) ) {
+                attributes.push("float");
+                attributes.push("integer");
+            }
+        }
+        
+        var i = 0;
+        while ( i < el.attributes.length) {
+            if (attributes.indexOf(el.attributes[i].name) == -1 ) {
+                attributes.push(el.attributes[i].name);
+            }
+            i += 1;
+        }
+        el = elements.iterateNext();
+    }
+    callback(attributes);
+}
 

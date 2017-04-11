@@ -10,6 +10,7 @@
     <script src="js/postprocessing/nested.js"></script>
     <script src="js/postprocessing/pagination.js"></script>
     <script src="js/postprocessing/unimplemented.js"></script>
+    <script src="js/postprocessing/attributes.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
@@ -225,6 +226,14 @@
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('pagination')">
               <div class="col-md-12">
                 This postprocessing does not have any attributes.
+              </div>
+            </div>
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('attributes')">
+              <div class="col-md-12">
+                <input type="text" name="Attributes" ng-model="script_builder.getSelectedPostprocessing().attribute" list="attributes">
+                  <datalist id="attributes">
+                    <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
+                  </datalist>
               </div>
             </div>
             <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>

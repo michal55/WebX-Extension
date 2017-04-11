@@ -35,3 +35,21 @@ function highlight(tab_id, start, xpath, type) {
 
     return true;
 }
+
+function get_attributes(xpath,tab_id,callback) {
+
+        console.log([xpath,tab_id,callback]);
+        try {
+            chrome.tabs.executeScript(tab_id, { file: 'js/jquery.js' }, function() {
+                chrome.tabs.executeScript(tab_id, { file: 'js/xpathOnClick.js' }, function() {
+                    chrome.tabs.sendMessage(tab_id, {get_attributes: {xpath:xpath}}, callback);
+                        
+                });
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+
+    return true;
+}
+
