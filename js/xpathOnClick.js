@@ -188,7 +188,7 @@ function get_attributes(xpath , callback) {
     while (el !== null) {
         if ( el.textContent !== undefined) {
             
-            if (isNaN(parseFloat(el.textContent)) !== true) {
+            if ((isNaN(parseFloat(el.textContent)) !== true) && (attributes.indexOf("float") == -1 ) ) {
                 attributes.push("float");
                 attributes.push("integer");
             }
