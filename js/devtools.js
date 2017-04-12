@@ -270,13 +270,13 @@ app.controller('main', function($scope) {
     };
 
     $scope.refresh = function() {
-		$scope.loading = true;
+        $scope.loading = true;
         uiLoginCheck($scope, function(status, response) {
             if (status != null) {
                 $scope.targeting_in_progress = false;
                 $scope.getProjects();
             }
-			$scope.loading = false;
+            $scope.loading = false;
         });
 
         stopRestrictHighlight();
