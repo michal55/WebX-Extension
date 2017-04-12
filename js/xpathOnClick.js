@@ -30,6 +30,10 @@ function addNodes(array, collection) {
 }
 
 function onClickXPath(useIdx, useId, useClass, callback, relative) {
+    if ($("#onClickXPath_style").length == 0) {
+        $("<style type='text/css' id='onClickXPath_style'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6) !important;} </style>").appendTo("head");
+    }
+
     var ae = [];
     addNodes(ae, document.getElementsByTagName("*"));
     for (var i = 0; i < ae.length; i++) {
@@ -44,8 +48,6 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             catch (err) { }
         }
     }
-
-    $("<style type='text/css'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6);;} </style>").appendTo("head");
 
     // Must be function in function - need to pass ae variable
     function handler (event) {
@@ -107,19 +109,14 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 
     $('*').mouseover(
         function(e) {
-            $('*').removeClass('highlighting-mouse-over-element');
+            $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
             $(this).addClass('highlighting-mouse-over-element');
             e.preventDefault();
             e.stopPropagation();
             return false;
-        }).mouseout(function(e) {
-            $(this).removeClass('highlighting-mouse-over-element');
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
         }).click(function() {
-            $('*').unbind('mouseenter mouseleave mouseover mouseout');
-            $('*').removeClass('highlighting-mouse-over-element');
+            $('*').unbind('mouseover');
+            $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
         });
 }
 
@@ -145,9 +142,11 @@ function xpathArray(parent, exp) {
 }
 
 function start_highlight(xpath, type) {
-    $("<style type='text/css'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4);;} </style>").appendTo("head");
-    $("<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6);;} </style>").appendTo("head");
-    $("<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6);;} </style>").appendTo("head");
+    if ($("#start_highlight_style").length == 0) {
+        $("<style type='text/css' id='start_highlight_style'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4) !important;} </style>").appendTo("head");
+        $("<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6) !important;} </style>").appendTo("head");
+        $("<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6) !important;} </style>").appendTo("head");
+    }
 
     var style = 'highlighting-selected-elements';
 
@@ -173,9 +172,9 @@ function start_highlight(xpath, type) {
 }
 
 function stop_highlight() {
-    $('*').removeClass('highlighting-selected-elements');
-    $('*').removeClass('highlighting-negative-elements');
-    $('*').removeClass('highlighting-positive-elements');
+    $('.highlighting-selected-elements').removeClass('highlighting-selected-elements');
+    $('.highlighting-negative-elements').removeClass('highlighting-negative-elements');
+    $('.highlighting-positive-elements').removeClass('highlighting-positive-elements');
 }
 
 function get_attributes(xpath , callback) {
@@ -206,9 +205,11 @@ function get_attributes(xpath , callback) {
     callback(attributes);
 }
 
-$("<style type='text/css'> .restrict-selected-highlight {background-color: rgba(194, 188, 9, 0.23);} </style>").appendTo("head");
-
 function startRestrictHighlight(xpath) {
+    if ($("#startRestrictHighlight_style").length == 0) {
+        $("<style type='text/css' id='startRestrictHighlight_style'> .restrict-selected-highlight {background-color: rgba(194, 188, 9, 0.23) !important;} </style>").appendTo("head");
+    }
+
     var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements_iter.iterateNext();
     var elements = [];
