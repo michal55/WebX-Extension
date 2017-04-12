@@ -1,7 +1,7 @@
 class Attributes {
     constructor() {
-        this.label = 'Attributes';
-        this.type = 'attributes';
+        this.label = 'Attribute';
+        this.type = 'attribute';
         this.postprocessing = {};
         // Default is always string
         this.attribute = 'string';
