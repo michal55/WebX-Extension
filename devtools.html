@@ -11,7 +11,7 @@
     <script src="js/postprocessing/restrict.js"></script>
     <script src="js/postprocessing/pagination.js"></script>
     <script src="js/postprocessing/unimplemented.js"></script>
-    <script src="js/postprocessing/attributes.js"></script>
+    <script src="js/postprocessing/attribute.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
@@ -231,7 +231,7 @@
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('attribute')">
               <div class="col-md-12">
-                <input type="text" name="Attributes" ng-model="script_builder.getSelectedPostprocessing().attribute" list="attributes">
+                <input type="text" ng-model="script_builder.getSelectedPostprocessing().attribute" list="attributes">
                   <datalist id="attributes">
                     <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
                   </datalist>
