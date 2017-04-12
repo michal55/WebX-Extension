@@ -3,8 +3,8 @@ class Attributes {
         this.label = 'Attributes';
         this.type = 'attributes';
         this.postprocessing = {};
-        //default is always string
-        this.attribute = "string";
+        // Default is always string
+        this.attribute = 'string';
         this.attributes = [];
     }
 
@@ -24,11 +24,10 @@ class Attributes {
     };
 
     show() {
-        console.log(this);
-        if (this.getParentXpath() === ""){
-            this.attributes = ["string","innerhtml"];
+        if (this.getParentXpath() === ''){
+            this.attributes = ['string', 'innerhtml'];
         } else{
-            // wont work if I put only this into callback
+            // Won't work if I put only this into callback
             var thisclass = this;
             get_attributes(this.getParentXpath(),function(result){
                 // Take only unique values from result

@@ -8,6 +8,7 @@
     <script src="js/options_helper.js"></script>
     <script src="js/postprocessing/postprocessing.js"></script>
     <script src="js/postprocessing/nested.js"></script>
+    <script src="js/postprocessing/restrict.js"></script>
     <script src="js/postprocessing/pagination.js"></script>
     <script src="js/postprocessing/unimplemented.js"></script>
     <script src="js/postprocessing/attributes.js"></script>
@@ -136,7 +137,7 @@
               </div>
             </div>
             <!-- ==============  BODY  ========================-->
-            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('nested')">
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('nested') || script_builder.isSelectedPostprocessingType('restrict')">
               <div class="col-md-12">
                 <table class="table table-hover" ng-show="script_builder.data_fields.length >= 1">
                   <thead>

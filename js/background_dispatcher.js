@@ -29,6 +29,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             callback(result);
         });
         return true;
+    } else if (request.start_restrict_highlight) {
+        restrictHighlight(request.start_restrict_highlight.tab_id, true, request.start_restrict_highlight.xpath);
+        return true;
+
+    } else if (request.stop_restrict_highlight) {
+        restrictHighlight(request.stop_restrict_highlight.tab_id, false);
+        return true;
     }
 
     return true;
@@ -36,6 +43,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
 
 chrome.runtime.onConnect.addListener(function (port) {
     port.onDisconnect.addListener(function(port) {
+        restrictHighlight(parseInt(port.name), false);
         highlight(parseInt(port.name), false);
     });
 });
