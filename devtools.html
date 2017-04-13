@@ -229,14 +229,16 @@
               </div>
             </div>
             <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>
-            <button
-              ng-show="script_builder.data_fields.length >= 1"
-              ng-click="saveScript()"
-              ng-disabled="saving"
-              class="btn btn-primary">
-              <span class="glyphicon glyphicon-floppy-disk"></span>
-              Save script
-            </button>
+            <div class="row content-container">
+              <button
+                ng-show="script_builder.data_fields.length >= 1"
+                ng-click="saveScript()"
+                ng-disabled="saving"
+                class="btn btn-primary">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                Save script
+              </button>
+            </div>
           </div>
         </div>
       </div>
