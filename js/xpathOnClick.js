@@ -1,4 +1,3 @@
-
 // Message handler for xpathOnClick.js content script
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
@@ -49,14 +48,10 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         }
     }
 
-    // Must be function in function - need to pass ae variable
-    function handler (event) {
-        for (var i = 0; i < ae.length; i++) {
-            ae[i].removeEventListener('click', arguments.callee);
-        }
-
-        event.preventDefault();
-        event.stopPropagation();
+    function handler(event) {
+        $('*').off('click.onClickXPath_handler');
+        $('*').off('mouseover.onClickXPath');
+        $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
 
         var e = this;
         var idx;
@@ -104,19 +99,14 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
     }
 
     for (var i = 0; i < ae.length; i++) {
-        ae[i].addEventListener('click', handler);
+        $(ae[i]).on('click.onClickXPath_handler', handler);
     }
 
-    $('*').mouseover(
+    $('*').on('mouseover.onClickXPath',
         function(e) {
             $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
             $(this).addClass('highlighting-mouse-over-element');
-            e.preventDefault();
-            e.stopPropagation();
             return false;
-        }).click(function() {
-            $('*').unbind('mouseover');
-            $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
         });
 }
 
