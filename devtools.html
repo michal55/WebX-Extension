@@ -29,22 +29,18 @@
                 <div class="container-fluid">
                   <div class="navbar-header">
                     <span class="navbar-brand">WebX Tools</span>
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a ng-show="!loading" ng-click="refresh()" href="#">Refresh</a></li>
+                    </ul>
                   </div>
-                  <ul class="nav navbar-nav navbar-left ">
-                    <li><a ng-show="!loading" ng-click="refresh()" href="#">Refresh</a></li>
-                  </ul>
-                  <ul class="nav navbar-nav navbar-right ">
-                    <li><a ng-show="!logged_in" ng-click="loginPrompt()" href="#">Log in</a></li>
-                    <li><a ng-show="logged_in" ng-click="logout()" href="#">Log out</a></li>
-                  </ul>
                 </div>
               </nav>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" ng-show="!logged_in">
-        <h1 style="text-align: center; padding: 150px">Please log in to continue</h1>
+      <div class="row" style="text-align:center;" ng-show="!logged_in">
+        <button style="margin-top:5%" ng-click="loginPrompt()" href="#" class="btn btn-primary">Please log in to continue</button>
       </div>
       <!-- ==================== MAIN CONTENT ========================== -->
       <div class="row content-container" ng-show="logged_in">
@@ -60,7 +56,7 @@
               </select>
             </div>
             <span ng-hide="projects.length > 1"> You have no projects! <a target="_blank" ng-href="{{ url_base }}/projects"> Add project</a> </span>
-            <div ng-show="project.id && scripts">
+            <div class="padded-top" ng-show="project.id && scripts">
               <div ng-show="scripts.length > 1">
                 <label>Select script:</label>
                 <select
@@ -73,16 +69,10 @@
               <span ng-hide="scripts.length > 1" class="padded"> Your project does not have any scripts! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add script</a> </span>
             </div>
           </div>
-          <div class="panel panel-default" ng-show="script.id">
-            <div class="panel-body">
-              <h1> {{ script.name }} </h1>
-              <p> {{ script.created_at }} </p>
-            </div>
-          </div>
         </div>
         <!-- ==============  WORK DESKTOP  ========================-->
         <div class="col-xs-9">
-          <div ng-show="script && !project.disabled">
+          <div ng-show="script && !project.disabled && !script.disabled">
             <!-- ==============  HEADERS  ========================-->
             <div id="headers" class="row">
               <div class="col-md-12" ng-show="!script_builder.getPostprocessingStackTopName()">
@@ -218,19 +208,20 @@
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('unimplemented')">
-              <div class="col-md-12">
+              <div class="col-md-12 padded">
                 This type of postprocessing is not implemented in extension. Try to update your extension or <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}/scripts/{{ script.id }}">correct the script in web application.</a> </span>
                 <br/><br/>
                 {{ script_builder.getSelectedPostprocessing().postprocessing }}
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('pagination')">
-              <div class="col-md-12">
+              <div class="col-md-12 padded">
                 This postprocessing does not have any attributes.
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('attribute')">
-              <div class="col-md-12">
+              <div class="col-md-12 padded">
+                <label>Select attribute:</label>
                 <input type="text" ng-model="script_builder.getSelectedPostprocessing().attribute" list="attributes">
                   <datalist id="attributes">
                     <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
@@ -238,14 +229,16 @@
               </div>
             </div>
             <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>
-            <button
-              ng-show="script_builder.data_fields.length >= 1"
-              ng-click="saveScript()"
-              ng-disabled="saving"
-              class="btn btn-primary">
-              <span class="glyphicon glyphicon-floppy-disk"></span>
-              Save script
-            </button>
+            <div class="row content-container">
+              <button
+                ng-show="script_builder.data_fields.length >= 1"
+                ng-click="saveScript()"
+                ng-disabled="saving"
+                class="btn btn-primary">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                Save script
+              </button>
+            </div>
           </div>
         </div>
       </div>
