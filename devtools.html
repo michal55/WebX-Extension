@@ -55,7 +55,7 @@
               </select>
             </div>
             <span ng-hide="projects.length > 1"> You have no projects! <a target="_blank" ng-href="{{ url_base }}/projects"> Add project</a> </span>
-            <div ng-show="project.id && scripts">
+            <div class="padded-top" ng-show="project.id && scripts">
               <div ng-show="scripts.length > 1">
                 <label>Select script:</label>
                 <select
@@ -207,19 +207,20 @@
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('unimplemented')">
-              <div class="col-md-12">
+              <div class="col-md-12 padded">
                 This type of postprocessing is not implemented in extension. Try to update your extension or <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}/scripts/{{ script.id }}">correct the script in web application.</a> </span>
                 <br/><br/>
                 {{ script_builder.getSelectedPostprocessing().postprocessing }}
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('pagination')">
-              <div class="col-md-12">
+              <div class="col-md-12 padded">
                 This postprocessing does not have any attributes.
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('attributes')">
-              <div class="col-md-12">
+              <div class="col-md-12 padded">
+                <label>Select attribute:</label>
                 <input type="text" name="Attributes" ng-model="script_builder.getSelectedPostprocessing().attribute" list="attributes">
                   <datalist id="attributes">
                     <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
