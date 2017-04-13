@@ -22,6 +22,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     return true;
 });
 
+var custom_styles = {
+    "highlighting-mouse-over-element": "<style type='text/css' id='WebX_custom_styles'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6) !important;} </style>",
+    "restrict-selected-highlight": "<style type='text/css'> .restrict-selected-highlight{background-color: rgba(194, 188, 9, 0.23) !important;} </style>",
+    "highlighting-selected-elements": "<style type='text/css'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4) !important;} </style>",
+    "highlighting-negative-elements": "<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6) !important;} </style>",
+    "highlighting-positive-elements": "<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6) !important;} </style>"
+};
+
+function initializeCustomStyles() {
+    if ($("#WebX_custom_styles").length == 0) {
+        for (var i in custom_styles) {
+            $(custom_styles[i]).appendTo("head");
+        }
+    }
+}
+
 function addNodes(array, collection) {
     for (var i = 0; collection && collection.length && i < collection.length; i++) {
         array.push(collection[i]);
@@ -29,9 +45,7 @@ function addNodes(array, collection) {
 }
 
 function onClickXPath(useIdx, useId, useClass, callback, relative) {
-    if ($("#onClickXPath_style").length == 0) {
-        $("<style type='text/css' id='onClickXPath_style'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6) !important;} </style>").appendTo("head");
-    }
+    initializeCustomStyles();
 
     var ae = [];
     addNodes(ae, document.getElementsByTagName("*"));
@@ -132,11 +146,7 @@ function xpathArray(parent, exp) {
 }
 
 function start_highlight(xpath, type) {
-    if ($("#start_highlight_style").length == 0) {
-        $("<style type='text/css' id='start_highlight_style'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4) !important;} </style>").appendTo("head");
-        $("<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6) !important;} </style>").appendTo("head");
-        $("<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6) !important;} </style>").appendTo("head");
-    }
+    initializeCustomStyles();
 
     var style = 'highlighting-selected-elements';
 
@@ -196,9 +206,7 @@ function get_attributes(xpath , callback) {
 }
 
 function startRestrictHighlight(xpath) {
-    if ($("#startRestrictHighlight_style").length == 0) {
-        $("<style type='text/css' id='startRestrictHighlight_style'> .restrict-selected-highlight {background-color: rgba(194, 188, 9, 0.23) !important;} </style>").appendTo("head");
-    }
+    initializeCustomStyles();
 
     var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements_iter.iterateNext();
