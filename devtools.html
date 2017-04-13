@@ -39,8 +39,8 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="!logged_in">
-        <button ng-show="!logged_in" ng-click="loginPrompt()" href="#">Please log in to continue</button>
+      <div class="row" style="text-align:center;" ng-show="!logged_in">
+        <button style="margin-top:5%" ng-click="loginPrompt()" href="#" class="btn btn-primary">Please log in to continue</button>
       </div>
       <!-- ==================== MAIN CONTENT ========================== -->
       <div class="row content-container" ng-show="logged_in">
@@ -67,12 +67,6 @@
                 </select>
               </div>
               <span ng-hide="scripts.length > 1" class="padded"> Your project does not have any scripts! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add script</a> </span>
-            </div>
-          </div>
-          <div class="panel panel-default" ng-show="script.id">
-            <div class="panel-body">
-              <h1> {{ script.name }} </h1>
-              <p> {{ script.created_at }} </p>
             </div>
           </div>
         </div>
