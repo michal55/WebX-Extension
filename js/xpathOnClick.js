@@ -186,7 +186,7 @@ function get_attributes(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
     var el = elements.iterateNext();
     var attributes = [];
-    attributes.push("string");
+    attributes.push("text");
     attributes.push("innerhtml");
 
     while (el !== null) {
