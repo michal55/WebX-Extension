@@ -107,6 +107,11 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
                 break;
             }
         }
+        var classes = Object.keys(custom_styles);
+        for (var i in classes) {
+            path.replace(new RegExp(classes[i], 'g'), "");
+        }
+        path.replace(/\[\s*@class='\s*'\s*\]/g, "");
 
         callback(path);
         return false;
