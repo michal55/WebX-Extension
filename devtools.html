@@ -265,6 +265,11 @@
                             ng-hide="script_builder.getSelectedPostprocessing().fields[key] != null">
                             &#127875;
                           </span>
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            ng-click="script_builder.getSelectedPostprocessing().deleteKey(key)">
+                            -
+                          </span>
                         </div>
                       </td>
                     </tr>

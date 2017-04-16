@@ -6,6 +6,7 @@ class Post {
         this.fields = {};
         this.new_key = '';
         this.new_value = '';
+        this.loaded = false;
     }
 
     canHaveChildren() {
@@ -17,21 +18,33 @@ class Post {
         return {
             type: this.type,
             url: this.url,
-            fields: this.fields
+            fields: angular.toJson(this.fields)
         };
     };
 
     load(postprocessing) {
+        this.loaded = true;
         this.url = postprocessing.url;
-        this.fields = postprocessing.fields;
+        this.fields = angular.fromJson(postprocessing.fields);
     };
 
     show() {
+        // Don't fetch form fields if postprocessing was loaded from server
+        if (this.loaded) {
+            return;
+        }
+
+        // Extract fields from form... this.getParentXpath()
         this.fields = {
             'username': 'xsrba',
             'csrf': null
         };
-        this.url = 'PH url'
+
+        // Extract url from form... this.getParentXpath()
+        this.url = 'PH url';
+
+        // Digest if we are assigning fields in callback
+        //angular.element('[ng-controller="main"]').scope().$digest();
     };
 
     addField() {
@@ -46,6 +59,9 @@ class Post {
         this.fields[key] = '';
     }
 
+    deleteKey(key) {
+        delete this.fields[key];
+    }
 }
 
 // Register postprocessing
