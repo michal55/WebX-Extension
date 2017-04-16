@@ -25,7 +25,7 @@ class Attributes {
 
     show() {
         if (this.getParentXpath() === ''){
-            this.attributes = ['string', 'innerhtml'];
+            this.attributes = ['text', 'innerhtml'];
         } else{
             // Won't work if I put only this into callback
             var thisclass = this;

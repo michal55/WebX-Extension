@@ -1,4 +1,3 @@
-
 // Message handler for xpathOnClick.js content script
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
@@ -23,6 +22,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     return true;
 });
 
+var custom_styles = {
+    "highlighting-mouse-over-element": "<style type='text/css' id='WebX_custom_styles'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6) !important;} </style>",
+    "restrict-selected-highlight": "<style type='text/css'> .restrict-selected-highlight{background-color: rgba(194, 188, 9, 0.23) !important;} </style>",
+    "highlighting-selected-elements": "<style type='text/css'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4) !important;} </style>",
+    "highlighting-negative-elements": "<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6) !important;} </style>",
+    "highlighting-positive-elements": "<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6) !important;} </style>"
+};
+
+function initializeCustomStyles() {
+    if ($("#WebX_custom_styles").length == 0) {
+        for (var i in custom_styles) {
+            $(custom_styles[i]).appendTo("head");
+        }
+    }
+}
+
 function addNodes(array, collection) {
     for (var i = 0; collection && collection.length && i < collection.length; i++) {
         array.push(collection[i]);
@@ -30,6 +45,8 @@ function addNodes(array, collection) {
 }
 
 function onClickXPath(useIdx, useId, useClass, callback, relative) {
+    initializeCustomStyles();
+
     var ae = [];
     addNodes(ae, document.getElementsByTagName("*"));
     for (var i = 0; i < ae.length; i++) {
@@ -45,16 +62,10 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         }
     }
 
-    $("<style type='text/css'> .highlighting-mouse-over-element{ background-color: rgba(0, 255, 0, 0.6);;} </style>").appendTo("head");
-
-    // Must be function in function - need to pass ae variable
-    function handler (event) {
-        for (var i = 0; i < ae.length; i++) {
-            ae[i].removeEventListener('click', arguments.callee);
-        }
-
-        event.preventDefault();
-        event.stopPropagation();
+    function handler(event) {
+        $('*').off('click.onClickXPath_handler');
+        $('*').off('mouseover.onClickXPath');
+        $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
 
         var e = this;
         var idx;
@@ -96,30 +107,25 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
                 break;
             }
         }
+        var classes = Object.keys(custom_styles);
+        for (var i in classes) {
+            path.replace(new RegExp(classes[i], 'g'), "");
+        }
+        path.replace(/\[\s*@class='\s*'\s*\]/g, "");
 
         callback(path);
         return false;
     }
 
     for (var i = 0; i < ae.length; i++) {
-        ae[i].addEventListener('click', handler);
+        $(ae[i]).on('click.onClickXPath_handler', handler);
     }
 
-    $('*').mouseover(
+    $('*').on('mouseover.onClickXPath',
         function(e) {
-            $('*').removeClass('highlighting-mouse-over-element');
+            $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
             $(this).addClass('highlighting-mouse-over-element');
-            e.preventDefault();
-            e.stopPropagation();
             return false;
-        }).mouseout(function(e) {
-            $(this).removeClass('highlighting-mouse-over-element');
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }).click(function() {
-            $('*').unbind('mouseenter mouseleave mouseover mouseout');
-            $('*').removeClass('highlighting-mouse-over-element');
         });
 }
 
@@ -145,9 +151,7 @@ function xpathArray(parent, exp) {
 }
 
 function start_highlight(xpath, type) {
-    $("<style type='text/css'> .highlighting-selected-elements{ background-color: rgba(0, 0, 255, 0.4);;} </style>").appendTo("head");
-    $("<style type='text/css'> .highlighting-negative-elements{ background-color: rgba(255, 0, 0, 0.6);;} </style>").appendTo("head");
-    $("<style type='text/css'> .highlighting-positive-elements{ background-color: rgba(0, 100, 0, 0.6);;} </style>").appendTo("head");
+    initializeCustomStyles();
 
     var style = 'highlighting-selected-elements';
 
@@ -173,16 +177,16 @@ function start_highlight(xpath, type) {
 }
 
 function stop_highlight() {
-    $('*').removeClass('highlighting-selected-elements');
-    $('*').removeClass('highlighting-negative-elements');
-    $('*').removeClass('highlighting-positive-elements');
+    $('.highlighting-selected-elements').removeClass('highlighting-selected-elements');
+    $('.highlighting-negative-elements').removeClass('highlighting-negative-elements');
+    $('.highlighting-positive-elements').removeClass('highlighting-positive-elements');
 }
 
 function get_attributes(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
     var el = elements.iterateNext();
     var attributes = [];
-    attributes.push("string");
+    attributes.push("text");
     attributes.push("innerhtml");
 
     while (el !== null) {
@@ -206,9 +210,9 @@ function get_attributes(xpath , callback) {
     callback(attributes);
 }
 
-$("<style type='text/css'> .restrict-selected-highlight {background-color: rgba(194, 188, 9, 0.23);} </style>").appendTo("head");
-
 function startRestrictHighlight(xpath) {
+    initializeCustomStyles();
+
     var elements_iter = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements_iter.iterateNext();
     var elements = [];
