@@ -12,6 +12,7 @@
     <script src="js/postprocessing/pagination.js"></script>
     <script src="js/postprocessing/unimplemented.js"></script>
     <script src="js/postprocessing/attribute.js"></script>
+    <script src="js/postprocessing/post.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
@@ -226,6 +227,64 @@
                   <datalist id="attributes">
                     <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
                   </datalist>
+              </div>
+            </div>
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('post')">
+              Debug: {{ script_builder.getSelectedPostprocessing().fields }}
+              <div class="col-md-12 padded">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Url: </td>
+                      <td>
+                        <input ng-model="script_builder.getSelectedPostprocessing().url" class="form-control">
+                      </td>
+                    </tr>
+                    <tr ng-repeat="(key, value) in script_builder.getSelectedPostprocessing().fields">
+                      <td> {{ key }} </td>
+                      <td>
+                        <div class="input-group">
+                          <input ng-model="script_builder.getSelectedPostprocessing().fields[key]"
+                            ng-disabled="script_builder.getSelectedPostprocessing().fields[key] == null"
+                            class="form-control">
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            ng-click="script_builder.getSelectedPostprocessing().disableKey(key)"
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[key] == null">
+                            &#128683;
+                          </span>
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            ng-click="script_builder.getSelectedPostprocessing().enableKey(key)"
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[key] != null">
+                            &#127875;
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input ng-model="script_builder.getSelectedPostprocessing().new_key" class="form-control">
+                      </td>
+                      <td>
+                        <div class="input-group">
+                          <input ng-model="script_builder.getSelectedPostprocessing().new_value" class="form-control">
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            ng-click="script_builder.getSelectedPostprocessing().addField()">
+                            +
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
             <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>
