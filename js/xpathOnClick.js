@@ -228,9 +228,9 @@ function get_form_data(xpath , callback) {
     if (el.tagName == "FORM") {
         meta_inputs.FORM = 1;
         meta_inputs.url = el.attributes.action.value;
-        for (var i in el.children) {
-            child = el.children[i];
-            if ((child.tagName == "INPUT") && (child.type !== "button")){
+        for (var i in el.getElementsByTagName("INPUT")) {
+            child = el.getElementsByTagName("INPUT")[i];
+            if ((child.tagName == "INPUT") && (child.type !== "button") && (child.type !== "submit")){
                 inputs[child.name] = child.value;
             }
         }
