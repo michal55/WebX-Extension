@@ -33,15 +33,26 @@ class Post {
         if (this.loaded) {
             return;
         }
-
+        var thisclass = this;
+        get_form_data(this.getParentXpath() , function(result) {
+            var meta_inputs = result.meta_inputs;
+            var inputs = result.inputs;
+            if (meta_inputs.FORM){
+                thisclass.url = meta_inputs.url;
+                thisclass.fields = inputs;
+                angular.element('[ng-controller="main"]').scope().$digest();
+            } else{
+                thisclass.url = "xpath does not point to form element";
+            }
+        });
         // Extract fields from form... this.getParentXpath()
-        this.fields = {
-            'username': 'xsrba',
-            'csrf': null
-        };
+        // this.fields = {
+        //     'username': 'xsrba',
+        //     'csrf': null
+        // };
 
-        // Extract url from form... this.getParentXpath()
-        this.url = 'PH url';
+        // // Extract url from form... this.getParentXpath()
+        // this.url = 'PH url';
 
         // Digest if we are assigning fields in callback
         //angular.element('[ng-controller="main"]').scope().$digest();

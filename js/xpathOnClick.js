@@ -19,6 +19,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
     }
 
+    else if (request.get_form_data){
+        try {
+            get_form_data(request.get_form_data.xpath, callback);
+        } catch (err) {
+            console.error(err);
+        }
+        return true;
+    }
+
     return true;
 });
 
@@ -208,6 +217,30 @@ function get_attributes(xpath , callback) {
         el = elements.iterateNext();
     }
     callback(attributes);
+}
+function get_form_data(xpath , callback) {
+    var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
+    var el = elements.iterateNext();
+    var inputs = {};
+    var meta_inputs = {};
+    console.log(xpath);
+
+    if (el.tagName == "FORM") {
+        meta_inputs.FORM = 1;
+        meta_inputs.url = el.attributes.action.value;
+        for (var i in el.children) {
+            child = el.children[i];
+            if ((child.tagName == "INPUT") && (child.type !== "button")){
+                inputs[child.name] = child.value;
+            }
+        }
+
+    }else {
+        console.log("xpath does not point to form");
+        meta_inputs.FORM = 0;
+    }
+
+    callback({"meta_inputs":meta_inputs,"inputs":inputs});
 }
 
 function startRestrictHighlight(xpath) {

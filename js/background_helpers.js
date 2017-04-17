@@ -25,6 +25,10 @@ function get_attributes(xpath,callback){
     chrome.runtime.sendMessage({get_attributes: {xpath: xpath, tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
 }
 
+function get_form_data(xpath,callback){
+    chrome.runtime.sendMessage({get_form_data: {xpath: xpath, tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
+}
+
 function startRestrictHighlight(xpath) {
     chrome.runtime.sendMessage({start_restrict_highlight: {tab_id: chrome.devtools.inspectedWindow.tabId, xpath: xpath}});
 }

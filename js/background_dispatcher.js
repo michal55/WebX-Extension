@@ -29,6 +29,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
             callback(result);
         });
         return true;
+    } else if (request.get_form_data) {
+        get_form_data(request.get_form_data.xpath, request.get_form_data.tab_id ,  function(result) {
+            callback(result);
+        });
+        return true;
     } else if (request.start_restrict_highlight) {
         restrictHighlight(request.start_restrict_highlight.tab_id, true, request.start_restrict_highlight.xpath);
         return true;
