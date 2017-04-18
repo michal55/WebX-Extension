@@ -53,31 +53,8 @@ function addNodes(array, collection) {
     }
 }
 
-function onClickXPath(useIdx, useId, useClass, callback, relative) {
-    initializeCustomStyles();
-
-    var ae = [];
-    addNodes(ae, document.getElementsByTagName("*"));
-    for (var i = 0; i < ae.length; i++) {
-        if (ae[i].tagName == 'IFRAME') {
-            try {
-                var d = ae[i].contentDocument;
-
-                if (d) {
-                    addNodes(ae, d.getElementsByTagName("*"));
-                }
-            }
-            catch (err) { }
-        }
-    }
-
-    function handler(event) {
-        $('*').off('click.onClickXPath_handler');
-        $('*').off('mouseover.onClickXPath');
-        $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
-
-        var e = this;
-        var idx;
+function construct_xpath(useIdx, useId, useClass, relative, e) {
+    var idx;
 
         for (var path = ''; e && e.nodeType == 1; e = e.parentNode) {
             var predicate = [];
@@ -116,6 +93,35 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
                 break;
             }
         }
+    return path;
+}
+
+function onClickXPath(useIdx, useId, useClass, callback, relative) {
+    initializeCustomStyles();
+
+    var ae = [];
+    addNodes(ae, document.getElementsByTagName("*"));
+    for (var i = 0; i < ae.length; i++) {
+        if (ae[i].tagName == 'IFRAME') {
+            try {
+                var d = ae[i].contentDocument;
+
+                if (d) {
+                    addNodes(ae, d.getElementsByTagName("*"));
+                }
+            }
+            catch (err) { }
+        }
+    }
+
+    function handler(event) {
+        $('*').off('click.onClickXPath_handler');
+        $('*').off('mouseover.onClickXPath');
+        $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
+
+        var e = this;
+        var path = construct_xpath(useIdx, useId, useClass, relative, e);
+        
         var classes = Object.keys(custom_styles);
         for (var i in classes) {
             path.replace(new RegExp(classes[i], 'g'), "");
@@ -223,16 +229,24 @@ function get_form_data(xpath , callback) {
     var el = elements.iterateNext();
     var inputs = {};
     var meta_inputs = {};
-    console.log(xpath);
 
-    if (el.tagName == "FORM") {
+    while (el && el.tagName !== "FORM") {
+        el = el.parentElement;
+    }
+
+    if ( el && el.tagName == "FORM") {
+        meta_inputs.new_xpath = construct_xpath(true, true, true, true, el);
         meta_inputs.FORM = 1;
         meta_inputs.url = el.attributes.action.value;
         for (var i in el.getElementsByTagName("INPUT")) {
             child = el.getElementsByTagName("INPUT")[i];
-            if ((child.tagName == "INPUT") && (child.type !== "button") && (child.type !== "submit")){
+            if ((child.type !== "button") && (child.type !== "submit")){
                 inputs[child.name] = child.value;
             }
+        }
+        for (var i in el.getElementsByTagName("TEXTAREA")) {
+            child = el.getElementsByTagName("TEXTAREA")[i];
+            inputs[child.name] = child.value;
         }
 
     }else {

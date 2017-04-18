@@ -38,6 +38,7 @@ class Post {
             var meta_inputs = result.meta_inputs;
             var inputs = result.inputs;
             if (meta_inputs.FORM){
+                console.log(["new_xpath",meta_inputs.new_xpath]);
                 thisclass.url = meta_inputs.url;
                 thisclass.fields = inputs;
                 angular.element('[ng-controller="main"]').scope().$digest();
