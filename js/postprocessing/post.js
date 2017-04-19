@@ -46,17 +46,6 @@ class Post {
                 thisclass.url = "xpath does not point to form element";
             }
         });
-        // Extract fields from form... this.getParentXpath()
-        // this.fields = {
-        //     'username': 'xsrba',
-        //     'csrf': null
-        // };
-
-        // // Extract url from form... this.getParentXpath()
-        // this.url = 'PH url';
-
-        // Digest if we are assigning fields in callback
-        //angular.element('[ng-controller="main"]').scope().$digest();
     };
 
     addField() {
