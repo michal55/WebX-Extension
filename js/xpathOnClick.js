@@ -55,44 +55,43 @@ function addNodes(array, collection) {
 
 function construct_xpath(useIdx, useId, useClass, relative, e) {
     var idx;
+    for (var path = ''; e && e.nodeType == 1; e = e.parentNode) {
+        var predicate = [];
+        var brothers = e.parentNode.children;
+        var count = 0;
+        var unique = false;
 
-        for (var path = ''; e && e.nodeType == 1; e = e.parentNode) {
-            var predicate = [];
-            var brothers = e.parentNode.children;
-            var count = 0;
-            var unique = false;
-
-            for (var i = 0; brothers && (i < brothers.length); i++) {
-                if (brothers[i].tagName == e.tagName) {
-                    count++;
-                    if (brothers[i] == e) {
-                        idx = count;
-                    }
+        for (var i = 0; brothers && (i < brothers.length); i++) {
+            if (brothers[i].tagName == e.tagName) {
+                count++;
+                if (brothers[i] == e) {
+                    idx = count;
                 }
             }
-
-            if (idx == 1 && count == 1) {
-                idx = null;
-            }
-
-            if (useId && e.id) {
-                predicate[predicate.length] = "@id='" + e.id + "'";
-                unique = true;
-            }
-
-            if (useClass && e.className) {
-                predicate[predicate.length] = "@class='" + e.className + "'";
-            }
-
-            idx = ( useIdx && idx && !unique ) ? ('[' + idx + ']') : '';
-            predicate = (predicate.length > 0) ? ('[' + predicate.join(' and ') + ']') : '';
-            path = '/' + e.tagName.toLowerCase() + idx + predicate + path;
-
-            if (unique && relative) {
-                path = '/' + path;
-                break;
-            }
         }
+
+        if (idx == 1 && count == 1) {
+            idx = null;
+        }
+
+        if (useId && e.id) {
+            predicate[predicate.length] = "@id='" + e.id + "'";
+            unique = true;
+        }
+
+        if (useClass && e.className) {
+            predicate[predicate.length] = "@class='" + e.className + "'";
+        }
+
+        idx = ( useIdx && idx && !unique ) ? ('[' + idx + ']') : '';
+        predicate = (predicate.length > 0) ? ('[' + predicate.join(' and ') + ']') : '';
+        path = '/' + e.tagName.toLowerCase() + idx + predicate + path;
+
+        if (unique && relative) {
+            path = '/' + path;
+            break;
+        }
+    }
     return path;
 }
 
