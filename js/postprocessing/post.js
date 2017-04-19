@@ -33,16 +33,21 @@ class Post {
         if (this.loaded) {
             return;
         }
+
+        this.refreshForm();
+    };
+
+    refreshForm() {
         var thisclass = this;
-        get_form_data(this.getParentXpath() , function(result) {
+        get_form_data(this.getParentXpath(), function(result) {
             var meta_inputs = result.meta_inputs;
             var inputs = result.inputs;
-            if (meta_inputs.FORM){
+            if (meta_inputs.FORM) {
                 thisclass.url = meta_inputs.url;
                 thisclass.fields = inputs;
                 thisclass.updateParentXpath(meta_inputs.new_xpath);
                 angular.element('[ng-controller="main"]').scope().$digest();
-            } else{
+            } else {
                 thisclass.url = "xpath does not point to form element";
             }
         });

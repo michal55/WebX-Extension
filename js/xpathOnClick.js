@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
     }
 
-    else if (request.get_form_data){
+    else if (request.get_form_data) {
         try {
             get_form_data(request.get_form_data.xpath, callback);
         } catch (err) {
@@ -92,6 +92,7 @@ function construct_xpath(useIdx, useId, useClass, relative, e) {
             break;
         }
     }
+
     return path;
 }
 
@@ -120,7 +121,7 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 
         var e = this;
         var path = construct_xpath(useIdx, useId, useClass, relative, e);
-        
+
         var classes = Object.keys(custom_styles);
         for (var i in classes) {
             path.replace(new RegExp(classes[i], 'g'), "");
@@ -196,7 +197,7 @@ function stop_highlight() {
     $('.highlighting-positive-elements').removeClass('highlighting-positive-elements');
 }
 
-function get_attributes(xpath , callback) {
+function get_attributes(xpath, callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
     var el = elements.iterateNext();
     var attributes = [];
@@ -223,8 +224,9 @@ function get_attributes(xpath , callback) {
     }
     callback(attributes);
 }
+
 function get_form_data(xpath , callback) {
-    var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
+    var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements.iterateNext();
     var inputs = {};
     var meta_inputs = {};
@@ -233,13 +235,13 @@ function get_form_data(xpath , callback) {
         el = el.parentElement;
     }
 
-    if ( el && el.tagName == "FORM") {
+    if (el && el.tagName == "FORM") {
         meta_inputs.new_xpath = construct_xpath(true, true, true, true, el);
         meta_inputs.FORM = 1;
         meta_inputs.url = el.attributes.action.value;
         for (var i in el.getElementsByTagName("INPUT")) {
             child = el.getElementsByTagName("INPUT")[i];
-            if ((child.type !== "button") && (child.type !== "submit")){
+            if ((child.type !== "button") && (child.type !== "submit")) {
                 inputs[child.name] = child.value;
             }
         }
@@ -248,12 +250,11 @@ function get_form_data(xpath , callback) {
             inputs[child.name] = child.value;
         }
 
-    }else {
-        console.log("xpath does not point to form");
+    } else {
         meta_inputs.FORM = 0;
     }
 
-    callback({"meta_inputs":meta_inputs,"inputs":inputs});
+    callback({"meta_inputs": meta_inputs, "inputs": inputs});
 }
 
 function startRestrictHighlight(xpath) {

@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         });
         return true;
     } else if (request.get_form_data) {
-        get_form_data(request.get_form_data.xpath, request.get_form_data.tab_id ,  function(result) {
+        get_form_data(request.get_form_data.xpath, request.get_form_data.tab_id, function(result) {
             callback(result);
         });
         return true;

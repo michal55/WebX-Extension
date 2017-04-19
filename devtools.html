@@ -230,7 +230,6 @@
               </div>
             </div>
             <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('post')">
-              Debug: {{ script_builder.getSelectedPostprocessing().fields }}
               <div class="col-md-12 padded">
                 <table class="table table-hover">
                   <thead>
@@ -292,7 +291,7 @@
                 </table>
                 <span
                     class="btn btn-primary input-group-addon"
-                    ng-click="script_builder.getSelectedPostprocessing().show()">
+                    ng-click="script_builder.getSelectedPostprocessing().refreshForm()">
                     Reload form data
                 </span>
               </div>
