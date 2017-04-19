@@ -38,9 +38,9 @@ class Post {
             var meta_inputs = result.meta_inputs;
             var inputs = result.inputs;
             if (meta_inputs.FORM){
-                console.log(["new_xpath",meta_inputs.new_xpath]);
                 thisclass.url = meta_inputs.url;
                 thisclass.fields = inputs;
+                thisclass.updateParentXpath(meta_inputs.new_xpath);
                 angular.element('[ng-controller="main"]').scope().$digest();
             } else{
                 thisclass.url = "xpath does not point to form element";
