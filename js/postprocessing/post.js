@@ -3,7 +3,7 @@ class Post {
         this.label = 'Post';
         this.type = 'post';
         this.url = '';
-        this.fields = {};
+        this.fields = [];
         this.new_key = '';
         this.new_value = '';
         this.loaded = false;
@@ -15,17 +15,24 @@ class Post {
 
     save() {
         // Return javascript object which is converted to JSON and saved
+        var fields=[];
+        for (var i in this.fields){
+            if ((this.fields[i][2] === 0) && (this.fields[i][1] !== "")){
+                fields.push({"name":this.fields[i][0], "value":this.fields[i][1], "custom":this.fields[i][3]});
+            }
+        }
         return {
             type: this.type,
-            url: this.url,
-            fields: angular.toJson(this.fields)
+            fields: angular.toJson(fields)
         };
     };
 
     load(postprocessing) {
         this.loaded = true;
-        this.url = postprocessing.url;
-        this.fields = angular.fromJson(postprocessing.fields);
+        var fields = angular.fromJson(postprocessing.fields);
+        for (var i in fields){
+            this.fields.push([fields[i].name, fields[i].value, 0, fields[i].custom]);
+        }
     };
 
     show() {
@@ -43,30 +50,30 @@ class Post {
             var meta_inputs = result.meta_inputs;
             var inputs = result.inputs;
             if (meta_inputs.FORM) {
-                thisclass.url = meta_inputs.url;
                 thisclass.fields = inputs;
+                console.log(inputs);
                 thisclass.updateParentXpath(meta_inputs.new_xpath);
                 angular.element('[ng-controller="main"]').scope().$digest();
             } else {
-                thisclass.url = "xpath does not point to form element";
+                thisclass.url = "selected xpath does not point into form element";
             }
         });
     };
 
     addField() {
-        this.fields[this.new_key] = this.new_value;
+        this.fields.push([this.new_key, this.new_value,0,1]);
     }
 
-    disableKey(key) {
-        this.fields[key] = null;
+    disableKey(indx) {
+        this.fields[indx][2] = 1;
     }
 
-    enableKey(key) {
-        this.fields[key] = '';
+    enableKey(indx) {
+        this.fields[indx][2] = 0;
     }
 
-    deleteKey(key) {
-        delete this.fields[key];
+    deleteKey(indx) {
+        this.fields.splice(indx,1);
     }
 }
 

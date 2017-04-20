@@ -239,34 +239,28 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Url: </td>
-                      <td>
-                        <input ng-model="script_builder.getSelectedPostprocessing().url" class="form-control">
-                      </td>
-                    </tr>
-                    <tr ng-repeat="(key, value) in script_builder.getSelectedPostprocessing().fields">
-                      <td> {{ key }} </td>
+                    <tr ng-repeat="field in script_builder.getSelectedPostprocessing().fields">
+                      <td> {{ field[0] }} </td>
                       <td>
                         <div class="input-group">
-                          <input ng-model="script_builder.getSelectedPostprocessing().fields[key]"
-                            ng-disabled="script_builder.getSelectedPostprocessing().fields[key] == null"
+                          <input ng-model="script_builder.getSelectedPostprocessing().fields[$index][1]"
+                            ng-disabled="script_builder.getSelectedPostprocessing().fields[$index][2]"
                             class="form-control">
                           <span
                             class="btn btn-primary input-group-addon"
-                            ng-click="script_builder.getSelectedPostprocessing().disableKey(key)"
-                            ng-hide="script_builder.getSelectedPostprocessing().fields[key] == null">
+                            ng-click="script_builder.getSelectedPostprocessing().disableKey($index)"
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index][2] == 1">
                             &#128683;
                           </span>
                           <span
                             class="btn btn-primary input-group-addon"
-                            ng-click="script_builder.getSelectedPostprocessing().enableKey(key)"
-                            ng-hide="script_builder.getSelectedPostprocessing().fields[key] != null">
+                            ng-click="script_builder.getSelectedPostprocessing().enableKey($index)"
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index][2] == 0">
                             &#127875;
                           </span>
                           <span
                             class="btn btn-primary input-group-addon"
-                            ng-click="script_builder.getSelectedPostprocessing().deleteKey(key)">
+                            ng-click="script_builder.getSelectedPostprocessing().deleteKey($index)">
                             -
                           </span>
                         </div>

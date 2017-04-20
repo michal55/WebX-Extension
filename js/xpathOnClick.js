@@ -228,8 +228,11 @@ function get_attributes(xpath, callback) {
 function get_form_data(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements.iterateNext();
-    var inputs = {};
+    // array of arrays [name, value, hidden, custom]
+    var inputs = [];
     var meta_inputs = {};
+    var hidden = [];
+    var nonhidden = [];
 
     while (el && el.tagName !== "FORM") {
         el = el.parentElement;
@@ -238,22 +241,41 @@ function get_form_data(xpath , callback) {
     if (el && el.tagName == "FORM") {
         meta_inputs.new_xpath = construct_xpath(true, true, true, true, el);
         meta_inputs.FORM = 1;
-        meta_inputs.url = el.attributes.action.value;
-        for (var i in el.getElementsByTagName("INPUT")) {
+
+        var i = 0;
+        while (el.getElementsByTagName("INPUT")[i]) {
             child = el.getElementsByTagName("INPUT")[i];
+            console.log(child);
+            console.log(i);
             if ((child.type !== "button") && (child.type !== "submit")) {
-                inputs[child.name] = child.value;
+                if (child.type !== "hidden"){
+                    nonhidden.push([child.name,child.value,0,0]);
+                } else if (child.type == "hidden") {
+                    hidden.push([child.name, child.value, 1, 0]);
+                }
             }
+            i++;
         }
-        for (var i in el.getElementsByTagName("TEXTAREA")) {
+        i = 0;
+        while (el.getElementsByTagName("TEXTAREA")[i]) {
+            if (!(Number.isInteger(i))){
+                break;
+            }
             child = el.getElementsByTagName("TEXTAREA")[i];
-            inputs[child.name] = child.value;
+            console.log(child);
+            if (child.type !== "hidden"){
+                nonhidden.push([child.name,child.value,0,0]);
+            } else if (child.type == "hidden") {
+                hidden.push([child.name, child.value, 1, 0]);
+            }
         }
 
     } else {
         meta_inputs.FORM = 0;
     }
-
+    
+    inputs = nonhidden.concat(hidden);
+    console.log(inputs);
     callback({"meta_inputs": meta_inputs, "inputs": inputs});
 }
 
