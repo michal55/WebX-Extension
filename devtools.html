@@ -260,7 +260,8 @@
                           </span>
                           <span
                             class="btn btn-primary input-group-addon"
-                            ng-click="script_builder.getSelectedPostprocessing().deleteKey($index)">
+                            ng-click="script_builder.getSelectedPostprocessing().deleteKey($index)"
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].custom == 0">
                             -
                           </span>
                         </div>
