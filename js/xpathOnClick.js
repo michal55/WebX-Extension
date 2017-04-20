@@ -225,11 +225,11 @@ function get_attributes(xpath, callback) {
     callback(attributes);
 }
 
-function _add_child(name,value,hidden,custom,array){
+function _add_child(name,value,disabled,custom,array){
     var child_new = {};
     child_new.name = name;
     child_new.value = value;
-    child_new.hidden = hidden;
+    child_new.disabled = disabled;
     child_new.custom = custom;
     array.push(child_new);
 }
@@ -237,7 +237,7 @@ function _add_child(name,value,hidden,custom,array){
 function get_form_data(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements.iterateNext();
-    // array of arrays [name, value, hidden, custom]
+    // array of dictionaries {name:"", value:"", disabled:1/0, custom:1/0}
     var inputs = [];
     var meta_inputs = {};
     var hidden = [];

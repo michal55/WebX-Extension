@@ -52,15 +52,15 @@ class Post {
     };
 
     addField() {
-        this.fields.push({"name":this.new_key,"value":this.new_value,"hidden":0,"custom":1});
+        this.fields.push({"name":this.new_key,"value":this.new_value,"disabled":0,"custom":1});
     }
 
     disableKey(indx) {
-        this.fields[indx].hidden = 1;
+        this.fields[indx].disabled = 1;
     }
 
     enableKey(indx) {
-        this.fields[indx].hidden = 0;
+        this.fields[indx].disabled = 0;
     }
 
     deleteKey(indx) {

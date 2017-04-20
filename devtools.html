@@ -244,18 +244,18 @@
                       <td>
                         <div class="input-group">
                           <input ng-model="script_builder.getSelectedPostprocessing().fields[$index].value"
-                            ng-disabled="script_builder.getSelectedPostprocessing().fields[$index].hidden"
+                            ng-disabled="script_builder.getSelectedPostprocessing().fields[$index].disabled"
                             class="form-control">
                           <span
                             class="btn btn-primary input-group-addon"
                             ng-click="script_builder.getSelectedPostprocessing().disableKey($index)"
-                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].hidden == 1">
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].disabled == 1">
                             &#128683;
                           </span>
                           <span
                             class="btn btn-primary input-group-addon"
                             ng-click="script_builder.getSelectedPostprocessing().enableKey($index)"
-                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].hidden == 0">
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].disabled == 0">
                             &#127875;
                           </span>
                           <span
