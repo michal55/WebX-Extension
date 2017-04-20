@@ -15,24 +15,15 @@ class Post {
 
     save() {
         // Return javascript object which is converted to JSON and saved
-        var fields=[];
-        for (var i in this.fields){
-            if ((this.fields[i][2] === 0) && (this.fields[i][1] !== "")){
-                fields.push({"name":this.fields[i][0], "value":this.fields[i][1], "custom":this.fields[i][3]});
-            }
-        }
         return {
             type: this.type,
-            fields: angular.toJson(fields)
+            fields: angular.toJson(this.fields)
         };
     };
 
     load(postprocessing) {
         this.loaded = true;
-        var fields = angular.fromJson(postprocessing.fields);
-        for (var i in fields){
-            this.fields.push([fields[i].name, fields[i].value, 0, fields[i].custom]);
-        }
+        this.fields = angular.fromJson(postprocessing.fields);
     };
 
     show() {
@@ -61,15 +52,15 @@ class Post {
     };
 
     addField() {
-        this.fields.push([this.new_key, this.new_value,0,1]);
+        this.fields.push({"name":this.new_key,"value":this.new_value,"hidden":0,"custom":1});
     }
 
     disableKey(indx) {
-        this.fields[indx][2] = 1;
+        this.fields[indx].hidden = 1;
     }
 
     enableKey(indx) {
-        this.fields[indx][2] = 0;
+        this.fields[indx].hidden = 0;
     }
 
     deleteKey(indx) {

@@ -240,22 +240,22 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="field in script_builder.getSelectedPostprocessing().fields">
-                      <td> {{ field[0] }} </td>
+                      <td> {{ field.name }} </td>
                       <td>
                         <div class="input-group">
-                          <input ng-model="script_builder.getSelectedPostprocessing().fields[$index][1]"
-                            ng-disabled="script_builder.getSelectedPostprocessing().fields[$index][2]"
+                          <input ng-model="script_builder.getSelectedPostprocessing().fields[$index].value"
+                            ng-disabled="script_builder.getSelectedPostprocessing().fields[$index].hidden"
                             class="form-control">
                           <span
                             class="btn btn-primary input-group-addon"
                             ng-click="script_builder.getSelectedPostprocessing().disableKey($index)"
-                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index][2] == 1">
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].hidden == 1">
                             &#128683;
                           </span>
                           <span
                             class="btn btn-primary input-group-addon"
                             ng-click="script_builder.getSelectedPostprocessing().enableKey($index)"
-                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index][2] == 0">
+                            ng-hide="script_builder.getSelectedPostprocessing().fields[$index].hidden == 0">
                             &#127875;
                           </span>
                           <span

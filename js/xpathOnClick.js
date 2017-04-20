@@ -225,6 +225,15 @@ function get_attributes(xpath, callback) {
     callback(attributes);
 }
 
+function _add_child(name,value,hidden,custom,array){
+    var child_new = {};
+    child_new.name = name;
+    child_new.value = value;
+    child_new.hidden = hidden;
+    child_new.custom = custom;
+    array.push(child_new);
+}
+
 function get_form_data(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements.iterateNext();
@@ -245,13 +254,12 @@ function get_form_data(xpath , callback) {
         var i = 0;
         while (el.getElementsByTagName("INPUT")[i]) {
             child = el.getElementsByTagName("INPUT")[i];
-            console.log(child);
-            console.log(i);
+            var child_new = {};
             if ((child.type !== "button") && (child.type !== "submit")) {
                 if (child.type !== "hidden"){
-                    nonhidden.push([child.name,child.value,0,0]);
+                    _add_child(child.name, child.value, 0, 0, nonhidden);
                 } else if (child.type == "hidden") {
-                    hidden.push([child.name, child.value, 1, 0]);
+                    _add_child(child.name, child.value, 1, 0, hidden);
                 }
             }
             i++;
@@ -264,9 +272,9 @@ function get_form_data(xpath , callback) {
             child = el.getElementsByTagName("TEXTAREA")[i];
             console.log(child);
             if (child.type !== "hidden"){
-                nonhidden.push([child.name,child.value,0,0]);
+                _add_child(child.name, child.value, 0, 0, nonhidden);
             } else if (child.type == "hidden") {
-                hidden.push([child.name, child.value, 1, 0]);
+                _add_child(child.name, child.value, 1, 0, hidden);
             }
         }
 
