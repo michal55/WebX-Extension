@@ -4,6 +4,7 @@ class Post {
         this.type = 'post';
         this.url = '';
         this.fields = [];
+        this.redirect_url = "";
         this.new_key = '';
         this.new_value = '';
         this.loaded = false;
@@ -17,12 +18,14 @@ class Post {
         // Return javascript object which is converted to JSON and saved
         return {
             type: this.type,
-            fields: angular.toJson(this.fields)
+            redirect_url: this.redirect_url,
+            fields: this.fields
         };
     };
 
     load(postprocessing) {
         this.loaded = true;
+        this.redirect_url = postprocessing.redirect_url;
         this.fields = angular.fromJson(postprocessing.fields);
     };
 

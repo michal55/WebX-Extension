@@ -239,6 +239,15 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <tr>
+                      <td>redirect_url</td>
+                      <td>
+                        <div class="input-group" style="width: 100%">
+                          <input ng-model="script_builder.getSelectedPostprocessing().redirect_url" class="form-control">
+                          
+                        </div>
+                      </td>
+                    </tr>
                     <tr ng-repeat="field in script_builder.getSelectedPostprocessing().fields">
                       <td> {{ field.name }} </td>
                       <td>
@@ -247,19 +256,25 @@
                             ng-disabled="script_builder.getSelectedPostprocessing().fields[$index].disabled"
                             class="form-control">
                           <span
-                            class="btn btn-primary input-group-addon"
+                            class="btn btn-primary input-group-addon" 
+                            data-toggle="tooltip" 
+                            title="disable field" 
                             ng-click="script_builder.getSelectedPostprocessing().disableKey($index)"
                             ng-hide="script_builder.getSelectedPostprocessing().fields[$index].disabled == 1">
                             &#128683;
                           </span>
                           <span
-                            class="btn btn-primary input-group-addon"
+                            class="btn btn-primary input-group-addon" 
+                            data-toggle="tooltip" 
+                            title="enable field"
                             ng-click="script_builder.getSelectedPostprocessing().enableKey($index)"
                             ng-hide="script_builder.getSelectedPostprocessing().fields[$index].disabled == 0">
                             &#127875;
                           </span>
                           <span
-                            class="btn btn-primary input-group-addon"
+                            class="btn btn-primary input-group-addon" 
+                            data-toggle="tooltip" 
+                            title="delete field"
                             ng-click="script_builder.getSelectedPostprocessing().deleteKey($index)"
                             ng-hide="script_builder.getSelectedPostprocessing().fields[$index].custom == 0">
                             -
@@ -275,7 +290,9 @@
                         <div class="input-group">
                           <input ng-model="script_builder.getSelectedPostprocessing().new_value" class="form-control">
                           <span
-                            class="btn btn-primary input-group-addon"
+                            class="btn btn-primary input-group-addon" 
+                            data-toggle="tooltip" 
+                            title="add field"
                             ng-click="script_builder.getSelectedPostprocessing().addField()">
                             +
                           </span>
