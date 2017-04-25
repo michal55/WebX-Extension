@@ -2,6 +2,7 @@ class Pagination {
     constructor() {
         this.label = 'Pagination';
         this.type = 'pagination';
+        this.limit = 100;
     }
 
     canHaveChildren() {
@@ -11,10 +12,13 @@ class Pagination {
     save() {
         return {
             type: this.type,
+            limit: this.limit
         };
     };
 
-    load(postprocessing) {};
+    load(postprocessing) {
+        this.limit = postprocessing.limit;
+    };
 }
 
 // Register postprocessing
