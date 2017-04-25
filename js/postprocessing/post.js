@@ -55,19 +55,23 @@ class Post {
     };
 
     addField() {
-        this.fields.push({"name":this.new_key,"value":this.new_value,"disabled":0,"custom":1});
+        this.fields.push({name: this.new_key, value: this.new_value, disabled: false, custom: true});
     }
 
-    disableKey(indx) {
-        this.fields[indx].disabled = 1;
+    disableField(field) {
+        field.disabled = true;
     }
 
-    enableKey(indx) {
-        this.fields[indx].disabled = 0;
+    enableField(field) {
+        field.disabled = false;
     }
 
-    deleteKey(indx) {
-        this.fields.splice(indx,1);
+    deleteField(index) {
+        this.fields.splice(index, 1);
+    }
+
+    reloadRedirectUrl() {
+        this.redirect_url = 'PH - NYI';
     }
 }
 

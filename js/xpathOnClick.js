@@ -237,7 +237,7 @@ function _add_child(name,value,disabled,custom,array){
 function get_form_data(xpath , callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
     var el = elements.iterateNext();
-    // array of dictionaries {name:"", value:"", disabled:1/0, custom:1/0}
+    // array of dictionaries {name:"", value:"", disabled: true/false, custom: true/false}
     var inputs = [];
     var meta_inputs = {};
     var hidden = [];
@@ -257,9 +257,9 @@ function get_form_data(xpath , callback) {
             var child_new = {};
             if ((child.type !== "button") && (child.type !== "submit")) {
                 if (child.type !== "hidden"){
-                    _add_child(child.name, child.value, 0, 0, nonhidden);
+                    _add_child(child.name, child.value, false, false, nonhidden);
                 } else if (child.type == "hidden") {
-                    _add_child(child.name, child.value, 1, 0, hidden);
+                    _add_child(child.name, child.value, true, false, hidden);
                 }
             }
             i++;
@@ -272,16 +272,16 @@ function get_form_data(xpath , callback) {
             child = el.getElementsByTagName("TEXTAREA")[i];
             console.log(child);
             if (child.type !== "hidden"){
-                _add_child(child.name, child.value, 0, 0, nonhidden);
+                _add_child(child.name, child.value, false, false, nonhidden);
             } else if (child.type == "hidden") {
-                _add_child(child.name, child.value, 1, 0, hidden);
+                _add_child(child.name, child.value, true, false, hidden);
             }
         }
 
     } else {
         meta_inputs.FORM = 0;
     }
-    
+
     inputs = nonhidden.concat(hidden);
     console.log(inputs);
     callback({"meta_inputs": meta_inputs, "inputs": inputs});

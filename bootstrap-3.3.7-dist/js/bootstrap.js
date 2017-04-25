@@ -31,7 +31,7 @@ if (typeof jQuery === 'undefined') {
   // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
   // ============================================================
   $(function () {
-  $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
   });
 
   function transitionEnd() {
