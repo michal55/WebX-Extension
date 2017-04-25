@@ -78,12 +78,20 @@
             <!-- ==============  HEADERS  ========================-->
             <div id="headers" class="row">
               <div class="col-md-12" ng-show="!script_builder.getPostprocessingStackTopName()">
-                <input
-                  ng-model="script_builder.url"
-                  ng-change="changeXpath()"
-                  placeholder="Source page url"
-                  class="form-control"
-                >
+                <div class="input-group">
+                  <input
+                    ng-model="script_builder.url"
+                    ng-change="changeXpath()"
+                    placeholder="Source page url"
+                    class="form-control">
+                  <span
+                    class="btn btn-primary input-group-addon"
+                    data-toggle="tooltip"
+                    title="Reload url"
+                    ng-click="script_builder.reloadUrl()">
+                    <i class="fa fa-refresh"></i>
+                  </span>
+                </div>
               </div>
               <div ng-show="script_builder.getPostprocessingStackTopName()">
                 <div class="post-info">

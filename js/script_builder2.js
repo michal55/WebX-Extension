@@ -235,6 +235,10 @@ class ScriptBuilder {
         localStorage.script_builder = this.toJSON();
     }
 
+    reloadUrl() {
+        this.url = 'PH - NYI';
+    }
+
     collectJsonData(json, script_id) {
         var script = this.scripts[script_id];
 
