@@ -236,7 +236,10 @@ class ScriptBuilder {
     }
 
     reloadUrl() {
-        this.url = 'PH - NYI';
+        var thisclass = this;
+        get_page_url(function(url) {
+            thisclass.url = url;
+        });
     }
 
     collectJsonData(json, script_id) {

@@ -21,12 +21,17 @@ function stophighlight() {
     chrome.runtime.sendMessage({stop_highlight: {tab_id: chrome.devtools.inspectedWindow.tabId}});
 }
 
-function get_attributes(xpath,callback){
+function get_attributes(xpath, callback){
     chrome.runtime.sendMessage({get_attributes: {xpath: xpath, tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
 }
 
-function get_form_data(xpath,callback){
+function get_form_data(xpath, callback){
     chrome.runtime.sendMessage({get_form_data: {xpath: xpath, tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
+}
+
+function get_page_url(callback){
+    //chrome.runtime.sendMessage({get_page_url: {tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
+    callback('PH - NYI');
 }
 
 function startRestrictHighlight(xpath) {

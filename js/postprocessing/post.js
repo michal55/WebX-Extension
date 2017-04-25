@@ -71,7 +71,11 @@ class Post {
     }
 
     reloadRedirectUrl() {
-        this.redirect_url = 'PH - NYI';
+        var thisclass = this;
+        get_page_url(function(url) {
+            thisclass.redirect_url  = url;
+            angular.element('[ng-controller="main"]').scope().$digest();
+        });
     }
 }
 
