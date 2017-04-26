@@ -11,8 +11,4 @@ app.controller('main', function($scope) {
     $scope.loginPrompt = function() {
         uiLoginPrompt($scope);
     };
-
-    $scope.logout = function() {
-        uiLogout($scope);
-    };
 });

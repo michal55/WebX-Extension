@@ -265,10 +265,6 @@ app.controller('main', function($scope) {
         uiLoginPrompt($scope, function() { $scope.getProjects(); });
     };
 
-    $scope.logout = function() {
-        uiLogout($scope);
-    };
-
     $scope.refresh = function() {
         $scope.loading = true;
         uiLoginCheck($scope, function(status, response) {

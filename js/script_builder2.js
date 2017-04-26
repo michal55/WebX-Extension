@@ -235,6 +235,13 @@ class ScriptBuilder {
         localStorage.script_builder = this.toJSON();
     }
 
+    reloadUrl() {
+        var thisclass = this;
+        get_page_url(function(url) {
+            thisclass.url = url;
+        });
+    }
+
     collectJsonData(json, script_id) {
         var script = this.scripts[script_id];
 
