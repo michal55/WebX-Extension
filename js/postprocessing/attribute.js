@@ -24,16 +24,16 @@ class Attributes {
     };
 
     show() {
-        if (this.getParentXpath() === ''){
+        if (this.getParentXpath() === '') {
             this.attributes = ['text', 'innerhtml'];
-        } else{
+        } else {
             // Won't work if I put only this into callback
             var thisclass = this;
-            get_attributes(this.getParentXpath(),function(result){
+            get_attributes(this.getParentXpath(), function(result) {
                 // Take only unique values from result
                 thisclass.attributes = [...new Set(result)];
                 angular.element('[ng-controller="main"]').scope().$digest();
-            } );
+            });
         }
     }
 }

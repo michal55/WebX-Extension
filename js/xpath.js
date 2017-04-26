@@ -50,6 +50,20 @@ function get_attributes(xpath,tab_id,callback) {
     return true;
 }
 
+function get_form_data(xpath,tab_id,callback) {
+        try {
+            chrome.tabs.executeScript(tab_id, { file: 'js/jquery.js' }, function() {
+                chrome.tabs.executeScript(tab_id, { file: 'js/xpathOnClick.js' }, function() {
+                    chrome.tabs.sendMessage(tab_id, {get_form_data: {xpath:xpath}}, callback);
+                });
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+
+    return true;
+}
+
 function restrictHighlight(tab_id, start, xpath) {
     try {
         chrome.tabs.executeScript(tab_id, { file: 'js/jquery.js' }, function() {

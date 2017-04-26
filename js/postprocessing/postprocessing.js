@@ -87,6 +87,9 @@ Postprocessing.create = function(type, visual_only_id, script_builder) {
     postprocessing.getParentXpath = function() {
         return script_builder.getSelectedScript().xpath;
     };
+    postprocessing.updateParentXpath = function(xpath) {
+        script_builder.getSelectedScript().xpath = xpath;
+    };
 
     return postprocessing;
 };

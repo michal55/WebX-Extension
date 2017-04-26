@@ -19,6 +19,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
     }
 
+    else if (request.get_form_data) {
+        try {
+            get_form_data(request.get_form_data.xpath, callback);
+        } catch (err) {
+            console.error(err);
+        }
+        return true;
+    }
+
     return true;
 });
 
@@ -42,6 +51,49 @@ function addNodes(array, collection) {
     for (var i = 0; collection && collection.length && i < collection.length; i++) {
         array.push(collection[i]);
     }
+}
+
+function construct_xpath(useIdx, useId, useClass, relative, e) {
+    var idx;
+    for (var path = ''; e && e.nodeType == 1; e = e.parentNode) {
+        var predicate = [];
+        var brothers = e.parentNode.children;
+        var count = 0;
+        var unique = false;
+
+        for (var i = 0; brothers && (i < brothers.length); i++) {
+            if (brothers[i].tagName == e.tagName) {
+                count++;
+                if (brothers[i] == e) {
+                    idx = count;
+                }
+            }
+        }
+
+        if (idx == 1 && count == 1) {
+            idx = null;
+        }
+
+        if (useId && e.id) {
+            predicate[predicate.length] = "@id='" + e.id + "'";
+            unique = true;
+        }
+
+        if (useClass && e.className) {
+            predicate[predicate.length] = "@class='" + e.className + "'";
+        }
+
+        idx = ( useIdx && idx && !unique ) ? ('[' + idx + ']') : '';
+        predicate = (predicate.length > 0) ? ('[' + predicate.join(' and ') + ']') : '';
+        path = '/' + e.tagName.toLowerCase() + idx + predicate + path;
+
+        if (unique && relative) {
+            path = '/' + path;
+            break;
+        }
+    }
+
+    return path;
 }
 
 function onClickXPath(useIdx, useId, useClass, callback, relative) {
@@ -68,45 +120,8 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
         $('.highlighting-mouse-over-element').removeClass('highlighting-mouse-over-element');
 
         var e = this;
-        var idx;
+        var path = construct_xpath(useIdx, useId, useClass, relative, e);
 
-        for (var path = ''; e && e.nodeType == 1; e = e.parentNode) {
-            var predicate = [];
-            var brothers = e.parentNode.children;
-            var count = 0;
-            var unique = false;
-
-            for (var i = 0; brothers && (i < brothers.length); i++) {
-                if (brothers[i].tagName == e.tagName) {
-                    count++;
-                    if (brothers[i] == e) {
-                        idx = count;
-                    }
-                }
-            }
-
-            if (idx == 1 && count == 1) {
-                idx = null;
-            }
-
-            if (useId && e.id) {
-                predicate[predicate.length] = "@id='" + e.id + "'";
-                unique = true;
-            }
-
-            if (useClass && e.className) {
-                predicate[predicate.length] = "@class='" + e.className + "'";
-            }
-
-            idx = ( useIdx && idx && !unique ) ? ('[' + idx + ']') : '';
-            predicate = (predicate.length > 0) ? ('[' + predicate.join(' and ') + ']') : '';
-            path = '/' + e.tagName.toLowerCase() + idx + predicate + path;
-
-            if (unique && relative) {
-                path = '/' + path;
-                break;
-            }
-        }
         var classes = Object.keys(custom_styles);
         for (var i in classes) {
             path.replace(new RegExp(classes[i], 'g'), "");
@@ -182,7 +197,7 @@ function stop_highlight() {
     $('.highlighting-positive-elements').removeClass('highlighting-positive-elements');
 }
 
-function get_attributes(xpath , callback) {
+function get_attributes(xpath, callback) {
     var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null ) ;
     var el = elements.iterateNext();
     var attributes = [];
@@ -208,6 +223,68 @@ function get_attributes(xpath , callback) {
         el = elements.iterateNext();
     }
     callback(attributes);
+}
+
+function _add_child(name,value,disabled,custom,array){
+    var child_new = {};
+    child_new.name = name;
+    child_new.value = value;
+    child_new.disabled = disabled;
+    child_new.custom = custom;
+    array.push(child_new);
+}
+
+function get_form_data(xpath , callback) {
+    var elements = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
+    var el = elements.iterateNext();
+    // array of dictionaries {name:"", value:"", disabled: true/false, custom: true/false}
+    var inputs = [];
+    var meta_inputs = {};
+    var hidden = [];
+    var nonhidden = [];
+
+    while (el && el.tagName !== "FORM") {
+        el = el.parentElement;
+    }
+
+    if (el && el.tagName == "FORM") {
+        meta_inputs.new_xpath = construct_xpath(true, true, true, true, el);
+        meta_inputs.FORM = 1;
+
+        var i = 0;
+        while (el.getElementsByTagName("INPUT")[i]) {
+            child = el.getElementsByTagName("INPUT")[i];
+            var child_new = {};
+            if ((child.type !== "button") && (child.type !== "submit")) {
+                if (child.type !== "hidden"){
+                    _add_child(child.name, child.value, false, false, nonhidden);
+                } else if (child.type == "hidden") {
+                    _add_child(child.name, child.value, true, false, hidden);
+                }
+            }
+            i++;
+        }
+        i = 0;
+        while (el.getElementsByTagName("TEXTAREA")[i]) {
+            if (!(Number.isInteger(i))){
+                break;
+            }
+            child = el.getElementsByTagName("TEXTAREA")[i];
+            console.log(child);
+            if (child.type !== "hidden"){
+                _add_child(child.name, child.value, false, false, nonhidden);
+            } else if (child.type == "hidden") {
+                _add_child(child.name, child.value, true, false, hidden);
+            }
+        }
+
+    } else {
+        meta_inputs.FORM = 0;
+    }
+
+    inputs = nonhidden.concat(hidden);
+    console.log(inputs);
+    callback({"meta_inputs": meta_inputs, "inputs": inputs});
 }
 
 function startRestrictHighlight(xpath) {

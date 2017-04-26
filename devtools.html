@@ -12,10 +12,12 @@
     <script src="js/postprocessing/pagination.js"></script>
     <script src="js/postprocessing/unimplemented.js"></script>
     <script src="js/postprocessing/attribute.js"></script>
+    <script src="js/postprocessing/post.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/custom.css">
   </head>
   <body ng-app="extension" ng-controller="main" ng-init="init()" ngcloak>
@@ -226,6 +228,91 @@
                   <datalist id="attributes">
                     <option data-ng-repeat="attr in script_builder.getSelectedPostprocessing().attributes" value="{{attr}}">
                   </datalist>
+              </div>
+            </div>
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('post')">
+              <div class="col-md-12 padded">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>redirect_url</td>
+                      <td>
+                        <div class="input-group" style="width: 100%">
+                          <input ng-model="script_builder.getSelectedPostprocessing().redirect_url" class="form-control">
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            data-toggle="tooltip"
+                            title="Reload redirect url"
+                            ng-click="script_builder.getSelectedPostprocessing().reloadRedirectUrl()">
+                          <i class="fa fa-refresh"></i>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr ng-repeat="field in script_builder.getSelectedPostprocessing().fields">
+                      <td> {{ field.name }} </td>
+                      <td>
+                        <div class="input-group">
+                          <input ng-model="field.value"
+                            ng-disabled="field.disabled"
+                            class="form-control">
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            data-toggle="tooltip"
+                            title="Disable field"
+                            ng-click="script_builder.getSelectedPostprocessing().disableField(field)"
+                            ng-hide="field.disabled || field.custom">
+                            <i class="fa fa-ban"></i>
+                          </span>
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            data-toggle="tooltip"
+                            title="Enable field"
+                            ng-click="script_builder.getSelectedPostprocessing().enableField(field)"
+                            ng-show="field.disabled">
+                            <i class="fa fa-undo"></i>
+                          </span>
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            data-toggle="tooltip"
+                            title="Delete field"
+                            ng-click="script_builder.getSelectedPostprocessing().deleteField($index)"
+                            ng-show="field.custom">
+                            -
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input ng-model="script_builder.getSelectedPostprocessing().new_key" class="form-control">
+                      </td>
+                      <td>
+                        <div class="input-group">
+                          <input ng-model="script_builder.getSelectedPostprocessing().new_value" class="form-control">
+                          <span
+                            class="btn btn-primary input-group-addon"
+                            data-toggle="tooltip"
+                            title="Add field"
+                            ng-click="script_builder.getSelectedPostprocessing().addField()">
+                            +
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <span
+                  class="btn btn-primary input-group-addon"
+                  ng-click="script_builder.getSelectedPostprocessing().refreshForm()">
+                  Reload form data
+                </span>
               </div>
             </div>
             <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>
