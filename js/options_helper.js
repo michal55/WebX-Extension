@@ -1,5 +1,5 @@
 var default_options = {
-    DEFAULT_SERVER_URL: 'http://team16-16.studenti.fiit.stuba.sk/webx'
+    DEFAULT_SERVER_URL: 'http://147.175.149.171/webx'
 };
 
 function getServerURL(callback) {
