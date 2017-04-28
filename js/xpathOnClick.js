@@ -28,6 +28,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         return true;
     }
 
+    else if (request.shortenXpath){
+        try {
+            var new_xpath = shortenXpath(request.shortenXpath.xpath);
+            callback(new_xpath);
+        } catch (err) {
+            console.error(err);
+        }
+        return true;
+    }
+
     return true;
 });
 

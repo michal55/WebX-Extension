@@ -234,12 +234,16 @@ app.controller('main', function($scope) {
         }
 
         main_xpath = main_xpath.join('/');
-        $scope.script_builder.scripts[field.script_id].xpath = main_xpath;
-        localStorage.script_builder = $scope.script_builder.toJSON();
+        console.log(main_xpath);
+        shortenXpath(main_xpath, function(result){
+            $scope.script_builder.scripts[field.script_id].xpath = result;
+            localStorage.script_builder = $scope.script_builder.toJSON();
 
-        // Clean fields
-        field.negatives = [];
-        field.positives = [];
+            // Clean fields
+            field.negatives = [];
+            field.positives = [];
+            $scope.$digest();
+        });
     };
 
     $scope.selectProject = function() {

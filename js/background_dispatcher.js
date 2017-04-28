@@ -45,6 +45,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         get_page_url(request.get_page_url.tab_id, function(result) {
             callback(result);
         });
+    } else if (request.shortenXpath) {
+        shortenXpath(request.shortenXpath.xpath, request.shortenXpath.tab_id, function(result) {
+            callback(result);
+        });
     }
 
     return true;
