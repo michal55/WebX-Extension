@@ -121,10 +121,20 @@ function shortenXpath(path){
     var new_path = "";
     var new_path_found = 1;
     console.log(path_split);
+    var id_pos = 0;
+    for (var i in path_split){
+        if (path_split[i].indexOf("@id=") != -1){
+            id_pos = i;
+        }
+    }
+
     for (var i in path_split){
         elements2 = [];
         new_path_found = 1;
         new_path = "/" + path_split[i] + new_path;
+        if (id_pos > i){
+            continue;
+        }
         console.log(new_path);
         el_iter = document_snapshot.evaluate("/" + new_path, document_snapshot, null, XPathResult.ANY_TYPE, null );
         el = el_iter.iterateNext();
