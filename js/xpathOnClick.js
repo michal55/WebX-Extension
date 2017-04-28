@@ -2,7 +2,7 @@
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
         try {
-            onClickXPath(true, true, true, callback, true);
+            onClickXPath(true, false, true, callback, true);
         } catch (err) {
             console.error(err);
         }
@@ -96,6 +96,50 @@ function construct_xpath(useIdx, useId, useClass, relative, e) {
     return path;
 }
 
+function shortenXpath(path){
+    var elements1 = [];
+    var elements2 = [];
+    var document_snapshot = document;
+    var el_iter = document_snapshot.evaluate(path, document_snapshot, null, XPathResult.ANY_TYPE, null );
+    var el = el_iter.iterateNext();
+    while (el){
+        elements1.push(el);
+        el = el_iter.iterateNext();
+    }
+    var slash = path.startsWith("//") ? 2:1;
+    var path_split = path.split("/").slice(slash).reverse();
+    var new_path = "";
+    var new_path_found = 1;
+    console.log(path_split);
+    for (var i in path_split){
+        elements2 = [];
+        new_path_found = 1;
+        new_path = "/" + path_split[i] + new_path;
+        console.log(new_path);
+        el_iter = document_snapshot.evaluate("/" + new_path, document_snapshot, null, XPathResult.ANY_TYPE, null );
+        el = el_iter.iterateNext();
+        while (el){
+            elements2.push(el);
+            el = el_iter.iterateNext();
+        }
+        console.log([elements1,elements2]);
+        console.log([elements1.length,elements2.length]);
+        if (elements1.length == elements2.length){
+            for (var j in elements1){
+                if (elements1[j] != elements2[j]){
+                    console.log(["e1",elements1[j],"e2",elements2[j]]);
+                    new_path_found = 0;
+                    break;
+                }
+            }
+            if (new_path_found){
+                return "/" + new_path;
+            }
+        }
+    }
+    return path;
+}
+
 function onClickXPath(useIdx, useId, useClass, callback, relative) {
     initializeCustomStyles();
 
@@ -127,7 +171,8 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
             path.replace(new RegExp(classes[i], 'g'), "");
         }
         path.replace(/\[\s*@class='\s*'\s*\]/g, "");
-
+        console.log(path);
+        path = shortenXpath(path);
         callback(path);
         return false;
     }
