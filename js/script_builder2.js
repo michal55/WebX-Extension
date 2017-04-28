@@ -239,6 +239,7 @@ class ScriptBuilder {
         var thisclass = this;
         get_page_url(function(url) {
             thisclass.url = url;
+            angular.element('[ng-controller="main"]').scope().$digest();
         });
     }
 

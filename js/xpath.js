@@ -87,3 +87,9 @@ function restrictHighlight(tab_id, start, xpath) {
 
     return true;
 }
+
+function get_page_url(tab_id,callback) {
+    chrome.tabs.get(tab_id, function (tab) {
+        callback(tab.url);
+    });
+}
