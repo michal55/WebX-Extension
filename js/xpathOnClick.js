@@ -2,7 +2,7 @@
 chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     if (request.onClickXPath) {
         try {
-            onClickXPath(true, false, true, callback, true);
+            onClickXPath(true, true, true, callback, true);
         } catch (err) {
             console.error(err);
         }
