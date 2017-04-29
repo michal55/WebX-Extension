@@ -13,6 +13,7 @@
     <script src="js/postprocessing/unimplemented.js"></script>
     <script src="js/postprocessing/attribute.js"></script>
     <script src="js/postprocessing/post.js"></script>
+    <script src="js/postprocessing/filter.js"></script>
     <script src="js/script_builder2.js"></script>
     <script src="js/ui_shared.js"></script>
     <script src="js/devtools.js"></script>
@@ -322,6 +323,21 @@
                   ng-click="script_builder.getSelectedPostprocessing().refreshForm()">
                   Reload form data
                 </span>
+              </div>
+            </div>
+            <div class="tab-container row" ng-show="script_builder.isSelectedPostprocessingType('filter')">
+              <div class="col-md-12 padded">
+                <label>Select filter:</label>
+                <select ng-model="script_builder.getSelectedPostprocessing().filter" ng-change="script_builder.getSelectedPostprocessing().onchange()">
+                  <option data-ng-repeat="filter in script_builder.getSelectedPostprocessing().filters" value="{{ filter.name }}">
+                    {{ filter.name }}
+                  </option>
+                </select>
+                <div ng-show="script_builder.getSelectedPostprocessing().warning">
+                  <br/>
+                  <i class="fa fa-exclamation-triangle"></i>
+                  <label>{{ script_builder.getSelectedPostprocessing().warning }}</label>
+                </div>
               </div>
             </div>
             <span ng-hide="script_builder.data_fields.length >= 1" class="padded"> Your project does not have any data schema! <a target="_blank" ng-href="{{ url_base }}/projects/{{ project.id }}"> Add data schema</a> </span>

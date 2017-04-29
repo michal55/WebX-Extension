@@ -90,6 +90,10 @@ Postprocessing.create = function(type, visual_only_id, script_builder) {
     postprocessing.updateParentXpath = function(xpath) {
         script_builder.getSelectedScript().xpath = xpath;
     };
+    // Make hacking directly on script_builder possible, nobody in their right mind would want to do it anyway... right?
+    postprocessing.getScriptBuilder = function() {
+        return script_builder;
+    };
 
     return postprocessing;
 };
