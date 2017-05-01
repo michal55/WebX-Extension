@@ -186,9 +186,9 @@ function onClickXPath(useIdx, useId, useClass, callback, relative) {
 
         var classes = Object.keys(custom_styles);
         for (var i in classes) {
-            path.replace(new RegExp(classes[i], 'g'), "");
+            path = path.replace(new RegExp(classes[i], 'g'), "");
         }
-        path.replace(/\[\s*@class='\s*'\s*\]/g, "");
+        path = path.replace(/\[\s*@class='\s*'\s*\]/g, "");
         path = shortenXpath(path);
         callback(path);
         return false;
