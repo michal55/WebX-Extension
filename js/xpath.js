@@ -87,3 +87,23 @@ function restrictHighlight(tab_id, start, xpath) {
 
     return true;
 }
+
+function get_page_url(tab_id,callback) {
+    chrome.tabs.get(tab_id, function (tab) {
+        callback(tab.url);
+    });
+}
+
+function shortenXpath(xpath,tab_id,callback) {
+        try {
+            chrome.tabs.executeScript(tab_id, { file: 'js/jquery.js' }, function() {
+                chrome.tabs.executeScript(tab_id, { file: 'js/xpathOnClick.js' }, function() {
+                    chrome.tabs.sendMessage(tab_id, {shortenXpath: {xpath:xpath}}, callback);
+                });
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+
+    return true;
+}

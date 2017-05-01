@@ -41,6 +41,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
     } else if (request.stop_restrict_highlight) {
         restrictHighlight(request.stop_restrict_highlight.tab_id, false);
         return true;
+    } else if (request.get_page_url) {
+        get_page_url(request.get_page_url.tab_id, function(result) {
+            callback(result);
+        });
+    } else if (request.shortenXpath) {
+        shortenXpath(request.shortenXpath.xpath, request.shortenXpath.tab_id, function(result) {
+            callback(result);
+        });
     }
 
     return true;

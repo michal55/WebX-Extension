@@ -30,8 +30,11 @@ function get_form_data(xpath, callback){
 }
 
 function get_page_url(callback){
-    //chrome.runtime.sendMessage({get_page_url: {tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
-    callback('PH - NYI');
+    chrome.runtime.sendMessage({get_page_url: {tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
+}
+
+function shortenXpath(xpath,callback) {
+    chrome.runtime.sendMessage({shortenXpath: {xpath: xpath, tab_id: chrome.devtools.inspectedWindow.tabId}}, callback);
 }
 
 function startRestrictHighlight(xpath) {
