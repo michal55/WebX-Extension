@@ -6,7 +6,6 @@ class Filter {
         this.warning = undefined;
 
         this.filters = [
-            {name: ''},
             {name: 'yesterday'}
         ];
     }
